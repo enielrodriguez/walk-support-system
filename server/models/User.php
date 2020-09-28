@@ -1,4 +1,5 @@
 <?php
+
 use RedBeanPHP\Facade as RedBean;
 
 /**
@@ -10,19 +11,23 @@ use RedBeanPHP\Facade as RedBean;
  * @apiParam {String} name The name of the user.
  * @apiParam {Boolean} verified Indicates if the user has verified the email.
  * @apiParam {Boolean} notRegistered Indicates if the user had logged at least one time.
+ * @apiParam {Object} company Company to which the user belongs.
  * @apiParam {[CustomField](#api-Data_Structures-ObjectCustomfield)[]} customfields Indicates the values for custom fields.
  */
-
-class User extends DataStore {
+class User extends DataStore
+{
     const TABLE = 'user';
     public $ticketNumber = null;
-    public static function authenticate($userEmail, $userPassword) {
+
+    public static function authenticate($userEmail, $userPassword)
+    {
         $user = User::getUser($userEmail, 'email');
 
         return ($user && Hashing::verifyPassword($userPassword, $user->password) && !$user->notRegistered) ? $user : new NullDataStore();
     }
 
-    public static function getProps() {
+    public static function getProps()
+    {
         return [
             'email',
             'password',
@@ -40,37 +45,36 @@ class User extends DataStore {
         ];
     }
 
-    public function getDefaultProps() {
-        return [];
-    }
-
-    public static function getUser($value, $property = 'id') {
+    public static function getUser($value, $property = 'id')
+    {
         return parent::getDataStore($value, $property);
     }
 
-    public function canManageTicket(Ticket $ticket){
+    public function canManageTicket(Ticket $ticket)
+    {
         $ticketNumberInstanceValidation = true;
         $ticketOfSupervisedUser = false;
-        
-        if($this->ticketNumber) {
+
+        if ($this->ticketNumber) {
             $ticketNumberInstanceValidation = $this->ticketNumber == $ticket->ticketNumber;
         }
-        if($this->supervisedrelation){
-            foreach( $this->supervisedrelation->sharedUserList as $user){
-                if($ticket->isAuthor($user)) $ticketOfSupervisedUser = true;
+        if ($this->supervisedrelation) {
+            foreach ($this->supervisedrelation->sharedUserList as $user) {
+                if ($ticket->isAuthor($user)) $ticketOfSupervisedUser = true;
             }
         }
         return (($ticket->isAuthor($this) || $ticketOfSupervisedUser) && $ticketNumberInstanceValidation);
     }
 
-    public function toArray($minimal = false) {
-        if($minimal) {
+    public function toArray($minimal = false)
+    {
+        if ($minimal) {
             return [
                 'id' => $this->id,
                 'name' => $this->name,
                 'email' => $this->email,
                 'isStaff' => 0,
-                'company' => $this->company
+                'company' => $this->companyToArray()
             ];
         }
 
@@ -83,7 +87,22 @@ class User extends DataStore {
             'customfields' => $this->xownCustomfieldvalueList->toArray(),
             'notRegistered' => $this->notRegistered,
             'supervisedrelation' => $this->supervisedrelation,
-            'company' => $this->company
+            'company' => $this->companyToArray()
         ];
+    }
+
+    public function companyToArray()
+    {
+        $company = $this->company;
+
+        if ($company && !$company->isNull()) {
+            return [
+                'id' => $company->id,
+                'business_name' => $company->business_name,
+                'nit' => $company->nit
+            ];
+        }
+
+        return null;
     }
 }
