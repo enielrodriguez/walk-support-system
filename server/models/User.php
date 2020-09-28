@@ -12,6 +12,7 @@ use RedBeanPHP\Facade as RedBean;
  * @apiParam {Boolean} verified Indicates if the user has verified the email.
  * @apiParam {Boolean} notRegistered Indicates if the user had logged at least one time.
  * @apiParam {Object} company Company to which the user belongs.
+ * @apiParam {Boolean} is_company_admin Determines if a user is a company administrator.
  * @apiParam {[CustomField](#api-Data_Structures-ObjectCustomfield)[]} customfields Indicates the values for custom fields.
  */
 class User extends DataStore
@@ -41,7 +42,8 @@ class User extends DataStore
             'notRegistered',
             'sharedUserList',
             'supervisedrelation',
-            'company'
+            'company',
+            'is_company_admin'
         ];
     }
 
@@ -74,7 +76,8 @@ class User extends DataStore
                 'name' => $this->name,
                 'email' => $this->email,
                 'isStaff' => 0,
-                'company' => $this->companyToArray()
+                'company' => $this->companyToArray(),
+                'is_company_admin' => $this->is_company_admin
             ];
         }
 
@@ -87,7 +90,8 @@ class User extends DataStore
             'customfields' => $this->xownCustomfieldvalueList->toArray(),
             'notRegistered' => $this->notRegistered,
             'supervisedrelation' => $this->supervisedrelation,
-            'company' => $this->companyToArray()
+            'company' => $this->companyToArray(),
+            'is_company_admin' => $this->is_company_admin
         ];
     }
 
