@@ -6,7 +6,6 @@ use RedBeanPHP\Facade as RedBean;
  * @api {OBJECT} Company Company
  * @apiVersion 4.8.0
  * @apiGroup Data Structures
- * @apiParam {Number} id Id of the company.
  * @apiParam {String} nit NIT of the company.
  * @apiParam {String} business_name Name of the company.
  * @apiParam {String} phone Phone of the company.
@@ -26,8 +25,12 @@ class Company extends DataStore
         ];
     }
 
-    public function toArray()
+    public function toArray($minimized = false)
     {
+        if ($minimized) {
+            return $this->business_name;
+        }
+
         return [
             'id' => $this->id,
             'nit' => $this->nit,
