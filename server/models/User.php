@@ -35,7 +35,8 @@ class User extends DataStore {
             'xownCustomfieldvalueList',
             'notRegistered',
             'sharedUserList',
-            'supervisedrelation'
+            'supervisedrelation',
+            'company'
         ];
     }
 
@@ -68,7 +69,8 @@ class User extends DataStore {
                 'id' => $this->id,
                 'name' => $this->name,
                 'email' => $this->email,
-                'isStaff' => 0
+                'isStaff' => 0,
+                'company' => $this->company
             ];
         }
 
@@ -80,7 +82,8 @@ class User extends DataStore {
             'disabled' => $this->disabled,
             'customfields' => $this->xownCustomfieldvalueList->toArray(),
             'notRegistered' => $this->notRegistered,
-            'supervisedrelation' => $this->supervisedrelation
+            'supervisedrelation' => $this->supervisedrelation,
+            'company' => $this->company
         ];
     }
 }
