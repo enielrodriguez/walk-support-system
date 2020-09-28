@@ -24,12 +24,15 @@
  * @apiParam {String}  owner.email The owner's email of the ticket.
  * @apiParam {[TicketEvent](#api-Data_Structures-ObjectTicketevent)[]} events Events related to the ticket.
  */
+
 use RedBeanPHP\Facade as RedBean;
 
-class Ticket extends DataStore {
+class Ticket extends DataStore
+{
     const TABLE = 'ticket';
 
-    public static function getProps() {
+    public static function getProps()
+    {
         return array(
             'ticketNumber',
             'title',
@@ -54,7 +57,8 @@ class Ticket extends DataStore {
         );
     }
 
-    public static function getFetchAs() {
+    public static function getFetchAs()
+    {
         return [
             'author' => 'user',
             'authorStaff' => 'staff',
@@ -62,31 +66,36 @@ class Ticket extends DataStore {
         ];
     }
 
-    public static function getTicket($value, $property = 'id') {
+    public static function getTicket($value, $property = 'id')
+    {
         return parent::getDataStore($value, $property);
     }
 
-    public static function getByTicketNumber($value) {
-        return Ticket::getTicket($value, 'ticketNumber');
+    public static function getByTicketNumber($value)
+    {
+        return self::getTicket($value, 'ticketNumber');
     }
 
-    public function setAuthor($author) {
-        if($author instanceof User) {
+    public function setAuthor($author)
+    {
+        if ($author instanceof User) {
             $this->author = $author;
-        } else if($author instanceof Staff) {
+        } else if ($author instanceof Staff) {
             $this->authorStaff = $author;
         }
     }
 
-    public function getAuthor() {
-        if($this->author && !$this->author->isNull()) {
+    public function getAuthor()
+    {
+        if ($this->author && !$this->author->isNull()) {
             return $this->author;
-        } else {
-            return $this->authorStaff;
         }
+
+        return $this->authorStaff;
     }
 
-    public function getDefaultProps() {
+    public function getDefaultProps()
+    {
         return array(
             'unread' => false,
             'unreadStaff' => true,
@@ -94,21 +103,24 @@ class Ticket extends DataStore {
         );
     }
 
-    public function store() {
+    public function store()
+    {
         parent::store();
     }
 
-    public function delete() {
+    public function delete()
+    {
         parent::delete();
     }
 
-    public function generateUniqueTicketNumber() {
+    public function generateUniqueTicketNumber()
+    {
         $linearCongruentialGenerator = new LinearCongruentialGenerator();
 
-        if (Ticket::count() === 0) {
+        if (self::count() === 0) {
             $ticketNumber = Setting::getSetting('ticket-first-number')->value;
         } else {
-            $lastTicketId = Ticket::findOne(' ORDER BY id DESC')->id;
+            $lastTicketId = self::findOne(' ORDER BY id DESC')->id;
             $linearCongruentialGenerator->setGap(Setting::getSetting('ticket-gap')->value);
             $linearCongruentialGenerator->setFirst(Setting::getSetting('ticket-first-number')->value);
 
@@ -118,7 +130,8 @@ class Ticket extends DataStore {
         return $ticketNumber;
     }
 
-    public function toArray($minimized = false) {
+    public function toArray($minimized = false)
+    {
         return [
             'ticketNumber' => $this->ticketNumber,
             'title' => $this->title,
@@ -142,7 +155,8 @@ class Ticket extends DataStore {
         ];
     }
 
-    public function authorToArray() {
+    public function authorToArray()
+    {
         $author = $this->getAuthor();
 
         if ($author && !$author->isNull()) {
@@ -154,17 +168,18 @@ class Ticket extends DataStore {
                 'email' => $author->email,
                 'customfields' => $author->xownCustomfieldvalueList ? $author->xownCustomfieldvalueList->toArray() : [],
             ];
-        } else {
-            return [
-              'id' => NULL,
-              'staff' => false,
-              'name' => $this->authorName,
-              'email' => $this->authorEmail
-            ];
         }
+
+        return [
+            'id' => NULL,
+            'staff' => false,
+            'name' => $this->authorName,
+            'email' => $this->authorEmail
+        ];
     }
 
-    public function ownerToArray() {
+    public function ownerToArray()
+    {
         $owner = $this->owner;
 
         if ($owner && !$owner->isNull()) {
@@ -173,38 +188,39 @@ class Ticket extends DataStore {
                 'name' => $owner->name,
                 'email' => $owner->email
             ];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
-    public function eventsToArray() {
+    public function eventsToArray()
+    {
         $events = [];
 
         foreach ($this->ownTicketeventList as $ticketEvent) {
             $event = [
                 'type' => $ticketEvent->type,
-                'content'=> $ticketEvent->content,
+                'content' => $ticketEvent->content,
                 'author' => [],
-                'date'=> $ticketEvent->date,
-                'file'=> $ticketEvent->file,
-                'private'=> $ticketEvent->private,
+                'date' => $ticketEvent->date,
+                'file' => $ticketEvent->file,
+                'private' => $ticketEvent->private,
                 'edited' => $ticketEvent->editedContent,
                 'id' => $ticketEvent->id
             ];
 
             $author = $ticketEvent->getAuthor();
-            if($author && !$author->isNull()) {
+            if ($author && !$author->isNull()) {
                 $event['author'] = [
-                    'id'=> $author->id,
+                    'id' => $author->id,
                     'name' => $author->name,
-                    'email' =>$author->email,
+                    'email' => $author->email,
                     'profilePic' => ($author instanceof Staff) ? $author->profilePic : null,
                     'staff' => $author instanceof Staff
                 ];
             }
 
-            if(!Controller::isStaffLogged() && $ticketEvent->private) {
+            if (!Controller::isStaffLogged() && $ticketEvent->private) {
                 continue;
             }
 
@@ -214,18 +230,25 @@ class Ticket extends DataStore {
         return $events;
     }
 
-    public function addEvent(Ticketevent $event) {
+    public function addEvent(Ticketevent $event)
+    {
         $this->ownTicketeventList->add($event);
     }
 
-    public function isAuthor($user) {
+    public function isAuthor($user)
+    {
         $ticketAuthor = $this->authorToArray();
-        if(is_string($user)) return $user == $ticketAuthor['email'];
-        if(!($user instanceof DataStore) || $user->isNull()) return false;
+        if (is_string($user)) {
+            return $user == $ticketAuthor['email'];
+        }
+        if (!($user instanceof DataStore) || $user->isNull()) {
+            return false;
+        }
         return $user->id == $ticketAuthor['id'] && ($user instanceof Staff) == $ticketAuthor['staff'];
     }
 
-    public function isOwner($user) {
+    public function isOwner($user)
+    {
         return !$user->isNull() && $this->owner && $user->id == $this->owner->id && ($user instanceof Staff);
     }
 }
