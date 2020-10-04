@@ -1,4 +1,5 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
 
 /**
@@ -30,13 +31,14 @@ use Respect\Validation\Validator as DataValidator;
  * @apiSuccess {Boolean} data.desc Indicates if it's ordered in decreasing order
  * @apiSuccess {String} data.search Query of the search
  */
-
-class GetUsersController extends Controller {
+class GetUsersController extends Controller
+{
     const PATH = '/get-users';
     const METHOD = 'POST';
 
-    public function validations() {
-        return[
+    public function validations()
+    {
+        return [
             'permission' => 'staff_1',
             'requestData' => [
                 'page' => [
@@ -44,14 +46,15 @@ class GetUsersController extends Controller {
                     'error' => ERRORS::INVALID_PAGE
                 ],
                 'orderBy' => [
-                    'validation' => DataValidator::in(['id','tickets']),
+                    'validation' => DataValidator::in(['id', 'tickets']),
                     'error' => ERRORS::INVALID_ORDER
                 ]
             ]
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
 
         $userList = $this->getUserList();
         $userListArray = [];
@@ -64,7 +67,8 @@ class GetUsersController extends Controller {
                 'tickets' => $user->tickets,
                 'email' => $user->email,
                 'signupDate' => $user->signupDate,
-                'disabled' => !!$user->disabled
+                'disabled' => !!$user->disabled,
+                'company' => $user->company->toArray(true)
             ];
         }
 
@@ -78,7 +82,8 @@ class GetUsersController extends Controller {
         ]);
     }
 
-    private function getUserList() {
+    private function getUserList()
+    {
         $query = $this->getSearchQuery();
 
         return User::find($query, [
@@ -89,10 +94,11 @@ class GetUsersController extends Controller {
         ]);
     }
 
-    private function getPagesQuantity() {
+    private function getPagesQuantity()
+    {
         $query = '';
 
-        if(Controller::request('search')) {
+        if (Controller::request('search')) {
             $query .= " (name LIKE ? OR email LIKE ? )";
         }
 
@@ -104,10 +110,11 @@ class GetUsersController extends Controller {
         return ceil($usersQuantity / 10);
     }
 
-    private function getSearchQuery() {
+    private function getSearchQuery()
+    {
         $query = '';
 
-        if(Controller::request('search')) {
+        if (Controller::request('search')) {
             $query .= " (name LIKE ? OR email LIKE ? )";
             $query .= " ORDER BY CASE WHEN (name LIKE ? OR email LIKE ?)";
             $query .= " THEN 1 ELSE 2 END ASC,";
@@ -120,21 +127,22 @@ class GetUsersController extends Controller {
         return $query;
     }
 
-    private function getOrderAndLimit() {
+    private function getOrderAndLimit()
+    {
         $query = '';
 
-        if(Controller::request('orderBy') === 'tickets') {
+        if (Controller::request('orderBy') === 'tickets') {
             $query .= 'tickets';
         } else {
             $query .= 'id';
         }
 
-        if(Controller::request('desc')) {
+        if (Controller::request('desc')) {
             $query .= ' desc';
         } else {
             $query .= ' asc';
         }
-        $query .= " LIMIT 10 OFFSET ". ((Controller::request('page')-1)*10);
+        $query .= " LIMIT 10 OFFSET " . ((Controller::request('page') - 1) * 10);
 
         return $query;
     }
