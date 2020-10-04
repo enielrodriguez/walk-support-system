@@ -81,7 +81,12 @@ class AdminPanelListUsers extends React.Component {
             {
                 key: 'email',
                 value: i18n('EMAIL'),
-                className: 'admin-panel-list-users__table-email col-md-5'
+                className: 'admin-panel-list-users__table-email col-md-3'
+            },
+            {
+                key: 'company',
+                value: i18n('COMPANY'),
+                className: 'admin-panel-list-users__table-company col-md-2'
             },
             {
                 key: 'tickets',
@@ -113,6 +118,7 @@ class AdminPanelListUsers extends React.Component {
                 </div>
             ),
             email: user.email,
+            company: user.company.business_name,
             tickets: (
                 <span className="admin-panel-list-users__tickets-number">
                     {user.tickets}

@@ -456,5 +456,8 @@ export default {
     'TEST_SMTP_CONNECTION': 'Probar conexion de SMTP',
     'SERVER_ERROR': 'No es posible conectar con el servidor.',
     'EMAIL_SERVER_ADDRESS': 'Dirección del servidor de correo electrónico',
-    'EMAIL_SERVER_ADDRESS_DESCRIPTION': 'Dirección donde se recibirán y enviarán los correos.'
+    'EMAIL_SERVER_ADDRESS_DESCRIPTION': 'Dirección donde se recibirán y enviarán los correos.',
+
+    //Custom for F2F
+    'COMPANY': 'Empresa'
 };
