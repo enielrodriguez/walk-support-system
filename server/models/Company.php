@@ -28,7 +28,9 @@ class Company extends DataStore
     public function toArray($minimized = false)
     {
         if ($minimized) {
-            return $this->business_name;
+            return [
+                'business_name' => $this->business_name
+            ];
         }
 
         return [
