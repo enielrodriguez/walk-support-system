@@ -214,7 +214,6 @@ class AdminPanelDepartments extends React.Component {
             onChange: (form) => {this.setState({form, edited: true})},
             onValidateErrors: (errors) => {this.setState({errors})},
             onSubmit: this.onFormSubmit.bind(this),
-            loading: formLoading,
             className: 'admin-panel-departments__form'
         };
     }
