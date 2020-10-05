@@ -71,7 +71,6 @@ class SessionStore {
         this.setItem('max-size', configs['max-size']);
         this.setItem('tags', JSON.stringify(configs['tags']));
         this.setItem('max-size', configs['max-size']);
-        this.setItem('tags', JSON.stringify(configs['tags']));
         this.setItem('default-is-locked', configs['default-is-locked']);
         this.setItem('default-department-id',  configs['default-department-id']);
     }
