@@ -57,14 +57,14 @@
     }
 
     &_medium {
-        width: 200px;
+        width: 250px;
 
         .drop-down__current-item {
             border-radius: 4px;
         }
 
         .drop-down__list-container {
-            width: 200px;
+            width: 250px;
             border: 1px solid $light-grey;
         }
     }
