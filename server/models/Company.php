@@ -25,6 +25,11 @@ class Company extends DataStore
         ];
     }
 
+    public static function getCompany($value, $property = 'id')
+    {
+        return parent::getDataStore($value, $property);
+    }
+
     public function toArray($minimized = false)
     {
         if ($minimized) {

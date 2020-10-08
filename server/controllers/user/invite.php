@@ -1,6 +1,7 @@
 <?php
 
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -17,6 +18,7 @@ DataValidator::with('CustomValidations', true);
  *
  * @apiParam {String} name The name of the invited user.
  * @apiParam {String} email The email of the invited user.
+ * @apiParam {Number} companyId Id of the company to which the user belongs.
  * @apiParam {String} customfield_ Custom field values for this user.
  *
  * @apiUse INVALID_NAME
@@ -32,15 +34,17 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {String} data.userEmail Email of the invited user
  *
  */
-
-class InviteUserController extends Controller {
+class InviteUserController extends Controller
+{
     const PATH = '/invite';
     const METHOD = 'POST';
 
     private $userEmail;
     private $userName;
+    private $companyId;
 
-    public function validations() {
+    public function validations()
+    {
         $validations = [
             'permission' => 'staff_1',
             'requestData' => [
@@ -51,6 +55,10 @@ class InviteUserController extends Controller {
                 'email' => [
                     'validation' => DataValidator::email(),
                     'error' => ERRORS::INVALID_EMAIL
+                ],
+                'companyId' => [
+                    'validation' => DataValidator::notBlank(),
+                    'error' => ERRORS::INVALID_COMPANY
                 ]
             ]
         ];
@@ -63,8 +71,8 @@ class InviteUserController extends Controller {
         return $validations;
     }
 
-    public function handler() {
-
+    public function handler()
+    {
         $this->storeRequestData();
 
         $existentUser = User::getUser($this->userEmail, 'email');
@@ -101,28 +109,33 @@ class InviteUserController extends Controller {
         Log::createLog('INVITE', $this->userName);
     }
 
-    public function storeRequestData() {
+    public function storeRequestData()
+    {
         $this->userName = Controller::request('name');
         $this->userEmail = Controller::request('email');
+        $this->companyId = Controller::request('companyId');
     }
 
-    public function createNewUserAndRetrieveId() {
+    public function createNewUserAndRetrieveId()
+    {
         $userInstance = new User();
 
         $userInstance->setProperties([
             'name' => $this->userName,
-            'signupDate' => Date::getCurrentDate(),
+            //'signupDate' => Date::getCurrentDate(), //is set in the database
             'tickets' => 0,
             'email' => $this->userEmail,
             'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
             'verificationToken' => null,
-            'xownCustomfieldvalueList' => $this->getCustomFieldValues()
+            'xownCustomfieldvalueList' => $this->getCustomFieldValues(),
+            'company' => Company::getCompany($this->companyId)
         ]);
 
         return $userInstance->store();
     }
 
-    public function sendInvitationMail() {
+    public function sendInvitationMail()
+    {
         $mailSender = MailSender::getInstance();
 
         $mailSender->setTemplate(MailTemplate::USER_INVITE, [
