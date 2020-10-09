@@ -206,8 +206,8 @@ export default {
     'NEVER': 'Nunca',
     'HIMSELF': 'si mismo',
     'SUPERVISED_USERS_UPDATED': 'Los usuarios supervisados ​​actualizan',
-    'ADD_USER': 'Añadir un usuario',
-    'INVITE_USER': 'invitar usuario',
+    'ADD_USER': 'Añadir usuario',
+    'INVITE_USER': 'Añadir usuario',
     'INVITE_STAFF': 'invitar staff',
     'UPLOAD_FILE': 'Subir archivo',
     'PRIVATE': 'privado',
@@ -365,7 +365,7 @@ export default {
     'EMAIL_NOT_EXIST': 'Email no existe',
     'ERROR_EMPTY': 'Valor inválido',
     'ERROR_PASSWORD': 'Contraseña Incorrecta',
-    'INVITE_USER_VIEW_DESCRIPTION': 'Aquí se puede invitar a un usuario a nuestro sistema de soporte, que sólo tendrá que proporcionar su contraseña para crear una cuenta nueva.',
+    'INVITE_USER_VIEW_DESCRIPTION': 'Aquí se puede añadir un usuario a nuestro sistema de soporte, que sólo tendrá que crear su contraseña.',
     'ERROR_NAME': 'Nombre Incorrecto',
     'INVITE_STAFF_DESCRIPTION': 'Aquí se puede invitar a los miembros del personal a sus equipos.',
     'ERROR_TITLE': 'Título incorrecto',
@@ -407,7 +407,7 @@ export default {
     'SUPERVISOR_CAN_NOT_SUPERVISE_HIMSELF': 'Supervisor no puede supervisar el propio',
     'VALID_RECOVER': 'La contraseña se recuperó correctamente',
     'EMAIL_EXISTS': 'El email ya existe',
-    'INVITE_USER_SUCCESS': 'Has invitado a un nuevo usuario con éxito en nuestro sistema de soporte',
+    'INVITE_USER_SUCCESS': 'Has añadido un nuevo usuario con éxito a nuestro sistema de soporte',
     'ARE_YOU_SURE': '¿Estás seguro?',
     'EMAIL_WILL_CHANGE': 'El correo electrónico actual se cambiará',
     'PASSWORD_WILL_CHANGE': 'Se cambiará la contraseña actual',
@@ -459,5 +459,7 @@ export default {
     'EMAIL_SERVER_ADDRESS_DESCRIPTION': 'Dirección donde se recibirán y enviarán los correos.',
 
     //Custom for F2F
-    'COMPANY': 'Empresa'
+    'COMPANY': 'Empresa',
+
+    'UNKNOWN_ERROR': 'Ocurrió un error'
 };

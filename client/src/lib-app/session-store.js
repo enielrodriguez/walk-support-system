@@ -48,6 +48,10 @@ class SessionStore {
         return JSON.parse(this.getItem('departments'));
     }
 
+    getCompanies() {
+        return JSON.parse(this.getItem('companies'));
+    }
+
     storeRememberData({token, userId, expiration, isStaff}) {
         this.setItem('rememberData-token', token);
         this.setItem('rememberData-userId', userId);
@@ -73,6 +77,7 @@ class SessionStore {
         this.setItem('max-size', configs['max-size']);
         this.setItem('default-is-locked', configs['default-is-locked']);
         this.setItem('default-department-id',  configs['default-department-id']);
+        this.setItem('companies', JSON.stringify(configs['companies']));
     }
 
     getConfigs() {
@@ -91,7 +96,8 @@ class SessionStore {
             'max-size': this.getItem('max-size'),
             'tags': JSON.parse(this.getItem('tags')),
             'default-is-locked': this.getItem('default-is-locked'),
-            'default-department-id':  this.getItem('default-department-id')
+            'default-department-id':  this.getItem('default-department-id'),
+            'companies': JSON.parse(this.getItem('companies'))
             
         };
     }
