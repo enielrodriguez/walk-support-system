@@ -34,7 +34,9 @@ class Company extends DataStore
     {
         if ($minimized) {
             return [
-                'business_name' => $this->business_name
+                'id' => $this->id,
+                'business_name' => $this->business_name,
+                'nit' => $this->nit
             ];
         }
 
