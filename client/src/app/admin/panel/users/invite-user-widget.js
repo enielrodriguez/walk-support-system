@@ -1,18 +1,18 @@
-import React              from 'react';
-import ReactDOM           from 'react-dom';
-import _                  from 'lodash';
-import classNames         from 'classnames';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import _ from 'lodash';
+import classNames from 'classnames';
 
-import i18n               from 'lib-app/i18n';
-import API                from 'lib-app/api-call';
+import i18n from 'lib-app/i18n';
+import API from 'lib-app/api-call';
 
-import Captcha            from 'app/main/captcha';
-import SubmitButton       from 'core-components/submit-button';
-import Message            from 'core-components/message';
-import Form               from 'core-components/form';
-import FormField          from 'core-components/form-field';
-import Widget             from 'core-components/widget';
-import Header             from 'core-components/header';
+import Captcha from 'app/main/captcha';
+import SubmitButton from 'core-components/submit-button';
+import Message from 'core-components/message';
+import Form from 'core-components/form';
+import FormField from 'core-components/form-field';
+import Widget from 'core-components/widget';
+import Header from 'core-components/header';
 import SessionStore from "../../../../lib-app/session-store";
 import CompanyDropdown from "../../../../app-components/company-dropdown";
 
@@ -38,21 +38,24 @@ class InviteUserWidget extends React.Component {
             path: '/system/get-custom-fields',
             data: {}
         })
-        .then(result => this.setState({customFields: result.data}));
+            .then(result => this.setState({customFields: result.data}));
     }
 
     render() {
         return (
             <Widget className={this.getClass()}>
-                <Header title={i18n('INVITE_USER')} description={i18n('INVITE_USER_VIEW_DESCRIPTION')} />
+                <Header title={i18n('INVITE_USER')} description={i18n('INVITE_USER_VIEW_DESCRIPTION')}/>
                 <Form {...this.getFormProps()}>
                     <div className="invite-user-widget__inputs">
-                        <FormField {...this.getInputProps()} label={i18n('FULL_NAME')} name="name" validation="NAME" required/>
-                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL" required/>
-                        <FormField {...this.getInputProps()} label={i18n('COMPANY')} name="companyIndex" field="select" decorator={CompanyDropdown} fieldProps={{
+                        <FormField {...this.getInputProps()} label={i18n('FULL_NAME')} name="name" validation="NAME"
+                                   required/>
+                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL"
+                                   required/>
+                        <FormField {...this.getInputProps()} label={i18n('COMPANY')} name="companyIndex" field="select"
+                                   decorator={CompanyDropdown} fieldProps={{
                             companies: SessionStore.getCompanies(),
                             size: "medium"
-                        }} />
+                        }}/>
                         {this.state.customFields.map(this.renderCustomField.bind(this))}
                     </div>
                     <div className="invite-user-widget__captcha">
@@ -67,14 +70,14 @@ class InviteUserWidget extends React.Component {
     }
 
     renderCustomField(customField, key) {
-        if(customField.type === 'text') {
+        if (customField.type === 'text') {
             return (
                 <FormField {...this.getInputProps()}
-                    name={`customfield_${customField.name}`}
-                    key={key}
-                    label={customField.name}
-                    infoMessage={customField.description}
-                    field="input"/>
+                           name={`customfield_${customField.name}`}
+                           key={key}
+                           label={customField.name}
+                           infoMessage={customField.description}
+                           field="input"/>
             );
         } else {
             const items = customField.options.map(option => ({content: option.name, value: option.name}));
@@ -86,7 +89,7 @@ class InviteUserWidget extends React.Component {
                     label={customField.name}
                     infoMessage={customField.description}
                     field="select"
-                    fieldProps={{size:'medium', items}}/>
+                    fieldProps={{size: 'medium', items}}/>
             );
         }
     }
@@ -151,7 +154,7 @@ class InviteUserWidget extends React.Component {
             delete form['companyIndex'];
 
             this.state.customFields.forEach(customField => {
-                if(customField.type === 'select') {
+                if (customField.type === 'select') {
                     form[`customfield_${customField.name}`] = customField.options[form[`customfield_${customField.name}`]].name;
                 }
             })
@@ -168,6 +171,8 @@ class InviteUserWidget extends React.Component {
             loading: false,
             message: 'success'
         });
+        if (this.props.onSuccess)
+            this.props.onSuccess();
     }
 
     onInviteUserFail(reason) {

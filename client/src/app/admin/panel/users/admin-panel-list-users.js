@@ -203,8 +203,9 @@ class AdminPanelListUsers extends React.Component {
             </div>
         );
     }
+
     onInviteUserSuccess() {
-        ModalContainer.closeModal();
+        this.componentDidMount();
     }
 
     onUsersRetrieved(result) {
