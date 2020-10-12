@@ -92,7 +92,7 @@ export default {
     'INFO': 'Information',
     'ALL_DEPARTMENTS': 'All Departments',
     'EMAIL_BANNED': 'Email banned',
-    'UN_BAN': 'Disable ban',
+    'UN_BAN': 'Unban',
     'BAN_NEW_EMAIL': 'Ban new email',
     'BAN_EMAIL': 'Ban email',
     'EDIT_EMAIL': 'Edit email',
@@ -313,7 +313,7 @@ export default {
     'BAN_USERS_DESCRIPTION': 'Here you can see a list of banned emails, you can un-ban them or add more emails to the list.',
     'LIST_USERS_DESCRIPTION': 'This is the list of users that are registered in this platform. You can search for someone in particular, delete it or ban it.',
     'USER_VIEW_DESCRIPTION': 'Here you can find all the information about an user and all the tickets sent by the user. You can also delete or ban it.',
-    'DELETE_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more.',
+    'DELETE_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased.',
     'DELETE_TOPIC_DESCRIPTION': 'By deleting the topic, all articles on it will be erased.',
     'EDIT_TOPIC_DESCRIPTION': 'Here you can change the name, the icon and the icon color of the topic.',
     'ADD_ARTICLE_DESCRIPTION': 'Here you can add an article that will be available for every user. It will be added inside the category {category}.',
@@ -454,6 +454,17 @@ export default {
 
     //Custom for F2F
     'COMPANY': 'Company',
+    'COMPANIES': 'Companies',
+    'LIST_COMPANIES': 'List Companies',
+    'LIST_COMPANIES_DESCRIPTION': 'This is the list of companies that are registered in this platform. You can search for someone in particular, edit it or delete it.',
+    'SEARCH_COMPANIES': 'Search companies...',
+    'ADD_COMPANY': 'Add Company',
+    'BUSINESS_NAME': 'Business name',
+    'NIT': 'NIT',
+    'PHONE': 'Phone',
+    'CONTACT_NAME': 'Contact name',
+    'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more.',
 
-    'UNKNOWN_ERROR': 'An error occurred'
+    'UNKNOWN_ERROR': 'An error occurred',
+    'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies.'
 };
