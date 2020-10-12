@@ -19,6 +19,7 @@ class AdminPanelViewUser extends React.Component {
     state = {
         name: '',
         email: '',
+        company: '',
         verified: true,
         tickets: [],
         customfields: [],
@@ -68,6 +69,12 @@ class AdminPanelViewUser extends React.Component {
                             {(!this.state.verified) ? this.renderNotVerified() : null}
                         </div>
                     </div>
+                    <div className="admin-panel-view-user__info-item">
+                        {i18n('COMPANY')}
+                        <div className="admin-panel-view-user__info-box">
+                            {this.state.company.business_name}
+                        </div>
+                    </div>
                     {this.state.customfields.map(this.renderCustomField.bind(this))}
                     <div className="admin-panel-view-user__action-buttons">
                         <Button
@@ -77,8 +84,11 @@ class AdminPanelViewUser extends React.Component {
                             type={this.state.disabled ? 'tertiary' : 'primary'}>
                             {i18n(this.state.disabled ? 'ENABLE_USER' : 'DISABLE_USER')}
                         </Button>
-                        <Button className="admin-panel-view-user__action-button" onClick={this.onDeleteClick.bind(this)} size="medium">
+                        <Button className="admin-panel-view-user__action-button" onClick={this.onDeleteAndBanClick.bind(this)} size="medium">
                             {i18n('DELETE_AND_BAN')}
+                        </Button>
+                        <Button className="admin-panel-view-user__action-button" onClick={this.onDeleteClick.bind(this)} size="medium">
+                            {i18n('DELETE')}
                         </Button>
                     </div>
                 </div>
@@ -240,6 +250,7 @@ class AdminPanelViewUser extends React.Component {
         this.setState({
             name: result.data.name,
             email: result.data.email,
+            company: result.data.company,
             verified: result.data.verified,
             tickets: result.data.tickets,
             disabled: result.data.disabled,
@@ -260,6 +271,10 @@ class AdminPanelViewUser extends React.Component {
         AreYouSure.openModal(i18n('DELETE_USER_DESCRIPTION'), this.deleteUser.bind(this))
     }
 
+    onDeleteAndBanClick() {
+        AreYouSure.openModal(i18n('DELETE_BAN_USER_DESCRIPTION'), this.deleteAndBanUser.bind(this))
+    }
+
     disableUser() {
         return API.call({
             path: this.state.disabled ? '/user/enable' : '/user/disable',
@@ -270,6 +285,15 @@ class AdminPanelViewUser extends React.Component {
     }
 
     deleteUser() {
+        return API.call({
+            path: '/user/delete',
+            data: {
+                userId: this.props.params.userId
+            }
+        }).then(() => history.push('/admin/panel/users/list-users'));
+    }
+
+    deleteAndBanUser() {
         return API.call({
             path: '/user/delete',
             data: {
