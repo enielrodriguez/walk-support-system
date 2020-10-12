@@ -86,7 +86,10 @@ class AdminPanelListUsers extends React.Component {
             {
                 key: 'company',
                 value: i18n('COMPANY'),
-                className: 'admin-panel-list-users__table-company col-md-2'
+                className: 'admin-panel-list-users__table-company col-md-2',
+                order: true,
+                onOrderUp: this.orderByCompany.bind(this, 0),
+                onOrderDown: this.orderByCompany.bind(this, 1)
             },
             {
                 key: 'tickets',
@@ -156,6 +159,15 @@ class AdminPanelListUsers extends React.Component {
         this.retrieveUsers({
             page: 1,
             orderBy: 'tickets',
+            desc: desc,
+            search: this.state.search
+        });
+    }
+
+    orderByCompany(desc) {
+        this.retrieveUsers({
+            page: 1,
+            orderBy: 'company',
             desc: desc,
             search: this.state.search
         });
