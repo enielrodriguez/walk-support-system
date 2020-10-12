@@ -46,7 +46,7 @@ class GetUsersController extends Controller
                     'error' => ERRORS::INVALID_PAGE
                 ],
                 'orderBy' => [
-                    'validation' => DataValidator::in(['id', 'tickets']),
+                    'validation' => DataValidator::in(['id', 'tickets', 'company']),
                     'error' => ERRORS::INVALID_ORDER
                 ]
             ]
@@ -133,6 +133,8 @@ class GetUsersController extends Controller
 
         if (Controller::request('orderBy') === 'tickets') {
             $query .= 'tickets';
+        } else if (Controller::request('orderBy') === 'company') {
+            $query .= 'company_id';
         } else {
             $query .= 'id';
         }
