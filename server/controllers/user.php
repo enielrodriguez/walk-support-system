@@ -13,6 +13,7 @@ $userControllers->addController(new EditPassword);
 $userControllers->addController(new EditEmail);
 $userControllers->addController(new GetUserController);
 $userControllers->addController(new GetUsersController);
+$userControllers->addController(new GetCompaniesController);
 $userControllers->addController(new GetUserByIdController);
 $userControllers->addController(new DeleteUserController);
 $userControllers->addController(new BanUserController);
