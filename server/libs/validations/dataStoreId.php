@@ -22,6 +22,9 @@ class DataStoreId extends AbstractRule {
             case 'user':
                 $dataStore = \User::getUser($dataStoreId);
                 break;
+            case 'company':
+                $dataStore = \Company::getCompany($dataStoreId);
+                break;
             case 'staff':
                 $dataStore = \Staff::getUser($dataStoreId);
                 break;
@@ -54,6 +57,7 @@ class DataStoreId extends AbstractRule {
     private function isDataStoreNameValid($dataStoreName) {
         return in_array($dataStoreName, [
             'user',
+            'company',
             'staff',
             'ticket',
             'department',
