@@ -1,0 +1,13 @@
+.add-company-widget {
+    padding: 30px;
+    text-align: center;
+
+    &__form {
+        margin-bottom: 20px;
+    }
+
+    &__inputs {
+        display: inline-block;
+        margin: 0 auto;
+    }
+}
