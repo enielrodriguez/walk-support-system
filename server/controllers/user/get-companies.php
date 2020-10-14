@@ -8,7 +8,7 @@ DataValidator::with('CustomValidations', true);
  *
  * @apiName Get companies
  *
- * @apiGroup Company
+ * @apiGroup User
  *
  * @apiDescription This path returns all the companies.
  *

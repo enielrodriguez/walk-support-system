@@ -8,18 +8,12 @@ DataValidator::with('CustomValidations', true);
  *
  * @apiName Create company
  *
- * @apiGroup Ticket
+ * @apiGroup User
  *
  * @apiDescription This path creates a new company.
  *
  * @apiPermission staff3
  *
- * @apiParam {Number} name The new name of the company.
- * @apiParam {String} color The new color of the company.
- *
- * @apiUse NO_PERMISSION
- * @apiUse INVALID_NAME
- * @apiUse TAG_EXISTS
  *
  * @apiSuccess {Object} data Empty object
  *
