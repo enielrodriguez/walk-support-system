@@ -46,8 +46,17 @@ class GetCompanyByIdController extends Controller
         $companyId = Controller::request('companyId');
         $company = Company::getCompany($companyId);
 
+        $users = User::find(' company_id = ? ', [$companyId]);
+
+        $listUsers = [];
+
+        foreach ($users as $user) {
+            $listUsers [] = $user->toArray(true);
+        }
+
         Response::respondSuccess([
-            'company' => $company->toArray()
+            'company' => $company->toArray(),
+            'users' => $listUsers
         ]);
     }
 }
