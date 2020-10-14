@@ -473,7 +473,7 @@ export default {
     'ADD_COMPANY_SUCCESS': 'Has añadido una nueva empresa.',
     'COMPANY_VIEW_TITLE': 'Empresa #{companyId}',
     'COMPANY_VIEW_DESCRIPTION': 'Aquí puede ver toda la información sobre una empresa. También puede eliminarla.',
-    'DELETE_COMPANY_DESCRIPTION': 'La empresa y todos sus usuarios serán borrados del sistema.',
+    'DELETE_COMPANY_DESCRIPTION': 'La empresa y todos sus usuarios y tickets serán borrados del sistema.',
 
     'DELETE_BAN_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán. Además, el correo electrónico ya no podrá utilizarse.',
 
