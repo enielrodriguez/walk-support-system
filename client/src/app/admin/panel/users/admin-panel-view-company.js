@@ -13,6 +13,7 @@ import Button from 'core-components/button';
 import Message from 'core-components/message';
 import InfoTooltip from 'core-components/info-tooltip';
 import Autocomplete from 'core-components/autocomplete';
+import UserList from "../../../../app-components/user-list";
 
 class AdminPanelViewCompany extends React.Component {
 
@@ -70,13 +71,27 @@ class AdminPanelViewCompany extends React.Component {
                         </Button>
                     </div>
                 </div>
+                <span className="separator" />
+                <div className="admin-panel-view-company__users">
+                    <div className="admin-panel-view-user__users-title">{i18n('USERS')}</div>
+                    <UserList {...this.getUserListProps()}/>
+                </div>
             </div>
         );
+    }
+
+    getUserListProps() {
+        return {
+            users: this.state.users,
+            loading: this.state.loading,
+            userPath: '/admin/panel/users/view-user/'
+        };
     }
 
     onCompanyRetrieved(result) {
         this.setState({
             company: result.data.company,
+            users: result.data.users,
             loading: false
         });
     }

@@ -1,0 +1,29 @@
+@import "../scss/vars";
+
+.user-list {
+
+  &__tickets-number {
+    background-color: white;
+    border-radius: 10px;
+    width: 70px;
+    display: inline-block;
+    text-align: center;
+  }
+
+  &__table-name {
+    text-align: left;
+  }
+
+  &__table-email {
+    text-align: left;
+  }
+
+  &__table-tickets {
+    text-align: center;
+  }
+
+  &__title-link {
+    color: $secondary-blue;
+  }
+
+}

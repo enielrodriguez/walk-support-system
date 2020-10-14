@@ -27,5 +27,11 @@
     &__action-button {
         margin-right: 20px;
     }
+
+    &__users-title {
+        font-size: $font-size--md;
+        margin-bottom: 20px;
+        text-align: left;
+    }
     
 }
