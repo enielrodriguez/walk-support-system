@@ -1,0 +1,31 @@
+@import '../../../../scss/vars';
+
+.admin-panel-view-company {
+
+    &__info {
+        text-align: left;
+
+        &-item {
+            display: inline-block;
+            margin-right: 20px;
+            min-width: 200px;
+        }
+
+        &-box {
+            background-color: $grey;
+            color: $primary-black;
+            font-size: $font-size--sm;
+            padding: 5px 15px;
+            text-align: center;
+        }
+    }
+
+    &__action-buttons {
+        margin-top: 20px;
+    }
+
+    &__action-button {
+        margin-right: 20px;
+    }
+    
+}
