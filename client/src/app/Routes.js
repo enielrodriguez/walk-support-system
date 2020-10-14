@@ -40,6 +40,7 @@ import AdminPanelListUsers from 'app/admin/panel/users/admin-panel-list-users';
 import AdminPanelViewUser from 'app/admin/panel/users/admin-panel-view-user';
 import AdminPanelBanUsers from 'app/admin/panel/users/admin-panel-ban-users';
 import AdminPanelCustomFields from 'app/admin/panel/users/admin-panel-custom-fields';
+import AdminPanelCompanies from "app/admin/panel/users/admin-panel-companies";
 
 import AdminPanelListArticles from 'app/admin/panel/articles/admin-panel-list-articles';
 import AdminPanelViewArticle from 'app/admin/panel/articles/admin-panel-view-article';
@@ -62,6 +63,7 @@ import InstallStep4UserSystem from 'app/install/install-step-4-user-system';
 import InstallStep5Settings from 'app/install/install-step-5-settings';
 import InstallStep6Admin from 'app/install/install-step-6-admin';
 import InstallCompleted from 'app/install/install-completed';
+import AdminPanelViewCompany from "./admin/panel/users/admin-panel-view-company";
 
 export default (
     <Router history={history}>
@@ -120,7 +122,9 @@ export default (
                     <Route path="users">
                         <IndexRedirect to="list-users" />
                         <Route path="list-users" component={AdminPanelListUsers} />
+                        <Route path="companies" component={AdminPanelCompanies} />
                         <Route path="view-user/:userId" component={AdminPanelViewUser} />
+                        <Route path="view-company/:companyId" component={AdminPanelViewCompany} />
                         <Route path="ban-users" component={AdminPanelBanUsers} />
                         <Route path="custom-fields" component={AdminPanelCustomFields} />
                     </Route>

@@ -1,0 +1,20 @@
+@import '../../../../scss/vars';
+
+.admin-panel-companies {
+
+    &__search-box {
+        margin: 20px;
+    }
+
+    &__table {
+        text-align: left;
+    }
+
+    &__name-link {
+        color: $secondary-blue;
+    }
+
+    &__add-company-form {
+        max-width: 500px;
+    }
+}

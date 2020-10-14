@@ -353,13 +353,13 @@ export default {
     'IMAP_POLLING_DESCRIPTION': 'Inbox checking will not be done automatically by OpenSupports. You have to make POST requests periodically to this url to process the emails: {url}',
     'NEW_CUSTOM_FIELD_DESCRIPTION': 'Here you can create a custom field for an user, it can be a blank text box or a fixed set of options.',
     'CUSTOM_FIELDS_DESCRIPTION': 'Custom fields are defined additional fields the users are able to fill to provide more information about them.',
-    'INVITE_USER_VIEW_DESCRIPTION': 'Here you can add an user to our support system, he will just need to create his password.',
+    'INVITE_USER_VIEW_DESCRIPTION': 'Here you can add an user to our support system.',
     'INVITE_STAFF_DESCRIPTION': 'Here you can add staff members to your teams.',
 
     //ERRORS
     'EMAIL_OR_PASSWORD': 'Email or password invalid',
     'EMAIL_NOT_EXIST': 'Email does not exist',
-    'ERROR_EMPTY': 'Invalid value',
+    'ERROR_EMPTY': 'This field is required',
     'ERROR_PASSWORD': 'Invalid password',
     'ERROR_NAME': 'Invalid name',
     'ERROR_TITLE': 'Invalid title',
@@ -456,15 +456,27 @@ export default {
     'COMPANY': 'Company',
     'COMPANIES': 'Companies',
     'LIST_COMPANIES': 'List Companies',
-    'LIST_COMPANIES_DESCRIPTION': 'This is the list of companies that are registered in this platform. You can search for someone in particular, edit it or delete it.',
+    'LIST_COMPANIES_DESCRIPTION': 'This is the list of companies that are registered in this platform.',
     'SEARCH_COMPANIES': 'Search companies...',
     'ADD_COMPANY': 'Add Company',
     'BUSINESS_NAME': 'Business name',
     'NIT': 'NIT',
     'PHONE': 'Phone',
     'CONTACT_NAME': 'Contact name',
+    'ADD_COMPANY_VIEW_DESCRIPTION': 'Here you can add a company to our support system.',
+    'ADD_COMPANY_SUCCESS': 'You have added a new company successfully to our support system.',
+    'COMPANY_VIEW_TITLE': 'Company #{companyId}',
+    'COMPANY_VIEW_DESCRIPTION': 'Here you can find all the information about a company. You can also delete it.',
+    'DELETE_COMPANY_DESCRIPTION': 'The company and all its users will be erased.',
+
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more.',
 
     'UNKNOWN_ERROR': 'An error occurred',
-    'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies.'
+    'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies.',
+    'INVALID_VALUE': 'Invalid value',
+    'ERROR_PHONE': 'Invalid phone value.',
+    'ERROR_NIT_EXISTS': 'There is already a company with this NIT.',
+    'ERROR_INVALID_NIT': 'Invalid NIT value.',
+    'ERROR_BUSINESS_NAME': 'Invalid business name value.',
+    'ERROR_CONTACT_NAME': 'Invalid contact name value.'
 };

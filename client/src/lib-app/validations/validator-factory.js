@@ -5,10 +5,12 @@ import LengthValidator from 'lib-app/validations/length-validator';
 import ListValidator from 'lib-app/validations/list-validator';
 import ImageSizeValidator from 'lib-app/validations/image-size-validator';
 import SpaceValidator from './space-validator';
+import PhoneValidator from "./phone-validator";
 
 let validators = {
     'DEFAULT': new Validator(),
     'NAME': new LengthValidator(2, 'ERROR_NAME'),
+    'PHONE': new PhoneValidator(),
     'TITLE': new LengthValidator(1, 'ERROR_TITLE'),
     'EMAIL': new EmailValidator(),
     'TEXT_AREA': new ImageSizeValidator(undefined, new LengthValidator(1, 'ERROR_CONTENT_SHORT')),
