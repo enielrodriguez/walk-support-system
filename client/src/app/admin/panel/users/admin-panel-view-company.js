@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect}  from 'react-redux';
+import {connect} from 'react-redux';
 import history from 'lib-app/history';
 
 import i18n from 'lib-app/i18n';
@@ -18,7 +18,7 @@ import UserList from "../../../../app-components/user-list";
 class AdminPanelViewCompany extends React.Component {
 
     state = {
-        company: {},
+        company: {admin: {}},
         loading: true,
         message: ''
     };
@@ -30,7 +30,8 @@ class AdminPanelViewCompany extends React.Component {
     render() {
         return (
             <div className="admin-panel-view-company">
-                <Header title={i18n('COMPANY_VIEW_TITLE', {companyId: this.props.params.companyId})} description={i18n('COMPANY_VIEW_DESCRIPTION')} />
+                <Header title={i18n('COMPANY_VIEW_TITLE', {companyId: this.props.params.companyId})}
+                        description={i18n('COMPANY_VIEW_DESCRIPTION')}/>
                 {this.renderCompanyInfo()}
             </div>
         );
@@ -66,12 +67,27 @@ class AdminPanelViewCompany extends React.Component {
                     </div>
 
                     <div className="admin-panel-view-company__action-buttons">
-                        <Button className="admin-panel-view-company__action-button" onClick={this.onDeleteClick.bind(this)} size="medium">
+                        <Button className="admin-panel-view-company__action-button"
+                                onClick={this.onDeleteClick.bind(this)} size="medium">
                             {i18n('DELETE')}
                         </Button>
                     </div>
                 </div>
-                <span className="separator" />
+                <span className="separator"/>
+                <div className="admin-panel-view-company__info">
+                    <div className="admin-panel-view-company__info-item">
+                        {i18n('COMPANY_ADMIN')}
+                        <div className="admin-panel-view-company__info-box">
+                            {i18n('NAME') + ': ' + this.state.company.admin.name}
+                        </div>
+                    </div>
+                    <div className="admin-panel-view-company__info-item">
+                        <div className="admin-panel-view-company__info-box">
+                            {i18n('EMAIL') + ': ' + this.state.company.admin.email}
+                        </div>
+                    </div>
+                </div>
+                <span className="separator"/>
                 <div className="admin-panel-view-company__users">
                     <div className="admin-panel-view-user__users-title">{i18n('USERS')}</div>
                     <UserList {...this.getUserListProps()}/>

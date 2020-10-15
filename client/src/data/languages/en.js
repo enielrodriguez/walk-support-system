@@ -468,6 +468,7 @@ export default {
     'COMPANY_VIEW_TITLE': 'Company #{companyId}',
     'COMPANY_VIEW_DESCRIPTION': 'Here you can find all the information about a company. You can also delete it.',
     'DELETE_COMPANY_DESCRIPTION': 'The company and all its users and tickets will be erased.',
+    'COMPANY_ADMIN': 'Administrator',
 
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more.',
 
