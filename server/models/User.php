@@ -96,14 +96,10 @@ class User extends DataStore
     {
         $company = $this->company;
 
-        if ($company && !$company->isNull()) {
-            return [
-                'id' => $company->id,
-                'business_name' => $company->business_name,
-                'nit' => $company->nit
-            ];
-        }
-
-        return null;
+        return [
+            'id' => $company->id,
+            'business_name' => $company->business_name,
+            'nit' => $company->nit
+        ];
     }
 }
