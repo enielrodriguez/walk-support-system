@@ -32,7 +32,7 @@ class GetCompaniesController extends Controller {
     }
 
     public function handler() {
-        $companies = $this->getCompanyList();//Company::getAll();
+        $companies = $this->getCompanyList();
 
         Response::respondSuccess([
             'companies' => $companies->toArray(),
