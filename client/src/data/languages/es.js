@@ -130,7 +130,7 @@ export default {
     'LEVEL': 'Nivel',
     'LEVEL_1': 'Nivel 1 (Tickets)',
     'LEVEL_2': 'Nivel 2 (Tickets + Artículos)',
-    'LEVEL_3': 'Nivel 3 (Tickets + Artículos + Staff)',
+    'LEVEL_3': 'Administrador',
     'LEVEL_1_DESCRIPTION': 'sólo puede responder tickets y administrar usuarios.',
     'LEVEL_2_DESCRIPTION': 'puede hacer lo mismo que el Nivel 1, y además, crear o editar artículos y crear respuestas personalizadas.',
     'LEVEL_3_DESCRIPTION': 'Puede hacer lo mismo que el  Nivel 2, y además, crear o editar miembros del personal y puede gestionar todo el sistema.',
