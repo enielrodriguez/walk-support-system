@@ -47,11 +47,13 @@ class DeleteCompanyController extends Controller
     {
         $company = Company::getCompany(Controller::request('companyId'));
 
+        $company->delete();
+
         Log::createLog('DELETE_COMPANY', $company->nit);
 
+        // just removes the tickets and writes the logs
+        // company users are deleted by cascade in the DB
         $this->deleteUsers($company);
-
-        $company->delete();
 
         Response::respondSuccess();
     }
@@ -69,8 +71,6 @@ class DeleteCompanyController extends Controller
             foreach ($user->sharedTicketList as $ticket) {
                 $ticket->delete();
             }
-
-            $user->delete();
         }
     }
 }

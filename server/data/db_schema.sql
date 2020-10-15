@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Sep 28, 2020 at 03:10 AM
+-- Generation Time: Oct 15, 2020 at 07:13 AM
 -- Server version: 5.6.49
 -- PHP Version: 7.4.9
 
@@ -71,7 +71,8 @@ CREATE TABLE `company` (
                            `nit` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
                            `business_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
                            `phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-                           `contact_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+                           `contact_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+                           `admin_id` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -144,7 +145,8 @@ CREATE TABLE `department` (
 --
 
 INSERT INTO `department` (`id`, `owners`, `name`, `private`) VALUES
-(1, 1, 'Help and Support', 0);
+(1, 1, 'Help and Support', 0),
+(2, 1, 'tst', 0);
 
 -- --------------------------------------------------------
 
@@ -161,9 +163,6 @@ CREATE TABLE `department_staff` (
 --
 -- Dumping data for table `department_staff`
 --
-
-INSERT INTO `department_staff` (`id`, `department_id`, `staff_id`) VALUES
-(1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -215,6 +214,10 @@ CREATE TABLE `log` (
                        `author_user_id` int(11) UNSIGNED DEFAULT NULL,
                        `author_staff` tinyint(1) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `log`
+--
 
 -- --------------------------------------------------------
 
@@ -428,6 +431,10 @@ CREATE TABLE `recoverpassword` (
                                    `staff` tinyint(1) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `recoverpassword`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -450,9 +457,6 @@ CREATE TABLE `sessioncookie` (
 -- Dumping data for table `sessioncookie`
 --
 
-INSERT INTO `sessioncookie` (`id`, `token`, `ip`, `creation_date`, `expiration_date`, `user_id`, `is_staff`, `user`, `staff_id`) VALUES
-(2, '6bdddb1ef2c591e1a6330fd1ba2ac0d4', '172.26.0.1', 202009271753, 202010271753, NULL, 1, NULL, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -468,34 +472,6 @@ CREATE TABLE `setting` (
 --
 -- Dumping data for table `setting`
 --
-
-INSERT INTO `setting` (`id`, `name`, `value`) VALUES
-(1, 'language', 'en'),
-(2, 'recaptcha-public', ''),
-(3, 'recaptcha-private', ''),
-(4, 'server-email', 'admin@localhost'),
-(5, 'imap-host', NULL),
-(6, 'imap-user', NULL),
-(7, 'imap-pass', NULL),
-(8, 'smtp-host', 'localhost'),
-(9, 'smtp-user', ''),
-(10, 'smtp-pass', ''),
-(11, 'maintenance-mode', '0'),
-(12, 'layout', 'boxed'),
-(13, 'allow-attachments', '1'),
-(14, 'max-size', '1'),
-(15, 'title', 'F2F Assistant'),
-(16, 'url', 'http://localhost:3000'),
-(17, 'registration', '0'),
-(18, 'last-stat-day', '202009150446'),
-(19, 'ticket-gap', '917459'),
-(20, 'ticket-first-number', '574577'),
-(21, 'session-prefix', 'opensupports-0e71b385faa633e2bc76e512ba2905d9_'),
-(22, 'mail-template-header-image', 'https://s3.amazonaws.com/opensupports/logo.png'),
-(23, 'default-department-id', '1'),
-(24, 'default-is-locked', '0'),
-(25, 'imap-token', ''),
-(26, 'mandatory-login', '1');
 
 -- --------------------------------------------------------
 
@@ -520,9 +496,6 @@ CREATE TABLE `staff` (
 -- Dumping data for table `staff`
 --
 
-INSERT INTO `staff` (`id`, `level`, `send_email_on_new_ticket`, `name`, `email`, `password`, `profile_pic`, `verification_token`, `disabled`, `last_login`) VALUES
-(1, 3, 1, 'Admin', 'adminemail@localhost.net', '$2y$10$O51DKOGgX7YltLCwZGOS7.T5PHEMukWaXKR8cPBDqHJjcBa6cK.7i', '', NULL, NULL, 202009271753);
-
 -- --------------------------------------------------------
 
 --
@@ -535,6 +508,36 @@ CREATE TABLE `staff_ticket` (
                                 `staff_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `staff_ticket`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supervisedrelation`
+--
+
+CREATE TABLE `supervisedrelation` (
+    `id` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+--
+-- Dumping data for table `supervisedrelation`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supervisedrelation_user`
+--
+
+CREATE TABLE `supervisedrelation_user` (
+                                           `id` int(11) UNSIGNED NOT NULL,
+                                           `user_id` int(11) UNSIGNED DEFAULT NULL,
+                                           `supervisedrelation_id` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -546,6 +549,10 @@ CREATE TABLE `tag` (
                        `name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                        `color` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tag`
+--
 
 -- --------------------------------------------------------
 
@@ -588,6 +595,10 @@ CREATE TABLE `ticket` (
                           `edited_content` tinyint(1) UNSIGNED DEFAULT NULL,
                           `edited_title` tinyint(1) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ticket`
+--
 
 -- --------------------------------------------------------
 
@@ -634,6 +645,10 @@ CREATE TABLE `topic` (
                          `private` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `topic`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -645,12 +660,13 @@ CREATE TABLE `user` (
                         `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                         `password` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                         `name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                        `signup_date` double DEFAULT NULL,
+                        `signup_date` datetime DEFAULT CURRENT_TIMESTAMP,
                         `tickets` int(11) UNSIGNED DEFAULT NULL,
                         `verification_token` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                         `disabled` int(11) UNSIGNED DEFAULT NULL,
                         `company_id` int(11) UNSIGNED NOT NULL,
-                        `is_company_admin` tinyint(1) NOT NULL DEFAULT '0'
+                        `is_company_admin` tinyint(1) NOT NULL DEFAULT '0',
+                        `supervisedrelation_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -658,13 +674,15 @@ CREATE TABLE `user` (
 --
 DELIMITER $$
 CREATE TRIGGER `plan_limit_check` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
-    /*DECLARE plan_limit INT;*/
+
     SET @plan_limit = (SELECT pl.users FROM plan_limit pl WHERE pl.company_id = NEW.company_id LIMIT 1);
     SET @current_users = (SELECT count(id) FROM `user` u WHERE u.company_id = NEW.company_id);
-    SET @error_message = CONCAT('You have reached the limit of users (', @plan_limit, ') allowed by your plan.');
+
     if @current_users >= @plan_limit then
+        SET @error_message = CONCAT('You have reached the limit of users (', @plan_limit, ') allowed by your plan.');
         signal sqlstate '45000' SET MESSAGE_TEXT = @error_message;
     end if;
+
 end
 $$
 DELIMITER ;
@@ -696,7 +714,8 @@ ALTER TABLE `ban`
 -- Indexes for table `company`
 --
 ALTER TABLE `company`
-    ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `company_FK` (`admin_id`);
 
 --
 -- Indexes for table `customfield`
@@ -804,6 +823,21 @@ ALTER TABLE `staff_ticket`
     ADD KEY `index_foreignkey_staff_ticket_staff` (`staff_id`);
 
 --
+-- Indexes for table `supervisedrelation`
+--
+ALTER TABLE `supervisedrelation`
+    ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `supervisedrelation_user`
+--
+ALTER TABLE `supervisedrelation_user`
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `UQ_0c5228cfadd3dca1357880bf711030ed41da30f9` (`supervisedrelation_id`,`user_id`),
+    ADD KEY `index_foreignkey_supervisedrelation_user_user` (`user_id`),
+    ADD KEY `index_foreignkey_supervisedrelation_user_supervisedrelation` (`supervisedrelation_id`);
+
+--
 -- Indexes for table `tag`
 --
 ALTER TABLE `tag`
@@ -857,6 +891,8 @@ ALTER TABLE `topic`
 --
 ALTER TABLE `user`
     ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `id` (`id`),
+    ADD KEY `index_foreignkey_user_supervisedrelation` (`supervisedrelation_id`),
     ADD KEY `user_FK` (`company_id`);
 
 --
@@ -885,7 +921,7 @@ ALTER TABLE `ban`
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `customfield`
@@ -915,13 +951,13 @@ ALTER TABLE `customresponse`
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `department_staff`
 --
 ALTER TABLE `department_staff`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `language`
@@ -933,7 +969,7 @@ ALTER TABLE `language`
 -- AUTO_INCREMENT for table `log`
 --
 ALTER TABLE `log`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `mailtemplate`
@@ -945,19 +981,19 @@ ALTER TABLE `mailtemplate`
 -- AUTO_INCREMENT for table `plan_limit`
 --
 ALTER TABLE `plan_limit`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `recoverpassword`
 --
 ALTER TABLE `recoverpassword`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `sessioncookie`
 --
 ALTER TABLE `sessioncookie`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `setting`
@@ -975,13 +1011,25 @@ ALTER TABLE `staff`
 -- AUTO_INCREMENT for table `staff_ticket`
 --
 ALTER TABLE `staff_ticket`
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `supervisedrelation`
+--
+ALTER TABLE `supervisedrelation`
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `supervisedrelation_user`
+--
+ALTER TABLE `supervisedrelation_user`
     MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tag_ticket`
@@ -993,7 +1041,7 @@ ALTER TABLE `tag_ticket`
 -- AUTO_INCREMENT for table `ticket`
 --
 ALTER TABLE `ticket`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `ticketevent`
@@ -1011,13 +1059,13 @@ ALTER TABLE `ticket_user`
 -- AUTO_INCREMENT for table `topic`
 --
 ALTER TABLE `topic`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
@@ -1028,6 +1076,12 @@ ALTER TABLE `user`
 --
 ALTER TABLE `article`
     ADD CONSTRAINT `c_fk_article_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--
+-- Constraints for table `company`
+--
+ALTER TABLE `company`
+    ADD CONSTRAINT `company_FK` FOREIGN KEY (`admin_id`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `customfieldoption`
@@ -1078,6 +1132,13 @@ ALTER TABLE `staff_ticket`
     ADD CONSTRAINT `c_fk_staff_ticket_ticket_id` FOREIGN KEY (`ticket_id`) REFERENCES `ticket` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `supervisedrelation_user`
+--
+ALTER TABLE `supervisedrelation_user`
+    ADD CONSTRAINT `c_fk_supervisedrelation_user_supervisedrelation_id` FOREIGN KEY (`supervisedrelation_id`) REFERENCES `supervisedrelation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `c_fk_supervisedrelation_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `tag_ticket`
 --
 ALTER TABLE `tag_ticket`
@@ -1112,7 +1173,8 @@ ALTER TABLE `ticket_user`
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-    ADD CONSTRAINT `user_FK` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`);
+    ADD CONSTRAINT `c_fk_user_supervisedrelation_id` FOREIGN KEY (`supervisedrelation_id`) REFERENCES `supervisedrelation` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `user_FK` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

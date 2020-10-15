@@ -21,7 +21,15 @@ class Company extends DataStore
             'nit',
             'business_name',
             'phone',
-            'contact_name'
+            'contact_name',
+            'admin'
+        ];
+    }
+
+    public static function getFetchAs()
+    {
+        return [
+            'admin' => 'user'
         ];
     }
 
@@ -45,7 +53,8 @@ class Company extends DataStore
             'nit' => $this->nit,
             'business_name' => $this->business_name,
             'phone' => $this->phone,
-            'contact_name' => $this->contact_name
+            'contact_name' => $this->contact_name,
+            'admin' => $this->admin->toArray()
         ];
     }
 }
