@@ -42,8 +42,7 @@ class User extends DataStore
             'notRegistered',
             'sharedUserList',
             'supervisedrelation',
-            'company',
-            'is_company_admin'
+            'company'
         ];
     }
 
@@ -76,8 +75,7 @@ class User extends DataStore
                 'name' => $this->name,
                 'email' => $this->email,
                 'isStaff' => 0,
-                'company' => $this->companyToArray(),
-                'is_company_admin' => $this->is_company_admin
+                'company' => $this->companyToArray()
             ];
         }
 
@@ -90,8 +88,7 @@ class User extends DataStore
             'customfields' => $this->xownCustomfieldvalueList->toArray(),
             'notRegistered' => $this->notRegistered,
             'supervisedrelation' => $this->supervisedrelation,
-            'company' => $this->companyToArray(),
-            'is_company_admin' => $this->is_company_admin
+            'company' => $this->companyToArray()
         ];
     }
 
