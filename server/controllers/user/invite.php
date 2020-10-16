@@ -42,6 +42,7 @@ class InviteUserController extends Controller
     private $userEmail;
     private $userName;
     private $companyId;
+    private $token;
 
     public function validations()
     {
