@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -18,55 +20,174 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class AddCompanyController extends Controller {
+class AddCompanyController extends Controller
+{
     const PATH = '/add-company';
     const METHOD = 'POST';
 
-    public function validations() {
+    private $adminEmail;
+    private $adminName;
+    private $token;
+
+    private Company $company;
+    private User $userAdmin;
+
+    private $business_name;
+    private $nit;
+    private $phone;
+    private $contact_name;
+
+    public function validations()
+    {
         return [
             'permission' => 'staff_3',
             'requestData' => [
                 'business_name' => [
                     'validation' => DataValidator::notBlank()->length(2, 100),
                     'error' => ERRORS::INVALID_NAME
-                ],'nit' => [
+                ], 'nit' => [
                     'validation' => DataValidator::notBlank()->length(2, 100),
                     'error' => ERRORS::INVALID_NIT
-                ],'phone' => [
+                ], 'phone' => [
                     'validation' => DataValidator::notBlank()->length(6, 100),
                     'error' => ERRORS::INVALID_PHONE
-                ],'contact_name' => [
+                ], 'contact_name' => [
                     'validation' => DataValidator::notBlank()->length(5, 100),
                     'error' => ERRORS::INVALID_CONTACT_NAME
+                ],
+                /*'admin_name' => [
+                    'validation' => DataValidator::notBlank()->length(2, 100),
+                    'error' => ERRORS::INVALID_ADMIN_NAME
+                ],*/
+                'admin_email' => [
+                    'validation' => DataValidator::email(),
+                    'error' => ERRORS::INVALID_ADMIN_EMAIL
                 ],
             ]
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
+        $this->business_name = Controller::request('business_name');
+        $this->nit = Controller::request('nit');
+        $this->phone = Controller::request('phone');
+        $this->contact_name = Controller::request('contact_name');
 
-        $business_name = Controller::request('business_name');
-        $nit = Controller::request('nit');
-        $phone = Controller::request('phone');
-        $contact_name = Controller::request('contact_name');
+        $this->adminName = Controller::request('admin_name');
+        $this->adminEmail = Controller::request('admin_email');
 
 
-        if (!Company::getDataStore($nit, 'nit')->isNull()) {
+        $this->createCompany();
+        try {
+            $this->createUserAdmin();
+        } catch (Exception $e) {
+            $this->company->delete();
+            throw $e;
+        }
+
+        $this->company->setProperties(array('admin' => $this->userAdmin));
+        $this->company->store();
+
+
+        $this->token = Hashing::generateRandomToken();
+
+        $recoverPassword = new RecoverPassword();
+        $recoverPassword->setProperties(array(
+            'email' => $this->adminEmail,
+            'token' => $this->token,
+            'staff' => false
+        ));
+        $recoverPassword->store();
+
+        $this->sendInvitationMail();
+
+
+        Response::respondSuccess();
+    }
+
+
+    public function createCompany()
+    {
+        if (!Company::getDataStore($this->nit, 'nit')->isNull()) {
             throw new RequestException(ERRORS::COMPANY_EXISTS);
         }
 
-        $companyInstance = new Company();
+        $this->company = new Company();
 
-        $companyInstance->setProperties([
-            'business_name' => $business_name,
-            'nit' => $nit,
-            'phone' => $phone,
-            'contact_name' => $contact_name
+        $this->company->setProperties([
+            'business_name' => $this->business_name,
+            'nit' => $this->nit,
+            'phone' => $this->phone,
+            'contact_name' => $this->contact_name
         ]);
 
-        $companyInstance->store();
+        $this->company->store();
+    }
 
-        Response::respondSuccess();
+
+    public function createUserAdmin()
+    {
+        $existentUser = User::getUser($this->adminEmail, 'email');
+
+        $this->checkUserAdmin($existentUser);
+
+        if (!$existentUser->isNull()) {
+            $this->userAdmin = $existentUser;
+            $this->userAdmin->setProperties(['company' => $this->company]);
+        } else {
+            $this->userAdmin = new User();
+
+            $this->userAdmin->setProperties([
+                'name' => $this->adminName,
+                'tickets' => 0,
+                'email' => $this->adminEmail,
+                'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
+                'verificationToken' => null,
+                'company' => $this->company
+            ]);
+        }
+        $this->userAdmin->store();
+    }
+
+
+    public function sendInvitationMail()
+    {
+        $mailSender = MailSender::getInstance();
+
+        $mailSender->setTemplate(MailTemplate::USER_INVITE, [
+            'to' => $this->adminEmail,
+            'name' => $this->adminName,
+            'url' => Setting::getSetting('url')->getValue(),
+            'token' => $this->token
+        ]);
+
+        $mailSender->send();
+    }
+
+
+    private function checkUserAdmin($existentUser)
+    {
+
+        if (!$this->adminName && $existentUser->isNull()) {
+            throw new RequestException(ERRORS::INVALID_ADMIN_NAME);
+        }
+
+        if ($this->adminName && !$existentUser->isNull()) {
+            throw new RequestException(ERRORS::USER_EXISTS);
+        }
+
+        if (!$existentUser->isNull()) {
+            $existentCompany = Company::findOne('admin_id = ?', [$existentUser->id]);
+            if (!$existentCompany->isNull()) {
+                throw new RequestException(ERRORS::USER_ALREADY_ADMIN);
+            }
+        }
+
+        $banRow = Ban::getDataStore($this->adminEmail, 'email');
+
+        if (!$banRow->isNull()) {
+            throw new RequestException(ERRORS::ALREADY_BANNED);
+        }
     }
 }
