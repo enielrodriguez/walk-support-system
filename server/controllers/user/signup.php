@@ -133,7 +133,7 @@ class SignUpController extends Controller {
 
         $userInstance->setProperties([
             'name' => $this->userName,
-            'signupDate' => Date::getCurrentDate(),
+            //'signupDate' => Date::getCurrentDate(), //is set in the database
             'tickets' => $UserTickets,
             'email' => $this->userEmail,
             'password' => Hashing::hashPassword($this->userPassword),
