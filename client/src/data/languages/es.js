@@ -475,6 +475,7 @@ export default {
     'COMPANY_VIEW_DESCRIPTION': 'Aquí puede ver toda la información sobre una empresa. También puede eliminarla.',
     'DELETE_COMPANY_DESCRIPTION': 'La empresa y todos sus usuarios y tickets serán borrados del sistema.',
     'COMPANY_ADMIN': 'Administrador',
+    'COMPANY_ADMIN_WARNING': 'Se creará un usuario con estos datos.',
 
     'DELETE_BAN_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán. Además, el correo electrónico ya no podrá utilizarse.',
 
@@ -485,5 +486,8 @@ export default {
     'ERROR_NIT_EXISTS': 'Ya hay una empresa con este NIT.',
     'ERROR_INVALID_NIT': 'NIT no válido.',
     'ERROR_BUSINESS_NAME': 'Nombre de empresa no válido.',
-    'ERROR_CONTACT_NAME': 'Nombre de contacto no válido.'
+    'ERROR_CONTACT_NAME': 'Nombre de contacto no válido.',
+    'ERROR_COMPANY_ADMIN': 'Error en los datos del administrador.',
+    'ERROR_ADMIN_EXISTS': 'Ya existe un usuario con este email, deje el nombre en blanco si quiere que sea el administrador de esta empresa.',
+    'ERROR_ALREADY_ADMIN': 'El usuario ya es administrador de otra empresa.'
 };

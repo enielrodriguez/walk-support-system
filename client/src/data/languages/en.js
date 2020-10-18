@@ -469,6 +469,7 @@ export default {
     'COMPANY_VIEW_DESCRIPTION': 'Here you can find all the information about a company. You can also delete it.',
     'DELETE_COMPANY_DESCRIPTION': 'The company and all its users and tickets will be erased.',
     'COMPANY_ADMIN': 'Administrator',
+    'COMPANY_ADMIN_WARNING': 'A user will be created with this data.',
 
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more.',
 
@@ -479,5 +480,8 @@ export default {
     'ERROR_NIT_EXISTS': 'There is already a company with this NIT.',
     'ERROR_INVALID_NIT': 'Invalid NIT value.',
     'ERROR_BUSINESS_NAME': 'Invalid business name value.',
-    'ERROR_CONTACT_NAME': 'Invalid contact name value.'
+    'ERROR_CONTACT_NAME': 'Invalid contact name value.',
+    'ERROR_COMPANY_ADMIN': 'The administrator data has an error.',
+    'ERROR_ADMIN_EXISTS': 'There is already a user with this email, leave the name blank if you want him to be the administrator of this company.',
+    'ERROR_ALREADY_ADMIN': 'The user is already an administrator of another company.'
 };

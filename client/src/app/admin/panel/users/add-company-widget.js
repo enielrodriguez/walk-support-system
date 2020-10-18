@@ -43,6 +43,10 @@ class AddCompanyWidget extends React.Component {
                         <FormField {...this.getInputProps()} label={i18n('PHONE')} name="phone" validation="PHONE"
                                    required/>
                         <FormField {...this.getInputProps()} label={i18n('CONTACT_NAME')} name="contact_name" required/>
+
+                        <Header title={i18n('COMPANY_ADMIN')} description={i18n('COMPANY_ADMIN_WARNING')}/>
+                        <FormField {...this.getInputProps()} label={i18n('NAME')} name="admin_name"/>
+                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="admin_email" required/>
                     </div>
 
                     <SubmitButton type="primary">{i18n('ADD_COMPANY')}</SubmitButton>
@@ -62,6 +66,10 @@ class AddCompanyWidget extends React.Component {
                 return <Message type="success">{i18n('ADD_COMPANY_SUCCESS')}</Message>;
             case 'COMPANY_EXISTS':
                 return <Message type="error">{i18n('ERROR_NIT_EXISTS')}</Message>;
+            case 'USER_EXISTS':
+                return <Message type="error">{i18n('ERROR_ADMIN_EXISTS')}</Message>;
+            case 'USER_ALREADY_ADMIN':
+                return <Message type="error">{i18n('ERROR_ALREADY_ADMIN')}</Message>;
             case 'INVALID_NAME':
                 return <Message type="error">{i18n('ERROR_BUSINESS_NAME')}</Message>;
             case 'INVALID_NIT':
@@ -70,6 +78,9 @@ class AddCompanyWidget extends React.Component {
                 return <Message type="error">{i18n('ERROR_PHONE')}</Message>;
             case 'INVALID_CONTACT_NAME':
                 return <Message type="error">{i18n('ERROR_CONTACT_NAME')}</Message>;
+            case 'INVALID_ADMIN_NAME':
+            case 'INVALID_ADMIN_EMAIL':
+                return <Message type="error">{i18n('ERROR_COMPANY_ADMIN')}</Message>;
             default:
                 return <Message type="error">{i18n('UNKNOWN_ERROR')}</Message>;
         }
