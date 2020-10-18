@@ -46,7 +46,7 @@ class InviteStaffModal extends React.Component {
                         </div>
                         <div className="col-md-5">
                             <div className="invite-staff-modal__departments">
-                                <div className="invite-staff-modal__departments-title">{i18n('Departments')}</div>
+                                <div className="invite-staff-modal__departments-title">{i18n('DEPARTMENTS')}</div>
                                 <FormField name="departments" field="checkbox-group" fieldProps={{items: this.getDepartments()}} />
                             </div>
                         </div>
