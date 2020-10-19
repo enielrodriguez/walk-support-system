@@ -92,6 +92,13 @@ class DropDown extends React.Component {
         const item = this.props.items[this.getSelectedIndex()];
         let iconNode = null;
 
+        if(!item){
+            return (
+                <div>
+                </div>
+            );
+        }
+
         if (item.icon) {
             iconNode = <Icon className="drop-down__current-item-icon" name={item.icon} />;
         }

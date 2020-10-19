@@ -29,16 +29,26 @@ class InviteUserWidget extends React.Component {
         this.state = {
             loading: false,
             email: null,
-            customFields: []
+            customFields: [],
+            companies: []
         };
     }
 
     componentDidMount() {
+        this.setState({loading: true});
+
         API.call({
             path: '/system/get-custom-fields',
             data: {}
-        })
-            .then(result => this.setState({customFields: result.data}));
+        }).then((result) => {
+            this.setState({customFields: result.data});
+            API.call({
+                path: '/user/get-companies',
+                data: {
+                    getAll: true
+                }
+            }).then(result => this.setState({companies: result.data.companies, loading: false}));
+        });
     }
 
     render() {
@@ -52,10 +62,12 @@ class InviteUserWidget extends React.Component {
                         <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL"
                                    required/>
                         <FormField {...this.getInputProps()} label={i18n('COMPANY')} name="companyIndex" field="select"
-                                   decorator={CompanyDropdown} fieldProps={{
-                            companies: SessionStore.getCompanies(),
-                            size: "medium"
-                        }}/>
+                                   decorator={CompanyDropdown} fieldProps={
+                            {
+                                companies: this.state.companies,
+                                size: "medium"
+                            }
+                        }/>
                         {this.state.customFields.map(this.renderCustomField.bind(this))}
                     </div>
                     <div className="invite-user-widget__captcha">

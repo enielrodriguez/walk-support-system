@@ -12,7 +12,6 @@ import Message from 'core-components/message';
 import Icon from 'core-components/icon';
 import ModalContainer from 'app-components/modal-container';
 import AddCompanyWidget from "./add-company-widget";
-import ConfigActions from "../../../../actions/config-actions";
 
 class AdminPanelCompanies extends React.Component {
     state = {
@@ -177,8 +176,6 @@ class AdminPanelCompanies extends React.Component {
 
     onAddCompanySuccess() {
         this.componentDidMount();
-        //reload companies in config (used by invite-user)
-        this.props.dispatch(ConfigActions.updateData());
     }
 
     onCompaniesRetrieved(result) {
