@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import Menu from 'core-components/menu';
 import Button from 'core-components/button';
 import Icon from 'core-components/icon';
+import i18n from "../lib-app/i18n";
 
 class Listing extends React.Component {
     static propTypes = {
@@ -16,7 +17,7 @@ class Listing extends React.Component {
     };
 
     static defaultProps = {
-        addNewText: 'Add new'
+        addNewText: i18n('ADD_NEW')
     };
 
     render() {

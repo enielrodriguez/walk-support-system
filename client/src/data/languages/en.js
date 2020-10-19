@@ -473,6 +473,8 @@ export default {
 
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more.',
 
+    'ADD_NEW': 'Add new',
+
     'UNKNOWN_ERROR': 'An error occurred',
     'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies.',
     'INVALID_VALUE': 'Invalid value',

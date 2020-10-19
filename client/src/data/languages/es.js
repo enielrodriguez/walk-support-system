@@ -82,7 +82,7 @@ export default {
     'OPENED': 'Abierto',
     'CLOSED': 'Cerrado',
     'CLOSE': 'Cerrar',
-    'ANY': 'Alguna',
+    'ANY': 'Todos',
     'RE_OPEN': 'Reabrir',
     'ASSIGN_TO_ME': 'Asignar',
     'UN_ASSIGN': 'Desasignar',
@@ -478,6 +478,8 @@ export default {
     'COMPANY_ADMIN_WARNING': 'Se creará un usuario con estos datos.',
 
     'DELETE_BAN_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán. Además, el correo electrónico ya no podrá utilizarse.',
+
+    'ADD_NEW': 'Añadir',
 
     'UNKNOWN_ERROR': 'Ocurrió un error',
     'ERROR_RETRIEVING_COMPANIES': 'Error al acceder a la lista de empresas.',
