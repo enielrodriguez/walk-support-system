@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -19,29 +21,37 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class GetCompaniesController extends Controller {
+class GetCompaniesController extends Controller
+{
     const PATH = '/get-companies';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'staff_3',
             'requestData' => []
         ];
     }
 
-    public function handler() {
-        $companies = $this->getCompanyList();
+    public function handler()
+    {
+        $data = [];
+        if (Controller::request('getAll')) {
+            $data['companies'] = Company::getAll()->toArray();
+        } else {
+            $companies = $this->getCompanyList();
+            $data = [
+                'companies' => $companies->toArray(),
+                'pages' => $this->getPagesQuantity(),
+                'page' => Controller::request('page'),
+                'orderBy' => Controller::request('orderBy'),
+                'desc' => Controller::request('desc'),
+                'search' => Controller::request('search')
+            ];
+        }
 
-        Response::respondSuccess([
-            'companies' => $companies->toArray(),
-            'pages' => $this->getPagesQuantity(),
-            'page' => Controller::request('page'),
-            'orderBy' => Controller::request('orderBy'),
-            'desc' => Controller::request('desc'),
-            'search' => Controller::request('search')
-        ]);
+        Response::respondSuccess($data);
     }
 
     private function getCompanyList()
