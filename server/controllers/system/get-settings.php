@@ -18,29 +18,32 @@
  *
  */
 
-class GetSettingsController extends Controller {
+class GetSettingsController extends Controller
+{
     const PATH = '/get-settings';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'any',
             'requestData' => []
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
         $settingsList = [];
 
-        if(InstallationDoneController::isInstallationDone()) {
-            if(Controller::request('allSettings') && Controller::isStaffLogged(3)) {
+        if (InstallationDoneController::isInstallationDone()) {
+            if (Controller::request('allSettings') && Controller::isStaffLogged(3)) {
                 $settingsList = [
                     'language' => Setting::getSetting('language')->getValue(),
                     'reCaptchaKey' => Setting::getSetting('recaptcha-public')->getValue(),
                     'reCaptchaPrivate' => Setting::getSetting('recaptcha-private')->getValue(),
-                    'maintenance-mode' => intval(Setting::getSetting('maintenance-mode')->getValue()),
+                    'maintenance-mode' => (int)Setting::getSetting('maintenance-mode')->getValue(),
                     'layout' => Setting::getSetting('layout')->getValue(),
-                    'allow-attachments' => intval(Setting::getSetting('allow-attachments')->getValue()),
+                    'allow-attachments' => (int)Setting::getSetting('allow-attachments')->getValue(),
                     'max-size' => Setting::getSetting('max-size')->getValue(),
                     'url' => Setting::getSetting('url')->getValue(),
                     'title' => Setting::getSetting('title')->getValue(),
@@ -59,8 +62,7 @@ class GetSettingsController extends Controller {
                     'tags' => Tag::getAll()->toArray(),
                     'mandatory-login' => Setting::getSetting('mandatory-login')->getValue(),
                     'default-department-id' => Setting::getSetting('default-department-id')->getValue(),
-                    'default-is-locked' => Setting::getSetting('default-is-locked')->getValue(),
-                    'companies' => Company::getAll()->toArray()
+                    'default-is-locked' => Setting::getSetting('default-is-locked')->getValue()
                 ];
             } else {
                 $settingsList = [
@@ -79,8 +81,7 @@ class GetSettingsController extends Controller {
                     'tags' => Tag::getAll()->toArray(),
                     'mandatory-login' => Setting::getSetting('mandatory-login')->getValue(),
                     'default-department-id' => Setting::getSetting('default-department-id')->getValue(),
-                    'default-is-locked' => Setting::getSetting('default-is-locked')->getValue(),
-                    'companies' => Company::getAll()->toArray()
+                    'default-is-locked' => Setting::getSetting('default-is-locked')->getValue()
                 ];
             }
         }
