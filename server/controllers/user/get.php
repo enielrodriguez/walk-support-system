@@ -41,7 +41,6 @@ class GetUserController extends Controller {
         
         if (Controller::isStaffLogged()) {
             throw new RequestException(ERRORS::INVALID_CREDENTIALS);
-            return;
         }
 
         $user = Controller::getLoggedUser();
