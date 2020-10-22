@@ -90,6 +90,8 @@ class InviteUserController extends Controller
 
         $userId = $this->createNewUserAndRetrieveId();
 
+        $this->addSupervised($userId);
+
         $this->token = Hashing::generateRandomToken();
 
         $recoverPassword = new RecoverPassword();
@@ -128,11 +130,25 @@ class InviteUserController extends Controller
             'email' => $this->userEmail,
             'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
             'verificationToken' => null,
-            'xownCustomfieldvalueList' => $this->getCustomFieldValues(),
+            'xownCustomfieldvalueList' => self::getCustomFieldValues(),
             'company' => Company::getCompany($this->companyId)
         ]);
 
         return $userInstance->store();
+    }
+
+    public function addSupervised($userId){
+        $superUser = Company::getCompany($this->companyId)->admin;
+
+        if(!$superUser->supervisedrelation) {
+            $superUser->supervisedrelation = new Supervisedrelation();
+        }
+
+        $superUser->supervisedrelation->sharedUserList->add(User::getUser($userId));
+
+        $superUser->supervisedrelation->store();
+        $superUser->store();
+
     }
 
     public function sendInvitationMail()
