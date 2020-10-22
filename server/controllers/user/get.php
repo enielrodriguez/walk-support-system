@@ -55,6 +55,8 @@ class GetUserController extends Controller {
             'name' => $user->name,
             'email' => $user->email,
             'staff' => false,
+            'company' => $user->company->toArray(true),
+            'isCompanyAdmin' => $user->company->toArray()['admin']['id'] === $user->id,
             'verified' => !$user->verificationToken,
             'tickets' => $parsedTicketList,
             'customfields' => $user->xownCustomfieldvalueList->toArray(),
