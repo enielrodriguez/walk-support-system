@@ -161,7 +161,7 @@ class InviteUserWidget extends React.Component {
 
             const form = _.clone(formState);
 
-            form['companyId'] = SessionStore.getCompanies()[form['companyIndex']].id;
+            form['companyId'] = this.state.companies[form['companyIndex']].id;
 
             delete form['companyIndex'];
 
