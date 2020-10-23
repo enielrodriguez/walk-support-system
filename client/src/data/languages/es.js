@@ -481,6 +481,9 @@ export default {
 
     'ADD_NEW': 'Añadir',
 
+    'USER_LIST': 'Lista de usuarios',
+    'USER_LIST_DESCRIPTION': 'Aquí puede encontrar una lista de todos los usuarios de la empresa con acceso al sistema de soporte.',
+
     'UNKNOWN_ERROR': 'Ocurrió un error',
     'ERROR_RETRIEVING_COMPANIES': 'Error al acceder a la lista de empresas.',
     'INVALID_VALUE': 'Valor no válido',

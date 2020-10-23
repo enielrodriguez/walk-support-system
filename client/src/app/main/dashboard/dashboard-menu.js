@@ -6,6 +6,7 @@ import SessionActions from 'actions/session-actions';
 import i18n from 'lib-app/i18n';
 
 import Menu from 'core-components/menu';
+import sessionStore from "../../../lib-app/session-store";
 
 class DashboardMenu extends React.Component {
     static contextTypes = {
@@ -74,12 +75,16 @@ class DashboardMenu extends React.Component {
     }
     
     getDashboardRoutes() {
-        return [
+        let $routes = [
             { path: '/dashboard', text: i18n('TICKET_LIST'), icon: 'file-text-o' },
             { path: '/dashboard/create-ticket', text: i18n('CREATE_TICKET'), icon: 'plus' },
             { path: '/dashboard/articles', text: i18n('VIEW_ARTICLES'), icon: 'book' },
             { path: '/dashboard/edit-profile', text: i18n('EDIT_PROFILE'), icon: 'pencil' }
         ];
+        if(sessionStore.getUserData() && sessionStore.getUserData().isCompanyAdmin) {
+            $routes.push({ path: '/dashboard/users', text: i18n('USERS'), icon: 'user' });
+        }
+        return $routes;
     }
 }
 
