@@ -21,7 +21,7 @@ class DashboardListUsersPage extends React.Component {
 
     render() {
         return (
-            <div className="dashboard-ticket-list">
+            <div className="dashboard-user-list">
                 <Header title={i18n('USER_LIST')} description={i18n('USER_LIST_DESCRIPTION')}/>
                 <UserList {...this.getUserListProps()}/>
             </div>
