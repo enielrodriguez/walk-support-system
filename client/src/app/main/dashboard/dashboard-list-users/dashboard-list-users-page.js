@@ -35,7 +35,7 @@ class DashboardListUsersPage extends React.Component {
 
         return {
             users: userUsers.slice((page - 1) * 10, page * 10 + 1),
-            userPath: '/dashboard/users/view-user/',
+            userPath: '/dashboard/user/',
             onPageChange: this.onPageChange.bind(this),
             page: page,
             pages: userUsers.length / 10
