@@ -47,7 +47,7 @@ class InviteUserController extends Controller
     public function validations()
     {
         $validations = [
-            'permission' => 'staff_1',
+            'permission' => 'company_admin',
             'requestData' => [
                 'name' => [
                     'validation' => DataValidator::notBlank()->length(2, 55),
@@ -56,10 +56,6 @@ class InviteUserController extends Controller
                 'email' => [
                     'validation' => DataValidator::email(),
                     'error' => ERRORS::INVALID_EMAIL
-                ],
-                'companyId' => [
-                    'validation' => DataValidator::notBlank(),
-                    'error' => ERRORS::INVALID_COMPANY
                 ]
             ]
         ];
@@ -116,7 +112,16 @@ class InviteUserController extends Controller
     {
         $this->userName = Controller::request('name');
         $this->userEmail = Controller::request('email');
-        $this->companyId = Controller::request('companyId');
+
+
+        if (Controller::isCompanyAdminLogged()) {
+            $this->companyId = Controller::getLoggedUser()->company->id;
+        } else if (Controller::isStaffLogged()) {
+            $this->companyId = Controller::request('companyId');
+            if (!$this->companyId) {
+                throw new ValidationException(ERRORS::INVALID_COMPANY);
+            }
+        }
     }
 
     public function createNewUserAndRetrieveId()
@@ -137,10 +142,11 @@ class InviteUserController extends Controller
         return $userInstance->store();
     }
 
-    public function addSupervised($userId){
+    public function addSupervised($userId)
+    {
         $superUser = Company::getCompany($this->companyId)->admin;
 
-        if(!$superUser->supervisedrelation) {
+        if (!$superUser->supervisedrelation) {
             $superUser->supervisedrelation = new Supervisedrelation();
         }
 
