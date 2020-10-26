@@ -1,4 +1,5 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
 use RedBeanPHP\Facade as RedBean;
 
@@ -25,13 +26,15 @@ use RedBeanPHP\Facade as RedBean;
 
 DataValidator::with('CustomValidations', true);
 
-class DeleteUserController extends Controller {
+class DeleteUserController extends Controller
+{
     const PATH = '/delete';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
-            'permission' => 'staff_1',
+            'permission' => 'company_admin',
             'requestData' => [
                 'userId' => [
                     'validation' => DataValidator::dataStoreId('user'),
@@ -41,18 +44,22 @@ class DeleteUserController extends Controller {
         ];
     }
 
-    public function handler() {
-        
-        $userId = Controller::request('userId');
-        $user = User::getDataStore($userId);
+    public function handler()
+    {
+        $companyAdmin = Controller::getLoggedUser();
+        $user = User::getDataStore(Controller::request('userId'));
+
+        if ($companyAdmin->company->id !== $user->company->id) {
+            throw new ValidationException(ERRORS::NO_PERMISSION);
+        }
 
         Log::createLog('DELETE_USER', $user->name);
-        RedBean::exec('DELETE FROM log WHERE author_user_id = ?', [$userId]);
-        
-        foreach($user->sharedTicketList as $ticket) {
+        RedBean::exec('DELETE FROM log WHERE author_user_id = ?', [$user->id]);
+
+        foreach ($user->sharedTicketList as $ticket) {
             $ticket->delete();
         }
-        
+
         $user->delete();
 
         Response::respondSuccess();

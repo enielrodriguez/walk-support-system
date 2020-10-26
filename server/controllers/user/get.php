@@ -44,11 +44,14 @@ class GetUserController extends Controller {
         }
 
         $user = Controller::getLoggedUser();
-        $parsedTicketList = [];
-        $ticketList = $user->sharedTicketList;
 
-        foreach($ticketList as $ticket) {
-            $parsedTicketList[] = $ticket->toArray(true);
+        $userList = null;
+
+        if($user->supervisedrelation){
+            $userList = $user->supervisedrelation->sharedUserList->toArray();
+            foreach ($user->supervisedrelation->sharedUserList as $idx => $usr) {
+                $userList[$idx]['tickets'] = $usr->tickets;
+            }
         }
         
         Response::respondSuccess([
@@ -58,9 +61,9 @@ class GetUserController extends Controller {
             'company' => $user->company->toArray(true),
             'isCompanyAdmin' => $user->company->toArray()['admin']['id'] === $user->id,
             'verified' => !$user->verificationToken,
-            'tickets' => $parsedTicketList,
+            'tickets' => $user->sharedTicketList->toArray(true),
             'customfields' => $user->xownCustomfieldvalueList->toArray(),
-            'users' => $user->supervisedrelation ? $user->supervisedrelation->sharedUserList->toArray() : null
+            'users' => $userList
         ]);
     }
 }

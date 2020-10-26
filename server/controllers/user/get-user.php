@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -27,14 +29,15 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {Boolean} data.verified Indicates if the user is verified
  *
  */
-
-class GetUserByIdController extends Controller {
+class GetUserByIdController extends Controller
+{
     const PATH = '/get-user';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
-            'permission' => 'staff_1',
+            'permission' => 'company_admin',
             'requestData' => [
                 'userId' => [
                     'validation' => DataValidator::dataStoreId('user'),
@@ -44,29 +47,40 @@ class GetUserByIdController extends Controller {
         ];
     }
 
-    public function handler() {
-    
+    public function handler()
+    {
+
         $userId = Controller::request('userId');
         $user = User::getDataStore($userId);
-        $staff = Controller::getLoggedUser();
 
-        $tickets = new DataStoreList();
-
-        foreach($user->sharedTicketList as $ticket) {
-            if($staff->sharedDepartmentList->includesId($ticket->department->id)) {
-                $tickets->add($ticket);
-            }
-        }
-        Response::respondSuccess([
+        $response = [
             'name' => $user->name,
             'email' => $user->email,
-            'company' => $user->company->toArray(true),
             'signupDate' => $user->signupDate,
-            'tickets' => $tickets->toArray(true),
             'verified' => !$user->verificationToken,
             'disabled' => !!$user->disabled,
             'customfields' => $user->xownCustomfieldvalueList->toArray(),
-            'userList' => $user->supervisedrelation  ? $user->supervisedrelation->sharedUserList->toArray() : []    
-        ]);
+            'userList' => $user->supervisedrelation ? $user->supervisedrelation->sharedUserList->toArray() : []
+        ];
+
+        $tickets = new DataStoreList();
+
+        if (Controller::isStaffLogged()) {
+            $staff = Controller::getLoggedUser();
+            $response['company'] = $user->company->toArray(true);
+
+            // Add only the tickets sent to the departments to which the staff belongs.
+            foreach ($user->sharedTicketList as $ticket) {
+                if ($staff->sharedDepartmentList->includesId($ticket->department->id)) {
+                    $tickets->add($ticket);
+                }
+            }
+        } else { // Is company_admin, a regular user
+            $tickets = $user->sharedTicketList;
+        }
+
+        $response['tickets'] = $tickets->toArray(true);
+
+        Response::respondSuccess($response);
     }
 }

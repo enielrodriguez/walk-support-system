@@ -1,4 +1,5 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
 
 /**
@@ -22,13 +23,15 @@ use Respect\Validation\Validator as DataValidator;
  * @apiSuccess {Object} data Empty object
  *
  */
-class DisableUserController extends Controller {
+class DisableUserController extends Controller
+{
     const PATH = '/disable';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
-            'permission' => 'staff_1',
+            'permission' => 'company_admin',
             'requestData' => [
                 'userId' => [
                     'validation' => DataValidator::dataStoreId('user'),
@@ -38,9 +41,16 @@ class DisableUserController extends Controller {
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
+        $companyAdmin = Controller::getLoggedUser();
         $user = User::getDataStore(Controller::request('userId'));
-        if($user->disabled) {
+
+        if ($companyAdmin->company->id !== $user->company->id) {
+            throw new ValidationException(ERRORS::NO_PERMISSION);
+        }
+
+        if ($user->disabled) {
             throw new RequestException(ERRORS::ALREADY_DISABLED);
         }
 

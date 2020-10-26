@@ -1,19 +1,23 @@
 <?php
+
 use RedBeanPHP\Facade as RedBean;
 
-abstract class Controller {
+abstract class Controller
+{
     private static $dataRequester;
 
     /**
      * Instance-related stuff
-    */
+     */
     abstract public function handler();
+
     abstract public function validations();
 
-    public function getHandler() {
+    public function getHandler()
+    {
         return function () {
             try {
-                if(RedBean::testConnection() && !Setting::isTableEmpty()) {
+                if (RedBean::testConnection() && !Setting::isTableEmpty()) {
                     Session::getInstance()->setSessionPrefix(Setting::getSetting('session-prefix')->getValue());
                 }
                 $this->validate();
@@ -25,13 +29,15 @@ abstract class Controller {
         };
     }
 
-    public function validate() {
+    public function validate()
+    {
         $validator = new Validator();
 
         $validator->validate($this->validations());
     }
 
-    public static function init() {
+    public static function init()
+    {
         self::$dataRequester = function ($key) {
             $app = self::getAppInstance();
 
@@ -45,18 +51,20 @@ abstract class Controller {
         };
     }
 
-    public static function setDataRequester($dataRequester) {
+    public static function setDataRequester($dataRequester)
+    {
         self::$dataRequester = $dataRequester;
     }
 
-    public static function request($key, $secure = false) {
+    public static function request($key, $secure = false)
+    {
         $result = call_user_func(self::$dataRequester, $key);
 
-        if($key === 'email' || $key === 'newEmail') {
+        if ($key === 'email' || $key === 'newEmail') {
             return strtolower($result);
         }
 
-        if($secure) {
+        if ($secure) {
             $config = HTMLPurifier_Config::createDefault();
             $purifier = new HTMLPurifier($config);
             return $purifier->purify($result);
@@ -65,20 +73,24 @@ abstract class Controller {
         }
     }
 
-    public static function getLoggedUser() {
+    public static function getLoggedUser()
+    {
         $session = Session::getInstance();
 
         if ($session->isStaffLogged()) {
             return Staff::getUser($session->getUserId());
         } else {
             $user = User::getUser($session->getUserId());
-            if($session->getTicketNumber()) $user->ticketNumber = $session->getTicketNumber();
+            if ($session->getTicketNumber()) {
+                $user->ticketNumber = $session->getTicketNumber();
+            }
 
             return $user;
         }
     }
 
-    public static function isUserLogged() {
+    public static function isUserLogged()
+    {
         $session = Session::getInstance();
 
         return $session->checkAuthentication(array(
@@ -87,20 +99,30 @@ abstract class Controller {
         ));
     }
 
-    public static function isStaffLogged($level = 1) {
+    public static function isCompanyAdminLogged()
+    {
+        $user = Controller::getLoggedUser();
+        $isAdmin = !$user->isNull() && $user->company ? $user->company->toArray()['admin']['id'] === $user->id : false;
+        return (Controller::isUserLogged() && $isAdmin) || Controller::isStaffLogged();
+    }
+
+    public static function isStaffLogged($level = 1)
+    {
         return Controller::isUserLogged() && (Controller::getLoggedUser()->level >= $level);
     }
 
-    public static function getAppInstance() {
+    public static function getAppInstance()
+    {
         return \Slim\Slim::getInstance();
     }
 
-    public function uploadImages($forceUpload = false) {
+    public function uploadImages($forceUpload = false)
+    {
         $allowAttachments = Setting::getSetting('allow-attachments')->getValue();
         $totalImages = Controller::request('images') * 1;
 
-        if(!$allowAttachments && !$forceUpload) return [];
-        if(!$totalImages) return [];
+        if (!$allowAttachments && !$forceUpload) return [];
+        if (!$totalImages) return [];
 
         $maxSize = Setting::getSetting('max-size')->getValue();
 
@@ -109,15 +131,15 @@ abstract class Controller {
 
         $allImagesValidSize = true;
 
-        for($i=0;$i<$totalImages;$i++) {
+        for ($i = 0; $i < $totalImages; $i++) {
             $allImagesValidSize = $allImagesValidSize && $fileUploader->isSizeValid($_FILES["image_$i"]);
         }
 
-        if(!$allImagesValidSize) throw new RequestException(ERRORS::INVALID_FILE);
+        if (!$allImagesValidSize) throw new RequestException(ERRORS::INVALID_FILE);
 
         $imagePaths = [];
         $url = Setting::getSetting('url')->getValue();
-        for($i=0;$i<$totalImages;$i++) {
+        for ($i = 0; $i < $totalImages; $i++) {
             $fileUploader->upload("image_$i");
             $imagePaths[] = $url . '/api/system/download?file=' . $fileUploader->getFileName();
         }
@@ -125,48 +147,54 @@ abstract class Controller {
         return $imagePaths;
     }
 
-    public function uploadFile($forceUpload = false) {
+    public function uploadFile($forceUpload = false)
+    {
         $allowAttachments = Setting::getSetting('allow-attachments')->getValue();
 
-        if(!$allowAttachments && !$forceUpload) return '';
-        if(!isset($_FILES['file'])) return '';
+        if (!$allowAttachments && !$forceUpload) return '';
+        if (!isset($_FILES['file'])) return '';
 
         $maxSize = Setting::getSetting('max-size')->getValue();
 
         $fileUploader = FileUploader::getInstance();
         $fileUploader->setMaxSize($maxSize);
 
-        if($fileUploader->upload('file')) {
+        if ($fileUploader->upload('file')) {
             return $fileUploader;
         } else {
             throw new RequestException(ERRORS::INVALID_FILE);
         }
     }
 
-    public function replaceWithImagePaths($imagePaths, $content) {
-        if(!is_array($imagePaths)) return $content;
-        return str_replace(array_map(function($index) { return "IMAGE_PATH_$index"; }, array_keys($imagePaths)), $imagePaths, $content);
+    public function replaceWithImagePaths($imagePaths, $content)
+    {
+        if (!is_array($imagePaths)) return $content;
+        return str_replace(array_map(function ($index) {
+            return "IMAGE_PATH_$index";
+        }, array_keys($imagePaths)), $imagePaths, $content);
     }
 
-    public static function isLoginMandatory() {
+    public static function isLoginMandatory()
+    {
         return Setting::getSetting('mandatory-login')->getValue();
     }
 
-    public static function getCustomFieldValues() {
+    public static function getCustomFieldValues()
+    {
         $customFields = Customfield::getAll();
         $customFieldValues = new DataStoreList();
-        foreach($customFields as $customField) {
+        foreach ($customFields as $customField) {
             $value = Controller::request('customfield_' . str_replace(' ', '_', $customField->name));
-            if($value !== null) {
+            if ($value !== null) {
                 $customFieldValue = new Customfieldvalue();
                 $customFieldValue->setProperties([
                     'customfield' => $customField,
                 ]);
 
-                if($customField->type == 'select') {
+                if ($customField->type == 'select') {
                     $ok = false;
-                    foreach($customField->ownCustomfieldoptionList as $option) {
-                        if($option->name == $value) {
+                    foreach ($customField->ownCustomfieldoptionList as $option) {
+                        if ($option->name == $value) {
                             $customFieldValue->setProperties([
                                 'customfieldoption' => $option,
                                 'value' => $option->name,
@@ -174,7 +202,7 @@ abstract class Controller {
                             $ok = true;
                         }
                     }
-                    if(!$ok)
+                    if (!$ok)
                         throw new RequestException(ERRORS::INVALID_CUSTOM_FIELD_OPTION);
                 } else {
                     $customFieldValue->setProperties([
