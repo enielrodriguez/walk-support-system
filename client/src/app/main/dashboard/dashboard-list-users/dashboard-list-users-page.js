@@ -8,6 +8,12 @@ import i18n from 'lib-app/i18n';
 import Header from 'core-components/header';
 
 import UserList from "app-components/user-list";
+import ModalContainer from "../../../../app-components/modal-container";
+import Button from "../../../../core-components/button";
+import AddUserWidget from "./add-user-widget";
+import SearchBox from "../../../../core-components/search-box";
+import Table from "../../../../core-components/table";
+import Icon from "../../../../core-components/icon";
 
 class DashboardListUsersPage extends React.Component {
 
@@ -24,6 +30,7 @@ class DashboardListUsersPage extends React.Component {
             <div className="dashboard-user-list">
                 <Header title={i18n('USER_LIST')} description={i18n('USER_LIST_DESCRIPTION')}/>
                 <UserList {...this.getUserListProps()}/>
+                {this.renderAddButton()}
             </div>
         );
     }
@@ -50,6 +57,31 @@ class DashboardListUsersPage extends React.Component {
         this.setState({
             page: e.target.value
         });
+    }
+
+    renderAddButton() {
+        return (
+            <div style={{textAlign: 'right', marginTop: 10}}>
+                <Button onClick={this.onAddUser.bind(this)} type="secondary" size="medium">
+                    <Icon size="sm" name="plus"/> {i18n('INVITE_USER')}
+                </Button>
+            </div>
+        );
+    }
+
+    onAddUser(user) {
+        ModalContainer.openModal(
+            <div className="dashboard-user-list__add-user-form">
+                <AddUserWidget onSuccess={this.onAddUserSuccess.bind(this)}/>
+                <div style={{textAlign: 'center'}}>
+                    <Button onClick={ModalContainer.closeModal} type="link">{i18n('CLOSE')}</Button>
+                </div>
+            </div>
+        );
+    }
+
+    onAddUserSuccess() {
+        this.componentDidMount();
     }
 }
 
