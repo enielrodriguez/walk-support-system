@@ -312,7 +312,7 @@ export default {
     'TICKET_VIEW_DESCRIPTION': 'This ticket has been sent by a customer. Here you can respond or assign the ticket',
     'BAN_USERS_DESCRIPTION': 'Here you can see a list of banned emails, you can un-ban them or add more emails to the list.',
     'LIST_USERS_DESCRIPTION': 'This is the list of users that are registered in this platform. You can search for someone in particular, delete it or ban it.',
-    'USER_VIEW_DESCRIPTION': 'Here you can find all the information about an user and all the tickets sent by the user. You can also delete or ban it.',
+    'USER_VIEW_DESCRIPTION': 'Here you can find all the information about an user and all the tickets sent by the user.',
     'DELETE_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased.',
     'DELETE_TOPIC_DESCRIPTION': 'By deleting the topic, all articles on it will be erased.',
     'EDIT_TOPIC_DESCRIPTION': 'Here you can change the name, the icon and the icon color of the topic.',

@@ -65,6 +65,7 @@ import InstallStep6Admin from 'app/install/install-step-6-admin';
 import InstallCompleted from 'app/install/install-completed';
 import AdminPanelViewCompany from "./admin/panel/users/admin-panel-view-company";
 import DashboardListUsersPage from "./main/dashboard/dashboard-list-users/dashboard-list-users-page";
+import DashboardViewUser from "./main/dashboard/dashboard-view-user/dashboard-view-user";
 
 export default (
     <Router history={history}>
@@ -91,7 +92,9 @@ export default (
 
                     <Route path='article/:articleId' component={DashboardArticlePage}/>
                     <Route path='ticket/:ticketNumber' component={DashboardTicketPage}/>
+
                     <Route path='users' component={DashboardListUsersPage}/>
+                    <Route path='user/:userId' component={DashboardViewUser}/>
                 </Route>
             </Route>
             <Route path="install" component={InstallLayout}>

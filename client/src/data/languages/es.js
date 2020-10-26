@@ -315,7 +315,7 @@ export default {
     'TICKET_VIEW_DESCRIPTION': 'Este ticket ha sido enviado por un cliente. Aquí puede responderlo o asignárselo.',
     'BAN_USERS_DESCRIPTION': 'Aquí puede ver la lista de email bloqueados. Puede desbloquear o agregar más emails a la lista.',
     'LIST_USERS_DESCRIPTION': 'Esta es la lista de usuarios que están registrados en el sistema. Puede buscar a alguien en particular, bloquearlo o borralo.',
-    'USER_VIEW_DESCRIPTION': 'Aquí puede encontrar toda la información sobre un usuario y todos los tickets enviados por el usuario. También puede eliminarlo o bloquearlo.',
+    'USER_VIEW_DESCRIPTION': 'Aquí puede encontrar toda la información sobre un usuario y todos los tickets enviados por el usuario.',
     'DELETE_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán.',
     'DELETE_TOPIC_DESCRIPTION': 'Al borrar el tema, todos los artículos en él se borrarán.',
     'SEARCH_TICKETS_DESCRIPTION': 'Aquí puede buscar tickets por filtros específicos',
