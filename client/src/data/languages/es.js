@@ -483,6 +483,12 @@ export default {
 
     'USER_LIST': 'Lista de usuarios',
     'USER_LIST_DESCRIPTION': 'Aquí puede encontrar una lista de todos los usuarios de la empresa con acceso al sistema de soporte.',
+    'EDIT_NAME': 'Editar nombre',
+    'NEW_NAME': 'Nuevo nombre',
+    'CHANGE_NAME': 'Cambiar nombre',
+    'NAME_WILL_CHANGE': 'El nombre actual se cambiará',
+    'NAME_CHANGED': 'Se ha cambiado correctamente el nombre',
+
 
     'UNKNOWN_ERROR': 'Ocurrió un error',
     'ERROR_RETRIEVING_COMPANIES': 'Error al acceder a la lista de empresas.',

@@ -477,6 +477,11 @@ export default {
 
     'USER_LIST': 'User list',
     'USER_LIST_DESCRIPTION': 'Here you can find a list of all users in the company with access to the support system.',
+    'EDIT_NAME': 'Edit name',
+    'NEW_NAME': 'New name',
+    'CHANGE_NAME': 'Change name',
+    'NAME_WILL_CHANGE': 'The current name will be changed',
+    'NAME_CHANGED': 'Name has been changed successfully',
 
     'UNKNOWN_ERROR': 'An error occurred',
     'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies.',

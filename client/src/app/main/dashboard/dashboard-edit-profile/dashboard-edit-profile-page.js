@@ -26,9 +26,9 @@ class DashboardEditProfilePage extends React.Component {
     };
 
     state = {
-        loadingEmail: false,
+        loadingName: false,
         loadingPass: false,
-        messageEmail: '',
+        messageName: '',
         messagePass: '',
         customFields: [],
         customFieldsFrom: {},
@@ -43,11 +43,11 @@ class DashboardEditProfilePage extends React.Component {
         return (
             <div className="edit-profile-page">
                 <Header title={i18n('EDIT_PROFILE')} description={i18n('EDIT_PROFILE_VIEW_DESCRIPTION')} />
-                <div className="edit-profile-page__title">{i18n('EDIT_EMAIL')}</div>
-                <Form loading={this.state.loadingEmail} onSubmit={this.onSubmitEditEmail.bind(this)}>
-                    <FormField name="newEmail" label={i18n('NEW_EMAIL')} field="input" validation="EMAIL" fieldProps={{size:'large'}} required/>
-                    <SubmitButton>{i18n('CHANGE_EMAIL')}</SubmitButton>
-                    {this.renderMessageEmail()}
+                <div className="edit-profile-page__title">{i18n('EDIT_NAME')}</div>
+                <Form loading={this.state.loadingName} onSubmit={this.onSubmitEditName.bind(this)}>
+                    <FormField name="newName" label={i18n('NEW_NAME')} field="input" fieldProps={{size:'large'}} required/>
+                    <SubmitButton>{i18n('CHANGE_NAME')}</SubmitButton>
+                    {this.renderMessageName()}
                 </Form>
                 <div className="edit-profile-page__title">{i18n('EDIT_PASSWORD')}</div>
                 <Form loading={this.state.loadingPass} onSubmit={this.onSubmitEditPassword.bind(this)}>
@@ -96,12 +96,12 @@ class DashboardEditProfilePage extends React.Component {
         }
     }
 
-    renderMessageEmail() {
-        switch (this.state.messageEmail) {
+    renderMessageName() {
+        switch (this.state.messageName) {
             case 'success':
-                return <Message className="edit-profile-page__message" type="success">{i18n('EMAIL_CHANGED')}</Message>;
+                return <Message className="edit-profile-page__message" type="success">{i18n('NAME_CHANGED')}</Message>;
             case 'fail':
-                return <Message className="edit-profile-page__message" type="error">{i18n('EMAIL_EXISTS')}</Message>;
+                return <Message className="edit-profile-page__message" type="error">{i18n('INVALID_NAME')}</Message>;
             default:
                 return null;
         }
@@ -145,32 +145,32 @@ class DashboardEditProfilePage extends React.Component {
 
     }
 
-    onSubmitEditEmail(formState) {
-        AreYouSure.openModal(i18n('EMAIL_WILL_CHANGE'), this.callEditEmailAPI.bind(this, formState));
+    onSubmitEditName(formState) {
+        AreYouSure.openModal(i18n('NAME_WILL_CHANGE'), this.callEditNameAPI.bind(this, formState));
     }
 
     onSubmitEditPassword(formState) {
         AreYouSure.openModal(i18n('PASSWORD_WILL_CHANGE'), this.callEditPassAPI.bind(this, formState));
     }
 
-    callEditEmailAPI(formState){
+    callEditNameAPI(formState){
         this.setState({
-            loadingEmail: true
+            loadingName: true
         });
         return API.call({
-            path: "/user/edit-email",
+            path: "/user/edit-name",
             data: {
-                newEmail: formState.newEmail
+                newName: formState.newName
             }
         }).then(function () {
             this.setState({
-                loadingEmail: false,
-                messageEmail: "success"
+                loadingName: false,
+                messageName: "success"
             });
         }.bind(this)).catch(function (){
             this.setState({
-                loadingEmail: false,
-                messageEmail: 'fail'
+                loadingName: false,
+                messageName: 'fail'
             })
         }.bind(this));
     }
