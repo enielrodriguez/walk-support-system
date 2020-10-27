@@ -14,7 +14,7 @@ class AdminPanelMyAccount extends React.Component {
     render() {
         return (
             <div className="admin-panel-view-staff">
-                <Header title={i18n('MY_ACCOUNT')} description={i18n('MY_ACCOUNT_DESCRIPTION')} />
+                <Header title={i18n('MY_ACCOUNT')} description={i18n('MY_ACCOUNT_DESCRIPTION')}/>
                 <StaffEditor {...this.getEditorProps()}/>
             </div>
         );
@@ -29,7 +29,7 @@ class AdminPanelMyAccount extends React.Component {
             profilePic: this.props.userProfilePic,
             level: this.props.userLevel * 1,
             departments: this.props.userDepartments,
-            sendEmailOnNewTicket: this.props.userSendEmailOnNewTicket,
+            sendEmailOnNewTicket: Boolean(this.props.userSendEmailOnNewTicket),
             onChange: () => this.props.dispatch(SessionActions.getUserData(null, null, true))
         };
     }
