@@ -46,10 +46,10 @@ class DeleteUserController extends Controller
 
     public function handler()
     {
-        $companyAdmin = Controller::getLoggedUser();
+        $loggedUser = Controller::getLoggedUser();
         $user = User::getDataStore(Controller::request('userId'));
 
-        if ($companyAdmin->company->id !== $user->company->id) {
+        if (Controller::isCompanyAdminLogged() && $loggedUser->company->id !== $user->company->id) {
             throw new ValidationException(ERRORS::NO_PERMISSION);
         }
 
