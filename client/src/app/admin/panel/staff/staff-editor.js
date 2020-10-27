@@ -41,6 +41,7 @@ class StaffEditor extends React.Component {
 
     state = {
         email: this.props.email,
+        name: this.props.name,
         level: this.props.level - 1,
         message: null,
         loadingPicture: false,
@@ -82,26 +83,48 @@ class StaffEditor extends React.Component {
                             </div>
                             <label className={this.getPictureWrapperClass()}>
                                 <div className="staff-editor__card-pic-background"></div>
-                                <img className="staff-editor__card-pic" src={(this.props.profilePic) ? API.getFileLink(this.props.profilePic) : (API.getURL() + '/images/profile.png')} />
-                                {(this.state.loadingPicture) ? <Loading className="staff-editor__card-pic-loading" size="large"/> : <Icon className="staff-editor__card-pic-icon" name="upload" size="4x"/>}
-                                <input className="staff-editor__image-uploader" type="file" multiple={false} accept="image/x-png,image/gif,image/jpeg" onChange={this.onProfilePicChange.bind(this)}/>
+                                <img className="staff-editor__card-pic"
+                                     src={(this.props.profilePic) ? API.getFileLink(this.props.profilePic) : (API.getURL() + '/images/profile.png')}/>
+                                {(this.state.loadingPicture) ?
+                                    <Loading className="staff-editor__card-pic-loading" size="large"/> :
+                                    <Icon className="staff-editor__card-pic-icon" name="upload" size="4x"/>}
+                                <input className="staff-editor__image-uploader" type="file" multiple={false}
+                                       accept="image/x-png,image/gif,image/jpeg"
+                                       onChange={this.onProfilePicChange.bind(this)}/>
                             </label>
                         </div>
                     </div>
                     <div className="col-md-8">
                         <div className="staff-editor__form">
-                            <Form className="staff-editor__update-email" values={{email: this.state.email}} onChange={form => this.setState({email: form.email})} onSubmit={this.onSubmit.bind(this, 'EMAIL')}>
-                                <FormField name="email" validation="EMAIL" required label={i18n('EMAIL')} fieldProps={{size: 'large'}}/>
-                                <SubmitButton size="medium" className="staff-editor__submit-button">{i18n('UPDATE_EMAIL')}</SubmitButton>
+                            <Form className="staff-editor__update-email" values={{name: this.state.name}}
+                                  onChange={form => this.setState({name: form.name})}
+                                  onSubmit={this.onSubmit.bind(this, 'NAME')}>
+                                <FormField name="name" required label={i18n('NAME')} fieldProps={{size: 'large'}}/>
+                                <SubmitButton size="medium"
+                                              className="staff-editor__submit-button">{i18n('CHANGE_NAME')}</SubmitButton>
                             </Form>
-                            <span className="separator staff-editor__separator" />
-                            <Form className="staff-editor__update-password" onSubmit={this.onSubmit.bind(this, 'PASSWORD')}>
-                                <FormField name="password" validation="PASSWORD" required label={i18n('PASSWORD')} fieldProps={{size: 'large', password: true}}/>
-                                <FormField name="rpassword" validation="REPEAT_PASSWORD" required label={i18n('REPEAT_PASSWORD')} fieldProps={{size: 'large', password: true}}/>
-                                <SubmitButton size="medium" className="staff-editor__submit-button">{i18n('UPDATE_PASSWORD')}</SubmitButton>
+                            <span className="separator staff-editor__separator"/>
+                            <Form className="staff-editor__update-email" values={{email: this.state.email}}
+                                  onChange={form => this.setState({email: form.email})}
+                                  onSubmit={this.onSubmit.bind(this, 'EMAIL')}>
+                                <FormField name="email" validation="EMAIL" required label={i18n('EMAIL')}
+                                           fieldProps={{size: 'large'}}/>
+                                <SubmitButton size="medium"
+                                              className="staff-editor__submit-button">{i18n('UPDATE_EMAIL')}</SubmitButton>
+                            </Form>
+                            <span className="separator staff-editor__separator"/>
+                            <Form className="staff-editor__update-password"
+                                  onSubmit={this.onSubmit.bind(this, 'PASSWORD')}>
+                                <FormField name="password" validation="PASSWORD" required label={i18n('PASSWORD')}
+                                           fieldProps={{size: 'large', password: true}}/>
+                                <FormField name="rpassword" validation="REPEAT_PASSWORD" required
+                                           label={i18n('REPEAT_PASSWORD')}
+                                           fieldProps={{size: 'large', password: true}}/>
+                                <SubmitButton size="medium"
+                                              className="staff-editor__submit-button">{i18n('UPDATE_PASSWORD')}</SubmitButton>
                             </Form>
                             {(this.props.myAccount) ? this.renderSendEmailOnNewTicketForm() : this.renderLevelForm()}
-                            <span className="separator staff-editor__separator" />
+                            <span className="separator staff-editor__separator"/>
                         </div>
                     </div>
                 </div>
@@ -109,7 +132,7 @@ class StaffEditor extends React.Component {
                     <div className="col-md-4">
                         <div className="staff-editor__departments">
                             <div className="staff-editor__departments-title">{i18n('DEPARTMENTS')}</div>
-                            {(this.props.myAccount && this.props.level !== 3)  ? this.renderDepartmentsInfo() : this.renderDepartmentsForm()}
+                            {(this.props.myAccount && this.props.level !== 3) ? this.renderDepartmentsInfo() : this.renderDepartmentsForm()}
                         </div>
                     </div>
                     <div className="col-md-8">
@@ -130,6 +153,9 @@ class StaffEditor extends React.Component {
         let message = null;
 
         switch (this.state.message) {
+            case 'NAME':
+                message = 'NAME_CHANGED';
+                break;
             case 'EMAIL':
                 message = 'EMAIL_CHANGED';
                 break;
@@ -157,8 +183,12 @@ class StaffEditor extends React.Component {
         return (
             <div>
                 <span className="separator staff-editor__separator"/>
-                <Form className="staff-editor__update-email-setting" values={{sendEmailOnNewTicket: this.state.sendEmailOnNewTicket}} onChange={form => this.setState({sendEmailOnNewTicket: form.sendEmailOnNewTicket})} onSubmit={this.onSubmit.bind(this, 'SEND_EMAIL_ON_NEW_TICKET')}>
-                    <FormField name="sendEmailOnNewTicket" label={i18n('SEND_EMAIL_ON_NEW_TICKET')} field="checkbox" fieldProps={{size: 'large'}} />
+                <Form className="staff-editor__update-email-setting"
+                      values={{sendEmailOnNewTicket: this.state.sendEmailOnNewTicket}}
+                      onChange={form => this.setState({sendEmailOnNewTicket: form.sendEmailOnNewTicket})}
+                      onSubmit={this.onSubmit.bind(this, 'SEND_EMAIL_ON_NEW_TICKET')}>
+                    <FormField name="sendEmailOnNewTicket" label={i18n('SEND_EMAIL_ON_NEW_TICKET')} field="checkbox"
+                               fieldProps={{size: 'large'}}/>
                     <SubmitButton size="medium" className="staff-editor__submit-button">{i18n('UPDATE')}</SubmitButton>
                 </Form>
             </div>
@@ -169,12 +199,16 @@ class StaffEditor extends React.Component {
         return (
             <div>
                 <span className="separator staff-editor__separator"/>
-                <Form className="staff-editor__update-level" values={{level: this.state.level}} onChange={form => this.setState({level: form.level})} onSubmit={this.onSubmit.bind(this, 'LEVEL')}>
-                    <FormField name="level" label={i18n('LEVEL')} field="select" infoMessage={this.getStaffLevelInfo()} fieldProps={{
-                        items: [{content: i18n('LEVEL_1')}, {content: i18n('LEVEL_2')}, {content: i18n('LEVEL_3')}],
-                        size: 'large'
-                    }} />
-                    <SubmitButton size="medium" className="staff-editor__submit-button">{i18n('UPDATE_LEVEL')}</SubmitButton>
+                <Form className="staff-editor__update-level" values={{level: this.state.level}}
+                      onChange={form => this.setState({level: form.level})}
+                      onSubmit={this.onSubmit.bind(this, 'LEVEL')}>
+                    <FormField name="level" label={i18n('LEVEL')} field="select" infoMessage={this.getStaffLevelInfo()}
+                               fieldProps={{
+                                   items: [{content: i18n('LEVEL_1')}, {content: i18n('LEVEL_2')}, {content: i18n('LEVEL_3')}],
+                                   size: 'large'
+                               }}/>
+                    <SubmitButton size="medium"
+                                  className="staff-editor__submit-button">{i18n('UPDATE_LEVEL')}</SubmitButton>
                 </Form>
             </div>
         );
@@ -182,8 +216,10 @@ class StaffEditor extends React.Component {
 
     renderDepartmentsForm() {
         return (
-            <Form values={{departments: this.state.departments}} onChange={form => this.setState({departments: form.departments})} onSubmit={this.onSubmit.bind(this, 'DEPARTMENTS')}>
-                <FormField name="departments" field="checkbox-group" fieldProps={{items: this.getDepartments()}} />
+            <Form values={{departments: this.state.departments}}
+                  onChange={form => this.setState({departments: form.departments})}
+                  onSubmit={this.onSubmit.bind(this, 'DEPARTMENTS')}>
+                <FormField name="departments" field="checkbox-group" fieldProps={{items: this.getDepartments()}}/>
                 <SubmitButton size="medium">{i18n('UPDATE_DEPARTMENTS')}</SubmitButton>
             </Form>
         );
@@ -193,7 +229,8 @@ class StaffEditor extends React.Component {
     renderDepartmentsInfo() {
         return (
             <Form values={{departments: this.state.departments}}>
-                <FormField name="departments" field="checkbox-group" fieldProps={{items: this.getDepartments().filter((department,index) => this.state.departments.includes(index))}} />
+                <FormField name="departments" field="checkbox-group"
+                           fieldProps={{items: this.getDepartments().filter((department, index) => this.state.departments.includes(index))}}/>
             </Form>
         );
     }
@@ -226,7 +263,8 @@ class StaffEditor extends React.Component {
                     <div className="staff-editor__delete-title">
                         {i18n('DELETE_STAFF_MEMBER')}
                     </div>
-                    <Button onClick={() => AreYouSure.openModal(i18n('WILL_DELETE_STAFF'), this.onDeleteClick.bind(this))}>
+                    <Button
+                        onClick={() => AreYouSure.openModal(i18n('WILL_DELETE_STAFF'), this.onDeleteClick.bind(this))}>
                         {i18n('DELETE_STAFF_MEMBER')}
                     </Button>
                 </div>
@@ -258,7 +296,7 @@ class StaffEditor extends React.Component {
         let departmentIndexes = [];
 
         _.forEach(SessionStore.getDepartments(), (department, index) => {
-            if(_.includes(userDepartments, department.id)) {
+            if (_.includes(userDepartments, department.id)) {
                 departmentIndexes.push(index);
             }
         });
@@ -267,7 +305,7 @@ class StaffEditor extends React.Component {
 
     getDepartments() {
         return SessionStore.getDepartments().map(department => {
-            if(department.private * 1){
+            if (department.private * 1) {
                 return <span> {department.name} <Icon name='user-secret'/> </span>
             } else {
                 return department.name;
@@ -297,7 +335,7 @@ class StaffEditor extends React.Component {
     onSubmit(eventType, form) {
         let departments;
 
-        if(form.departments) {
+        if (form.departments) {
             departments = _.filter(SessionStore.getDepartments(), (department, index) => {
                 return _.includes(form.departments, index);
             }).map(department => department.id)
@@ -308,6 +346,7 @@ class StaffEditor extends React.Component {
             data: {
                 staffId: (!this.props.myAccount) ? this.props.staffId : null,
                 sendEmailOnNewTicket: (eventType === 'SEND_EMAIL_ON_NEW_TICKET') ? form.sendEmailOnNewTicket * 1 : null,
+                name: (eventType === 'NAME') ? form.name : null,
                 email: (eventType === 'EMAIL') ? form.email : null,
                 password: (eventType === 'PASSWORD') ? form.password : null,
                 level: (form.level !== undefined && eventType == 'LEVEL') ? form.level + 1 : null,
@@ -315,14 +354,14 @@ class StaffEditor extends React.Component {
             }
         }).then(() => {
             this.retrieveStaffMembers();
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
             this.setState({message: eventType});
 
-            if(this.props.onChange) {
+            if (this.props.onChange) {
                 this.props.onChange();
             }
         }).catch(() => {
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
             this.setState({message: 'FAIL'});
         });
     }
@@ -334,7 +373,7 @@ class StaffEditor extends React.Component {
                 staffId: this.props.staffId
             }
         }).then(this.props.onDelete).catch(() => {
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
             this.setState({message: 'FAIL'});
         });
     }
@@ -356,11 +395,11 @@ class StaffEditor extends React.Component {
                 loadingPicture: false
             });
 
-            if(this.props.onChange) {
+            if (this.props.onChange) {
                 this.props.onChange();
             }
         }).catch(() => {
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
             this.setState({message: 'FAIL', loadingPicture: false});
         });
     }
