@@ -480,8 +480,8 @@ export default {
     'EDIT_NAME': 'Edit name',
     'NEW_NAME': 'New name',
     'CHANGE_NAME': 'Change name',
-    'NAME_WILL_CHANGE': 'The current name will be changed',
-    'NAME_CHANGED': 'Name has been changed successfully',
+    'NAME_WILL_CHANGE': 'The current name will be changed.',
+    'NAME_CHANGED': 'Name has been changed successfully.',
 
     'UNKNOWN_ERROR': 'An error occurred',
     'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies.',

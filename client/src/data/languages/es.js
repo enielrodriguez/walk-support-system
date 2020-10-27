@@ -421,7 +421,7 @@ export default {
     'NO_DEPARTMENT_ASSIGNED': 'No tienes ningún departamento asignado.',
     'LEVEL_UPDATED': 'El nivel se ha actualizado correctamente.',
     'DEPARTMENTS_UPDATED': 'Los departamentos se han actualizado correctamente.',
-    'FAILED_EDIT_STAFF': 'Se ha producido un error al intentar editar al miembro de staff.',
+    'FAILED_EDIT_STAFF': 'Se ha producido un error al intentar editar al miembro del staff.',
     'EMAIL_BANNED_SUCCESSFULLY': 'Se ha bloqueado correctamente el correo electrónico',
     'WILL_DELETE_STAFF': 'Este miembro de staff será eliminado y todos sus tickets serán desasignados.',
     'WILL_RECOVER_EMAIL_TEMPLATE': 'Esta plantilla de correo electrónico se recuperará a su valor predeterminado en este idioma.',
@@ -486,8 +486,8 @@ export default {
     'EDIT_NAME': 'Editar nombre',
     'NEW_NAME': 'Nuevo nombre',
     'CHANGE_NAME': 'Cambiar nombre',
-    'NAME_WILL_CHANGE': 'El nombre actual se cambiará',
-    'NAME_CHANGED': 'Se ha cambiado correctamente el nombre',
+    'NAME_WILL_CHANGE': 'El nombre actual se cambiará.',
+    'NAME_CHANGED': 'Se ha cambiado correctamente el nombre.',
 
 
     'UNKNOWN_ERROR': 'Ocurrió un error',
