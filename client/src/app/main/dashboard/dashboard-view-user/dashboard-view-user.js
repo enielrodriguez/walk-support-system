@@ -116,7 +116,7 @@ class DashboardViewUser extends React.Component {
 
     getTicketListProps() {
         return {
-            type: 'primary',
+            type: 'secondary',
             tickets: this.state.tickets,
             loading: this.state.loading,
             departments: this.props.departments,
