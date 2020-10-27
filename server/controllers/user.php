@@ -11,6 +11,7 @@ $userControllers->addController(new SendRecoverPasswordController);
 $userControllers->addController(new RecoverPasswordController);
 $userControllers->addController(new EditPassword);
 $userControllers->addController(new EditEmail);
+$userControllers->addController(new EditName);
 $userControllers->addController(new GetUserController);
 $userControllers->addController(new GetUsersController);
 $userControllers->addController(new GetCompaniesController);
