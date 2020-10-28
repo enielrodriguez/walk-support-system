@@ -77,7 +77,7 @@ class AdminPanelEmailSettings extends React.Component {
         return (
             <div>
                 {this.renderEmailSettings()}
-                <Header title={i18n('EMAIL_TEMPLATES')} description={i18n('EMAIL_TEMPLATES_DESCRIPTION')}/>
+                <Header title={i18n('EMAIL_TEMPLATES')} description={i18n('EMAIL_TEMPLATES_DESCRIPTION', {'name': '{{name}}'})}/>
                 <div className="row">
                     <div className="col-md-3">
                         <Listing {...this.getListingProps()}/>
