@@ -68,7 +68,8 @@ class GetUsersController extends Controller
                 'email' => $user->email,
                 'signupDate' => $user->signupDate,
                 'disabled' => !!$user->disabled,
-                'company' => $user->company->toArray(true)
+                'company' => $user->company->toArray(true),
+                'isCompanyAdmin' => $this->isCompanyAdmin($user)
             ];
         }
 
@@ -147,5 +148,10 @@ class GetUsersController extends Controller
         $query .= " LIMIT 10 OFFSET " . ((Controller::request('page') - 1) * 10);
 
         return $query;
+    }
+
+    private function isCompanyAdmin($user)
+    {
+        return !$user->company->admin->isNull() && $user->id === $user->company->admin->id;
     }
 }
