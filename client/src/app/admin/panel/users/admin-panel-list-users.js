@@ -117,6 +117,7 @@ class AdminPanelListUsers extends React.Component {
                     <Button className="admin-panel-list-users__name-link" type="link" route={{to: '/admin/panel/users/view-user/' + user.id}}>
                         {user.name}
                     </Button>
+                    {user.isCompanyAdmin && <span>{'(admin)'}</span>}
                     {user.disabled ? this.renderDisabled() : null}
                 </div>
             ),
