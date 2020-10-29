@@ -489,7 +489,7 @@ export default {
     'CHANGE_NAME': 'Cambiar nombre',
     'NAME_WILL_CHANGE': 'El nombre actual se cambiará',
     'NAME_CHANGED': 'Se ha cambiado correctamente el nombre',
-    'SUPERVISED_USER_WARNING': 'Los usuarios que usted quite de esta lista serán eliminados del sistema. Si añade un usuario de otra empresa, será cambiado a la de este.',
+    'SUPERVISED_USER_WARNING': 'Los usuarios que usted quite de esta lista serán eliminados del sistema.',
 
     'UNKNOWN_ERROR': 'Ocurrió un error',
     'ERROR_RETRIEVING_COMPANIES': 'Error al acceder a la lista de empresas',

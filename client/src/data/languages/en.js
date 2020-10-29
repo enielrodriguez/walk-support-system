@@ -483,7 +483,7 @@ export default {
     'CHANGE_NAME': 'Change name',
     'NAME_WILL_CHANGE': 'The current name will be changed',
     'NAME_CHANGED': 'Name has been changed successfully',
-    'SUPERVISED_USER_WARNING': 'Users that you remove from this list will be removed from the system. If you add a user from another company, it will be changed to that of this user.',
+    'SUPERVISED_USER_WARNING': 'Users that you remove from this list will be removed from the system.',
 
     'UNKNOWN_ERROR': 'An error occurred',
     'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies',

@@ -45,7 +45,6 @@
         &-desc {
             color: $primary-black;
             font-size: $font-size--sm;
-            //padding: 5px 15px;
         }
     }
 
@@ -53,6 +52,16 @@
         display:flex;
         flex-direction: column;
         align-items:flex-start;
+
+        &-list{
+            text-align: left;
+            display: inline-block;
+            border-radius: 4px;
+            background-color: $very-light-grey;
+            border: 1px solid $grey;
+            min-height: 38px;
+            padding: 5px;
+        }
     }
 
     &__supervised-users-message {

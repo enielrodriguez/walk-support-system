@@ -13,6 +13,7 @@ import Button from 'core-components/button';
 import Message from 'core-components/message';
 import InfoTooltip from 'core-components/info-tooltip';
 import Autocomplete from 'core-components/autocomplete';
+import Tag from "../../../../core-components/tag";
 
 class AdminPanelViewUser extends React.Component {
 
@@ -139,11 +140,10 @@ class AdminPanelViewUser extends React.Component {
                 </div>
 
                 <div className="admin-panel-view-user__supervised-users-content">
-                    <Autocomplete
-                        onChange={this.onChangeValues.bind(this)}
-                        getItemListFromQuery={this.searchUsers.bind(this)}
-                        values={this.transformUserListToAutocomplete()}
-                    />
+                    <div className="admin-panel-view-user__supervised-users-content-list">
+                        {this.renderSupervisedUsers()}
+                    </div>
+
                     <Button
                         disabled={this.state.loading}
                         className="admin-panel-view-user__submit-button"
@@ -156,6 +156,26 @@ class AdminPanelViewUser extends React.Component {
                 {this.renderSupervisedUserMessage()}
             </div>
         )
+    }
+
+    renderSupervisedUsers() {
+        return this.state.userList.map(user => this.renderSupervisedUser(user));
+    }
+
+    renderSupervisedUser(user) {
+        return <Tag
+            name={user.name}
+            color="grey"
+            showDeleteButton
+            onRemoveClick={this.onRemoveSupervisedUserClick.bind(this, user.id)}
+            key={"tagId__" + user.id}/>
+    }
+
+    onRemoveSupervisedUserClick(userId) {
+        const newList = this.state.userList.filter(
+            user => user.id !== userId
+        );
+        this.setState({userList: newList});
     }
 
     onClickSupervisorUserButton() {
@@ -184,54 +204,6 @@ class AdminPanelViewUser extends React.Component {
                 message: r.message
             })
         });
-    }
-
-    onChangeValues(newList) {
-        this.setState({
-            userList: newList
-        });
-    }
-
-    searchUsers(query, blacklist = []) {
-        blacklist = blacklist.map(item => {
-            return {isStaff: item.isStaff, id: item.id}
-        });
-
-        return API.call({
-            path: '/ticket/search-authors',
-            data: {
-                query: query,
-                blackList: JSON.stringify(blacklist),
-                searchUsers: 1,
-                excludeCompanyAdmins: 1
-            }
-        }).then(r => {
-            return r.data.authors.map(author => {
-                return {
-                    name: author.name,
-                    color: "gray",
-                    id: author.id * 1,
-                    content: <div>{author.name}</div>,
-                    isStaff: false
-                }
-            });
-        }).catch((r) => {
-            console.log(r);
-        });
-    }
-
-    transformUserListToAutocomplete() {
-        return (
-            this.state.userList.map((user) => {
-                return ({
-                    id: user.id * 1,
-                    name: user.name,
-                    content: <div>{user.name}</div>,
-                    color: 'grey',
-                    isStaff: false
-                });
-            })
-        );
     }
 
     renderNotVerified() {
