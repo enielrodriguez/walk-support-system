@@ -146,15 +146,16 @@ class InviteUserController extends Controller
     {
         $superUser = Company::getCompany($this->companyId)->admin;
 
-        if (!$superUser->supervisedrelation) {
-            $superUser->supervisedrelation = new Supervisedrelation();
+        if ($superUser) {
+            if (!$superUser->supervisedrelation) {
+                $superUser->supervisedrelation = new Supervisedrelation();
+            }
+
+            $superUser->supervisedrelation->sharedUserList->add(User::getUser($userId));
+
+            $superUser->supervisedrelation->store();
+            $superUser->store();
         }
-
-        $superUser->supervisedrelation->sharedUserList->add(User::getUser($userId));
-
-        $superUser->supervisedrelation->store();
-        $superUser->store();
-
     }
 
     public function sendInvitationMail()

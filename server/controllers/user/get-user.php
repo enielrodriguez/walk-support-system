@@ -88,6 +88,6 @@ class GetUserByIdController extends Controller
 
     private function isCompanyAdmin($user)
     {
-        return !$user->company->admin->isNull() && $user->id === $user->company->admin->id;
+        return $user->company->admin && $user->id === $user->company->admin->id;
     }
 }
