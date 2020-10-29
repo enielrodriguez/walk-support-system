@@ -13,7 +13,6 @@ import Form from 'core-components/form';
 import FormField from 'core-components/form-field';
 import Widget from 'core-components/widget';
 import Header from 'core-components/header';
-import SessionStore from "../../../../lib-app/session-store";
 import CompanyDropdown from "../../../../app-components/company-dropdown";
 
 class InviteUserWidget extends React.Component {
@@ -61,13 +60,17 @@ class InviteUserWidget extends React.Component {
                                    required/>
                         <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL"
                                    required/>
-                        <FormField {...this.getInputProps()} label={i18n('COMPANY')} name="companyIndex" field="select"
-                                   decorator={CompanyDropdown} fieldProps={
-                            {
-                                companies: this.state.companies,
-                                size: "medium"
-                            }
-                        }/>
+                        {
+                            !this.props.companyId &&
+                                <FormField {...this.getInputProps()} label={i18n('COMPANY')} name="companyIndex"
+                                           field="select"
+                                           decorator={CompanyDropdown} fieldProps={
+                                    {
+                                        companies: this.state.companies,
+                                        size: "medium"
+                                    }
+                                }/>
+                        }
                         {this.state.customFields.map(this.renderCustomField.bind(this))}
                     </div>
                     <div className="invite-user-widget__captcha">
@@ -161,7 +164,7 @@ class InviteUserWidget extends React.Component {
 
             const form = _.clone(formState);
 
-            form['companyId'] = this.state.companies[form['companyIndex']].id;
+            form['companyId'] = this.props.companyId ?? this.state.companies[form['companyIndex']].id;
 
             delete form['companyIndex'];
 

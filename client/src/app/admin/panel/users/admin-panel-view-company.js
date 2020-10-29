@@ -1,19 +1,17 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import history from 'lib-app/history';
 
 import i18n from 'lib-app/i18n';
 import API from 'lib-app/api-call';
 
-import TicketList from 'app-components/ticket-list';
 import AreYouSure from 'app-components/are-you-sure';
 
 import Header from 'core-components/header';
 import Button from 'core-components/button';
-import Message from 'core-components/message';
-import InfoTooltip from 'core-components/info-tooltip';
-import Autocomplete from 'core-components/autocomplete';
 import UserList from "../../../../app-components/user-list";
+import Icon from "../../../../core-components/icon";
+import ModalContainer from "../../../../app-components/modal-container";
+import InviteUserWidget from "./invite-user-widget";
 
 class AdminPanelViewCompany extends React.Component {
 
@@ -95,6 +93,11 @@ class AdminPanelViewCompany extends React.Component {
                 <div className="admin-panel-view-company__users">
                     <div className="admin-panel-view-company__users-title">{i18n('USERS')}</div>
                     <UserList {...this.getUserListProps()}/>
+                    <div style={{textAlign: 'right', marginTop: 10}}>
+                        <Button onClick={this.onInviteUser.bind(this)} type="secondary" size="medium">
+                            <Icon size="sm" name="plus"/> {i18n('INVITE_USER')}
+                        </Button>
+                    </div>
                 </div>
             </div>
         );
@@ -138,6 +141,22 @@ class AdminPanelViewCompany extends React.Component {
         }).then(this.onCompanyRetrieved.bind(this)).catch(() => this.setState({
             invalid: true
         }));
+    }
+
+    onInviteUser() {
+        ModalContainer.openModal(
+            <div className="admin-panel-view-company__invite-user-form">
+                <InviteUserWidget onSuccess={this.onInviteUserSuccess.bind(this)}
+                                  companyId={this.props.params.companyId}/>
+                <div style={{textAlign: 'center'}}>
+                    <Button onClick={ModalContainer.closeModal} type="link">{i18n('CLOSE')}</Button>
+                </div>
+            </div>
+        );
+    }
+
+    onInviteUserSuccess() {
+        this.componentDidMount();
     }
 }
 
