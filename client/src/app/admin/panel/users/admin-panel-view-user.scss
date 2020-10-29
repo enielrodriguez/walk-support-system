@@ -34,22 +34,31 @@
         text-align: left;
     }
 
-    &__supervised-users-header {
-        font-size: $font-size--md;
-        margin-bottom: 20px;
+    &__supervised-users{
         text-align: left;
+        margin-bottom: 20px;
+
+        &-header {
+            font-size: $font-size--md;
+        }
+
+        &-desc {
+            color: $primary-black;
+            font-size: $font-size--sm;
+            //padding: 5px 15px;
+        }
     }
 
     &__supervised-users-content {
         display:flex;
         flex-direction: column;
-        align-items:flex-start; 
+        align-items:flex-start;
     }
 
     &__supervised-users-message {
         margin-top: 20px
     }
-    
+
     &__submit-button {
         margin-top: 20px;
     }
@@ -57,5 +66,5 @@
     &__unverified {
         margin-left: 15px;
     }
-    
+
 }

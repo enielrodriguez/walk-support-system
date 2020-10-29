@@ -129,7 +129,15 @@ class AdminPanelViewUser extends React.Component {
     renderSupervisedView() {
         return (
             <div className="admin-panel-view-user">
-                <div className="admin-panel-view-user__supervised-users-header">{i18n('SUPERVISED_USER')}</div>
+                <div className="admin-panel-view-user__supervised-users">
+                    <div className="admin-panel-view-user__supervised-users-header">
+                        {i18n('SUPERVISED_USER')}
+                    </div>
+                    <div className="admin-panel-view-user__supervised-users-desc">
+                        {i18n('SUPERVISED_USER_WARNING')}
+                    </div>
+                </div>
+
                 <div className="admin-panel-view-user__supervised-users-content">
                     <Autocomplete
                         onChange={this.onChangeValues.bind(this)}
@@ -142,7 +150,7 @@ class AdminPanelViewUser extends React.Component {
                         onClick={this.onClickSupervisorUserButton.bind(this)}
                         size="medium"
                     >
-                        {i18n('UPDATE')}
+                        {i18n('APPLY_CHANGES')}
                     </Button>
                 </div>
                 {this.renderSupervisedUserMessage()}
@@ -194,12 +202,11 @@ class AdminPanelViewUser extends React.Component {
             data: {
                 query: query,
                 blackList: JSON.stringify(blacklist),
-                searchUsers: 1
+                searchUsers: 1,
+                excludeCompanyAdmins: 1
             }
         }).then(r => {
-            const authorsListWithoutMe = r.data.authors.filter(author => author.id != this.props.params.userId);
-
-            return authorsListWithoutMe.map(author => {
+            return r.data.authors.map(author => {
                 return {
                     name: author.name,
                     color: "gray",
