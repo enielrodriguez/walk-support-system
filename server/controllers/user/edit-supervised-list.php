@@ -96,7 +96,9 @@ class EditSupervisedListController extends Controller
         $superUser = User::getDataStore(Controller::request('userId'));
 
         foreach ($clearedList as $item) {
-            if ($item == $superUser->id) throw new Exception(ERRORS::SUPERVISOR_CAN_NOT_SUPERVISE_HIMSELF);
+            if ($item == $superUser->id) {
+                throw new Exception(ERRORS::SUPERVISOR_CAN_NOT_SUPERVISE_HIMSELF);
+            }
         }
 
         return $clearedList;
