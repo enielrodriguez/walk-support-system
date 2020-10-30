@@ -88,6 +88,7 @@ class User extends DataStore
             'customfields' => $this->xownCustomfieldvalueList->toArray(),
             'notRegistered' => $this->notRegistered,
             'supervisedrelation' => $this->supervisedrelation,
+            'tickets' => $this->tickets,
             'company' => $this->companyToArray()
         ];
     }
