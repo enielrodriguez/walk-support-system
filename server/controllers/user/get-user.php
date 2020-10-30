@@ -50,8 +50,12 @@ class GetUserByIdController extends Controller
     public function handler()
     {
 
-        $userId = Controller::request('userId');
-        $user = User::getDataStore($userId);
+        $user = User::getDataStore(Controller::request('userId'));
+        $loggedUser = Controller::getLoggedUser();
+
+        if (!Controller::isStaffLogged() && $loggedUser->company->id !== $user->company->id) {
+            throw new RequestException(ERRORS::NO_PERMISSION);
+        }
 
         $response = [
             'name' => $user->name,
@@ -59,8 +63,7 @@ class GetUserByIdController extends Controller
             'signupDate' => $user->signupDate,
             'verified' => !$user->verificationToken,
             'disabled' => !!$user->disabled,
-            'customfields' => $user->xownCustomfieldvalueList->toArray(),
-            'userList' => $user->supervisedrelation ? $user->supervisedrelation->sharedUserList->toArray() : [],
+            'customfields' => $user->xownCustomfieldvalueList->toArray()
         ];
 
         $tickets = new DataStoreList();
@@ -69,6 +72,7 @@ class GetUserByIdController extends Controller
             $staff = Controller::getLoggedUser();
             $response['company'] = $user->company->toArray(true);
             $response['isCompanyAdmin'] = $this->isCompanyAdmin($user);
+            $response['userList'] = $user->supervisedrelation ? $user->supervisedrelation->sharedUserList->toArray() : [];
 
             // Add only the tickets sent to the departments to which the staff belongs.
             foreach ($user->sharedTicketList as $ticket) {
@@ -76,8 +80,8 @@ class GetUserByIdController extends Controller
                     $tickets->add($ticket);
                 }
             }
-        } // Is company_admin, a regular user who manages a company
-        else {
+
+        } else { // Is company_admin, a regular user who manages a company
             $tickets = $user->sharedTicketList;
         }
 
