@@ -51,6 +51,11 @@ class User extends DataStore
         return parent::getDataStore($value, $property);
     }
 
+    public static function isCompanyAdmin($user): bool
+    {
+        return $user->company->admin && $user->id === $user->company->admin->id;
+    }
+
     public function canManageTicket(Ticket $ticket)
     {
         $ticketNumberInstanceValidation = true;

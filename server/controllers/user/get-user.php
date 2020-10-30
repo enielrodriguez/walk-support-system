@@ -71,7 +71,7 @@ class GetUserByIdController extends Controller
         if (Controller::isStaffLogged()) {
             $staff = Controller::getLoggedUser();
             $response['company'] = $user->company->toArray(true);
-            $response['isCompanyAdmin'] = $this->isCompanyAdmin($user);
+            $response['isCompanyAdmin'] = User::isCompanyAdmin($user);
             $response['userList'] = $user->supervisedrelation ? $user->supervisedrelation->sharedUserList->toArray() : [];
 
             // Add only the tickets sent to the departments to which the staff belongs.
@@ -88,10 +88,5 @@ class GetUserByIdController extends Controller
         $response['tickets'] = $tickets->toArray(true);
 
         Response::respondSuccess($response);
-    }
-
-    private function isCompanyAdmin($user)
-    {
-        return $user->company->admin && $user->id === $user->company->admin->id;
     }
 }
