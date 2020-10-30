@@ -38,8 +38,9 @@ class AdminPanelListUsers extends React.Component {
     render() {
         return (
             <div className="admin-panel-list-users">
-                <Header title={i18n('LIST_USERS')} description={i18n('LIST_USERS_DESCRIPTION')} />
-                {(this.state.error) ? <Message type="error">{i18n('ERROR_RETRIEVING_USERS')}</Message> : this.renderTableAndInviteButton()}
+                <Header title={i18n('LIST_USERS')} description={i18n('LIST_USERS_DESCRIPTION')}/>
+                {(this.state.error) ? <Message
+                    type="error">{i18n('ERROR_RETRIEVING_USERS')}</Message> : this.renderTableAndInviteButton()}
             </div>
         );
     }
@@ -47,7 +48,8 @@ class AdminPanelListUsers extends React.Component {
     renderTableAndInviteButton() {
         return (
             <div>
-                <SearchBox className="admin-panel-list-users__search-box" placeholder={i18n('SEARCH_USERS')} onSearch={this.onSearch.bind(this)} />
+                <SearchBox className="admin-panel-list-users__search-box" placeholder={i18n('SEARCH_USERS')}
+                           onSearch={this.onSearch.bind(this)}/>
                 <Table {...this.getTableProps()}/>
                 <div style={{textAlign: 'right', marginTop: 10}}>
                     <Button onClick={this.onInviteUser.bind(this)} type="secondary" size="medium">
@@ -114,11 +116,12 @@ class AdminPanelListUsers extends React.Component {
         return {
             name: (
                 <div>
-                    <Button className="admin-panel-list-users__name-link" type="link" route={{to: '/admin/panel/users/view-user/' + user.id}}>
+                    <Button className="admin-panel-list-users__name-link" type="link"
+                            route={{to: '/admin/panel/users/view-user/' + user.id}}>
                         {user.name}
                     </Button>
-                    {user.isCompanyAdmin && <span>{'(admin)'}</span>}
-                    {user.disabled ? this.renderDisabled() : null}
+                    {user.isCompanyAdmin && this.renderAdmin()}
+                    {user.disabled && this.renderDisabled()}
                 </div>
             ),
             email: user.email,
@@ -134,7 +137,14 @@ class AdminPanelListUsers extends React.Component {
 
     renderDisabled() {
         return (
-            <InfoTooltip className="admin-panel-list-users__name-disabled" type="warning" text={i18n('USER_DISABLED')} />
+            <InfoTooltip className="admin-panel-list-users__name-disabled" type="warning" text={i18n('USER_DISABLED')}/>
+        );
+    }
+
+    renderAdmin() {
+        return (
+            <InfoTooltip className="admin-panel-view-user__unverified" type="user-plus" size="sm"
+                         text={i18n('COMPANY_ADMIN_DESCRIPTION')}/>
         );
     }
 
@@ -197,7 +207,7 @@ class AdminPanelListUsers extends React.Component {
     onInviteUser(user) {
         ModalContainer.openModal(
             <div className="admin-panel-list-users__invite-user-form">
-                <InviteUserWidget onSuccess={this.onInviteUserSuccess.bind(this)} />
+                <InviteUserWidget onSuccess={this.onInviteUserSuccess.bind(this)}/>
                 <div style={{textAlign: 'center'}}>
                     <Button onClick={ModalContainer.closeModal} type="link">{i18n('CLOSE')}</Button>
                 </div>
@@ -215,7 +225,7 @@ class AdminPanelListUsers extends React.Component {
             pages: result.data.pages * 1,
             users: result.data.users,
             orderBy: result.data.orderBy,
-            desc: (result.data.desc*1),
+            desc: (result.data.desc * 1),
             error: false,
             loading: false
         });

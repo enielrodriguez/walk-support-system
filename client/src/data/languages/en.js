@@ -470,6 +470,7 @@ export default {
     'DELETE_COMPANY_DESCRIPTION': 'The company and all its users and tickets will be erased',
     'COMPANY_ADMIN': 'Administrator',
     'COMPANY_ADMIN_WARNING': 'A user will be created with this data',
+    'COMPANY_ADMIN_DESCRIPTION': 'Company admin',
 
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more',
 
@@ -483,7 +484,7 @@ export default {
     'CHANGE_NAME': 'Change name',
     'NAME_WILL_CHANGE': 'The current name will be changed',
     'NAME_CHANGED': 'Name has been changed successfully',
-    'SUPERVISED_USER_WARNING': 'Users that you remove from this list will be removed from the system.',
+    'SUPERVISED_USER_WARNING': 'These users belong to the same company, and are managed by the current user.',
 
     'UNKNOWN_ERROR': 'An error occurred',
     'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies',

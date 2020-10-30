@@ -476,6 +476,7 @@ export default {
     'DELETE_COMPANY_DESCRIPTION': 'La empresa y todos sus usuarios y tickets serán borrados del sistema',
     'COMPANY_ADMIN': 'Administrador',
     'COMPANY_ADMIN_WARNING': 'Se creará un usuario con estos datos',
+    'COMPANY_ADMIN_DESCRIPTION': 'Administrador de la empresa',
 
     'DELETE_BAN_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán. Además, el correo electrónico ya no podrá utilizarse',
 
@@ -489,7 +490,7 @@ export default {
     'CHANGE_NAME': 'Cambiar nombre',
     'NAME_WILL_CHANGE': 'El nombre actual se cambiará',
     'NAME_CHANGED': 'Se ha cambiado correctamente el nombre',
-    'SUPERVISED_USER_WARNING': 'Los usuarios que usted quite de esta lista serán eliminados del sistema.',
+    'SUPERVISED_USER_WARNING': 'Estos usuarios pertenecen a la misma empresa, y son administrados por el usuario actual.',
 
     'UNKNOWN_ERROR': 'Ocurrió un error',
     'ERROR_RETRIEVING_COMPANIES': 'Error al acceder a la lista de empresas',
