@@ -43,11 +43,11 @@ class DisableUserController extends Controller
 
     public function handler()
     {
-        $companyAdmin = Controller::getLoggedUser();
+        $loggedUser = Controller::getLoggedUser();
         $user = User::getDataStore(Controller::request('userId'));
 
-        if ($companyAdmin->company->id !== $user->company->id) {
-            throw new ValidationException(ERRORS::NO_PERMISSION);
+        if (!Controller::isStaffLogged() && ($loggedUser->company->id !== $user->company->id)) {
+            throw new RequestException(ERRORS::NO_PERMISSION);
         }
 
         if ($user->disabled) {
