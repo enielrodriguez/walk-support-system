@@ -7,22 +7,26 @@ import Tooltip from 'core-components/tooltip';
 
 class InfoTooltip extends React.Component {
     static propTypes = {
-        type: React.PropTypes.oneOf(['default', 'warning']),
+        type: React.PropTypes.string,
+        size: React.PropTypes.string,
         text: React.PropTypes.node.isRequired
     };
 
     static defaultProps = {
-        type: 'default'
+        type: 'default',
+        size: 'lg'
     };
 
     render() {
-        let name = (this.props.type === 'default') ? 'question-circle' : 'exclamation-triangle';
+        let name = (this.props.type === 'default') ? 'question-circle'
+            : this.props.type === 'warning' ? 'exclamation-triangle' : this.props.type;
+        let size = this.props.size;
 
         return (
             <div className={this.getClass()}>
                 <Tooltip content={this.renderText()} openOnHover>
                     <span className="info-tooltip__icon">
-                        <Icon name={name}/>
+                        <Icon size={size} name={name}/>
                     </span>
                 </Tooltip>
             </div>
@@ -30,7 +34,7 @@ class InfoTooltip extends React.Component {
     }
 
     renderText() {
-        let message = (this.props.type === 'default') ? i18n('INFO') : i18n('WARNING');
+        let message = (this.props.type !== 'warning') ? i18n('INFO') : i18n('WARNING');
 
         return (
             <div className="info-tooltip__text">
