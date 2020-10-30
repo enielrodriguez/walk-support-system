@@ -50,7 +50,11 @@ class DeleteUserController extends Controller
         $user = User::getDataStore(Controller::request('userId'));
 
         if (Controller::isCompanyAdminLogged() && $loggedUser->company->id !== $user->company->id) {
-            throw new ValidationException(ERRORS::NO_PERMISSION);
+            throw new RequestException(ERRORS::NO_PERMISSION);
+        }
+
+        if (User::isCompanyAdmin($user)) {
+            throw new RequestException(ERRORS::NO_PERMISSION);
         }
 
         Log::createLog('DELETE_USER', $user->name);
