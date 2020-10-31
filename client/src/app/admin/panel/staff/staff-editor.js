@@ -265,7 +265,7 @@ class StaffEditor extends React.Component {
                     </div>
                     <Button
                         onClick={() => AreYouSure.openModal(i18n('WILL_DELETE_STAFF'), this.onDeleteClick.bind(this))}>
-                        {i18n('DELETE_STAFF_MEMBER')}
+                        {i18n('DELETE')}
                     </Button>
                 </div>
             </div>
@@ -325,7 +325,7 @@ class StaffEditor extends React.Component {
                     <span className="staff-editor__level-info-description">{i18n('LEVEL_2_DESCRIPTION')}</span>
                 </div>
                 <div className="staff-editor__level-info-box">
-                    <span className="staff-editor__level-info-title">{i18n('LEVEL')} 3 </span>
+                    <span className="staff-editor__level-info-title">{i18n('LEVEL_3')} </span>
                     <span className="staff-editor__level-info-description">{i18n('LEVEL_3_DESCRIPTION')}</span>
                 </div>
             </div>
