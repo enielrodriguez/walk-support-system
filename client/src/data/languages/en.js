@@ -485,6 +485,8 @@ export default {
     'NAME_WILL_CHANGE': 'The current name will be changed',
     'NAME_CHANGED': 'Name has been changed successfully',
     'SUPERVISED_USER_WARNING': 'These users belong to the same company, and are managed by the current user.',
+    'EDIT_USER': 'Edit User',
+    'EDIT_USER_DESCRIPTION': 'Here you can edit some user data',
 
     'UNKNOWN_ERROR': 'An error occurred',
     'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies',

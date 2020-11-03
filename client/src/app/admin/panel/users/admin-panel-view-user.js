@@ -1,7 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import history from 'lib-app/history';
+import {Link} from "react-router";
 
+import history from 'lib-app/history';
 import i18n from 'lib-app/i18n';
 import API from 'lib-app/api-call';
 
@@ -12,10 +13,8 @@ import Header from 'core-components/header';
 import Button from 'core-components/button';
 import Message from 'core-components/message';
 import InfoTooltip from 'core-components/info-tooltip';
-import Autocomplete from 'core-components/autocomplete';
-import Tag from "../../../../core-components/tag";
 import UserList from "../../../../app-components/user-list";
-import Icon from "../../../../core-components/icon";
+
 
 class AdminPanelViewUser extends React.Component {
 
@@ -111,6 +110,21 @@ class AdminPanelViewUser extends React.Component {
                             {i18n('DELETE')}
                             {this.state.isCompanyAdmin && this.renderForbiddenDelete()}
                         </Button>
+
+                        <Link className="admin-panel-view-user__link"
+                              to={
+                                  {
+                                      pathname: '/admin/panel/users/edit-user/' + this.props.params.userId,
+                                      state: {
+                                          name: this.state.name,
+                                          email: this.state.email,
+                                          customfields: this.state.customfields
+                                      }
+                                  }
+                              }>
+                            {i18n('EDIT')}
+                        </Link>
+
                     </div>
                 </div>
 
@@ -181,9 +195,9 @@ class AdminPanelViewUser extends React.Component {
         );
     }
 
-    renderCustomField(customfield) {
+    renderCustomField(customfield, id) {
         return (
-            <div className="admin-panel-view-user__info-item">
+            <div className="admin-panel-view-user__info-item" key={id}>
                 {customfield.customfield}
                 <div className="admin-panel-view-user__info-box">
                     {customfield.value}

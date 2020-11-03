@@ -1,0 +1,336 @@
+import React from 'react';
+import _ from 'lodash';
+
+import API from 'lib-app/api-call';
+import i18n from 'lib-app/i18n';
+import {getCustomFieldParamName} from 'lib-core/APIUtils';
+
+import Header from 'core-components/header';
+import Form from 'core-components/form';
+import FormField from 'core-components/form-field';
+import SubmitButton from 'core-components/submit-button';
+import Message from 'core-components/message';
+import Loading from "../../../../core-components/loading";
+
+
+class AdminPanelEditUser extends React.Component {
+
+    static propTypes = {
+        userCustomFields: React.PropTypes.object
+    };
+
+    static defaultProps = {
+        userCustomFields: {}
+    };
+
+    state = {
+        name: '',
+        email: '',
+        loadingData: true,
+        loadingName: false,
+        loadingEmail: false,
+        loadingPass: false,
+        loadingCustomFields: false,
+        messageName: '',
+        messageEmail: '',
+        messagePass: '',
+        customFields: [],
+        customFieldsFormValues: {},
+        errorRetrievingData: false
+    };
+
+    componentDidMount() {
+        this.retrieveData();
+    }
+
+    render() {
+        return this.state.loadingData ? (<Loading backgrounded/>)
+            : this.state.errorRetrievingData ? this.renderMessageError() : (
+                <div className="admin-panel-edit-user">
+                    <Header title={i18n('EDIT_USER')} description={i18n('EDIT_USER_DESCRIPTION')}/>
+
+                    <Form loading={this.state.loadingName}
+                          onSubmit={this.onSubmitEditName.bind(this)}
+                          values={{newName: this.state.name}}
+                          onChange={form => this.setState({name: form.newName})}>
+                        <FormField name="newName" label={i18n('EDIT_NAME')} field="input"
+                                   fieldProps={{size: 'large'}} required/>
+                        <SubmitButton>{i18n('CHANGE_NAME')}</SubmitButton>
+                        {this.renderMessageName()}
+                    </Form>
+
+                    <Form loading={this.state.loadingEmail}
+                          onSubmit={this.onSubmitEditEmail.bind(this)}
+                          values={{newEmail: this.state.email}}
+                          onChange={form => this.setState({email: form.newEmail})}>
+                        <FormField name="newEmail" label={i18n('EDIT_EMAIL')} validation="EMAIL"
+                                   fieldProps={{size: 'large'}} required/>
+                        <SubmitButton>{i18n('CHANGE_EMAIL')}</SubmitButton>
+                        {this.renderMessageEmail()}
+                    </Form>
+
+                    <Form loading={this.state.loadingPass} onSubmit={this.onSubmitEditPassword.bind(this)}>
+                        <FormField name="password" label={i18n('NEW_PASSWORD')} field="input" validation="PASSWORD"
+                                   fieldProps={{password: true, size: 'large'}} required/>
+                        <FormField name="repeatNewPassword" label={i18n('REPEAT_NEW_PASSWORD')} field="input"
+                                   validation="REPEAT_PASSWORD" fieldProps={{password: true, size: 'large'}} required/>
+                        <SubmitButton>{i18n('CHANGE_PASSWORD')}</SubmitButton>
+                        {this.renderMessagePass()}
+                    </Form>
+
+                    {this.state.customFields.length ? this.renderCustomFields() : null}
+                </div>
+            );
+    }
+
+    renderCustomFields() {
+        return (
+            <div>
+                <div className="admin-panel-edit-user__title">{i18n('ADDITIONAL_FIELDS')}</div>
+                <Form loading={this.state.loadingCustomFields} values={this.state.customFieldsFormValues}
+                      onChange={form => this.setState({customFieldsFormValues: form})}
+                      onSubmit={this.onCustomFieldsSubmit.bind(this)}>
+                    <div className="admin-panel-edit-user__custom-fields">
+                        {this.state.customFields.map(this.renderCustomField.bind(this))}
+                    </div>
+                    <div className="row">
+                        <SubmitButton>{i18n('SAVE')}</SubmitButton>
+                    </div>
+                </Form>
+            </div>
+        );
+    }
+
+    renderCustomField(customField, key) {
+        if (customField.type === 'text') {
+            return (
+                <div className="admin-panel-edit-user__custom-field" key={key}>
+                    <FormField name={customField.name} label={customField.name} infoMessage={customField.description}
+                               field="input" fieldProps={{size: 'small'}}/>
+                </div>
+            );
+        } else {
+            const items = customField.options.map(option => ({content: option.name, value: option.name}));
+
+            return (
+                <div className="admin-panel-edit-user__custom-field" key={key}>
+                    <FormField name={customField.name} label={customField.name} infoMessage={customField.description}
+                               field="select" fieldProps={{size: 'small', items}}/>
+                </div>
+            );
+        }
+    }
+
+    renderMessageError() {
+        return <Message className="admin-panel-edit-user__message"
+                        type="error">{i18n('UNKNOWN_ERROR')}</Message>
+    }
+
+    renderMessageName() {
+        switch (this.state.messageName) {
+            case 'success':
+                return <Message className="admin-panel-edit-user__message"
+                                type="success">{i18n('NAME_CHANGED')}</Message>;
+            case 'fail':
+                return <Message className="admin-panel-edit-user__message"
+                                type="error">{i18n('INVALID_NAME')}</Message>;
+            default:
+                return null;
+        }
+
+    }
+
+    renderMessageEmail() {
+        switch (this.state.messageEmail) {
+            case 'success':
+                return <Message className="admin-panel-edit-user__message"
+                                type="success">{i18n('EMAIL_CHANGED')}</Message>;
+            case 'fail':
+                return <Message className="admin-panel-edit-user__message"
+                                type="error">{i18n('INVALID_EMAIL')}</Message>;
+            default:
+                return null;
+        }
+
+    }
+
+    renderMessagePass() {
+        switch (this.state.messagePass) {
+            case 'success':
+                return <Message className="admin-panel-edit-user__message"
+                                type="success">{i18n('PASSWORD_CHANGED')}</Message>;
+            case 'fail':
+                return <Message className="admin-panel-edit-user__message"
+                                type="error">{i18n('OLD_PASSWORD_INCORRECT')}</Message>;
+            default:
+                return null;
+        }
+    }
+
+    onCustomFieldsSubmit(form) {
+        const customFields = this.state.customFields;
+        const parsedFormValues = {}
+
+        customFields.forEach(customField => {
+            if (customField.type === 'select') {
+                parsedFormValues[getCustomFieldParamName(customField.name)] = customField.options[form[customField.name]].name;
+            } else {
+                parsedFormValues[getCustomFieldParamName(customField.name)] = form[customField.name];
+            }
+        });
+
+        parsedFormValues['userId'] = this.props.params.userId;
+
+        this.setState({
+            loadingCustomFields: true,
+        });
+
+        API.call({
+            path: '/user/edit-custom-fields',
+            data: parsedFormValues
+        }).then(() => {
+            this.setState({loadingCustomFields: false});
+        });
+
+    }
+
+
+    onSubmitEditName(formState) {
+        this.setState({
+            loadingName: true
+        });
+        return API.call({
+            path: "/user/edit-name",
+            data: {
+                newName: formState.newName,
+                userId: this.props.params.userId
+
+            }
+        }).then(function () {
+            this.setState({
+                loadingName: false,
+                messageName: "success"
+            });
+        }.bind(this)).catch(function () {
+            this.setState({
+                loadingName: false,
+                messageName: 'fail'
+            })
+        }.bind(this));
+    }
+
+    onSubmitEditEmail(formState) {
+        this.setState({
+            loadingEmail: true
+        });
+        return API.call({
+            path: "/user/edit-email",
+            data: {
+                newEmail: formState.newEmail,
+                userId: this.props.params.userId
+            }
+        }).then(function () {
+            this.setState({
+                loadingEmail: false,
+                messageEmail: "success"
+            });
+        }.bind(this)).catch(function () {
+            this.setState({
+                loadingEmail: false,
+                messageEmail: 'fail'
+            })
+        }.bind(this));
+    }
+
+    onSubmitEditPassword(formState) {
+        this.setState({
+            loadingPass: true
+        });
+
+        return API.call({
+            path: "/user/edit-password",
+            data: {
+                newPassword: formState.password,
+                userId: this.props.params.userId
+            }
+        }).then(function () {
+            this.setState({
+                loadingPass: false,
+                messagePass: "success"
+            });
+        }.bind(this)).catch(function () {
+            this.setState({
+                loadingPass: false,
+                messagePass: 'fail'
+            })
+        }.bind(this));
+    }
+
+    retrieveData() {
+        if (!this.props.location.state) {
+            this.retrieveUser();
+        } else {
+            console.log(this.props.location.state.customfields);
+            this.setState({
+                name: this.props.location.state.name,
+                email: this.props.location.state.email
+            }, () => this.retrieveCustomFields(this.props.location.state.customfields));
+        }
+    }
+
+    // customfields contains the name and the value of the fields, but it does not contain
+    // the (field) type, and in case of select fields, it does not contain all the options either.
+    // That is why it is necessary to make a request to the server.
+    retrieveCustomFields(customfields) {
+        API.call({
+            path: '/system/get-custom-fields',
+            data: {}
+        }).then(result => {
+            const customFieldsFormValues = {};
+            const userCustomFieldsValues = {};
+
+            customfields.forEach(cf => {
+                userCustomFieldsValues[cf.customfield] = cf.value;
+            });
+
+            result.data.forEach(customField => {
+                if (customField.type === 'select') {
+                    const index = _.indexOf(customField.options.map(option => option.name), userCustomFieldsValues[customField.name]);
+                    customFieldsFormValues[customField.name] = (index === -1 ? 0 : index);
+                } else {
+                    customFieldsFormValues[customField.name] = userCustomFieldsValues[customField.name] || '';
+                }
+            });
+
+            this.setState({
+                customFields: result.data,
+                customFieldsFormValues: customFieldsFormValues,
+                loadingData: false,
+                errorRetrievingData: false
+            });
+        }).catch(() => this.setState({
+            loadingData: false,
+            errorRetrievingData: true
+        }));
+    }
+
+    retrieveUser() {
+        API.call({
+            path: '/user/get-user',
+            data: {
+                userId: this.props.params.userId
+            }
+        }).then(result => this.setState({
+                name: result.data.name,
+                email: result.data.email
+            }, () => this.retrieveCustomFields(result.data.customfields))
+        ).catch(() => this.setState(
+            {
+                loadingData: false,
+                errorRetrievingData: true
+            })
+        );
+    }
+}
+
+export default AdminPanelEditUser;

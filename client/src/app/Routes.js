@@ -66,6 +66,7 @@ import InstallCompleted from 'app/install/install-completed';
 import AdminPanelViewCompany from "./admin/panel/users/admin-panel-view-company";
 import DashboardListUsersPage from "./main/dashboard/dashboard-list-users/dashboard-list-users-page";
 import DashboardViewUser from "./main/dashboard/dashboard-view-user/dashboard-view-user";
+import AdminPanelEditUser from "./admin/panel/users/admin-panel-edit-user";
 
 export default (
     <Router history={history}>
@@ -129,6 +130,8 @@ export default (
                         <Route path="list-users" component={AdminPanelListUsers} />
                         <Route path="companies" component={AdminPanelCompanies} />
                         <Route path="view-user/:userId" component={AdminPanelViewUser} />
+                        <Route path="edit-user/:userId" component={AdminPanelEditUser}
+                               render={props => <AdminPanelEditUser {...props} />} />
                         <Route path="view-company/:companyId" component={AdminPanelViewCompany} />
                         <Route path="ban-users" component={AdminPanelBanUsers} />
                         <Route path="custom-fields" component={AdminPanelCustomFields} />
