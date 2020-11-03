@@ -16,7 +16,7 @@ use Respect\Validation\Validator as DataValidator;
  *
  * @apiParam {String} newPassword The new password that the user wants to change.
  * @apiParam {String} oldPassword The actual password of the user.
- * @apiParam {Number} userId Optional. The user id whose password is to be changed. This option is for administrators to manage other users.
+ * @apiParam {Number} userId Optional. The user id whose password is to be changed. This option is for staffs and company admins to manage other users.
  *
  * @apiUse NO_PERMISSION
  * @apiUse INVALID_PASSWORD
