@@ -1,4 +1,5 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
 
 /**
@@ -18,18 +19,19 @@ use Respect\Validation\Validator as DataValidator;
  *
  * @apiUse NO_PERMISSION
  * @apiUse INVALID_EMAIL
- * 
+ *
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class EditEmail extends Controller{
+class EditEmail extends Controller
+{
     const PATH = '/edit-email';
     const METHOD = 'POST';
 
     private $user;
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'user',
             'requestData' => [
@@ -40,13 +42,17 @@ class EditEmail extends Controller{
             ]
         ];
     }
-    
-    public function handler() {
+
+    public function handler()
+    {
 
         $newEmail = Controller::request('newEmail');
         $userId = Controller::request('userId');
 
         if (!$userId) {
+            if (Controller::isCompanyAdminLogged()) {
+                throw new RequestException(ERRORS::NO_PERMISSION);
+            }
             $this->user = Controller::getLoggedUser();
         } else if (Controller::isStaffLogged() || Controller::isCompanyAdminLogged()) {
             $this->setupForSomeUser($userId);
@@ -57,15 +63,15 @@ class EditEmail extends Controller{
         $oldEmail = $this->user->email;
         $this->user->email = $newEmail;
         $this->user->store();
-        
+
         $mailSender = MailSender::getInstance();
         $mailSender->setTemplate('USER_EMAIL', [
-            'to'=>$oldEmail,
-            'newemail'=>$this->user->email,
-            'name'=>$this->user->name
+            'to' => $oldEmail,
+            'newemail' => $this->user->email,
+            'name' => $this->user->name
         ]);
         $mailSender->send();
-        
+
         Response::respondSuccess();
     }
 
