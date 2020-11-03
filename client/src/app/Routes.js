@@ -67,12 +67,13 @@ import AdminPanelViewCompany from "./admin/panel/users/admin-panel-view-company"
 import DashboardListUsersPage from "./main/dashboard/dashboard-list-users/dashboard-list-users-page";
 import DashboardViewUser from "./main/dashboard/dashboard-view-user/dashboard-view-user";
 import AdminPanelEditUser from "./admin/panel/users/admin-panel-edit-user";
+import DashboardEditUser from "./main/dashboard/dashboard-edit-user/dashboard-edit-user";
 
 export default (
     <Router history={history}>
         <Route component={App}>
             <Route path='/' component={MainLayout}>
-                <IndexRoute component={MainHomePage} />
+                <IndexRoute component={MainHomePage}/>
                 <Route path='signup' component={MainSignUpPage}/>
                 <Route path='verify-token/:email/:token' component={MainVerifyTokenPage}/>
                 <Route path='recover-password' component={MainRecoverPasswordPage}/>
@@ -85,7 +86,7 @@ export default (
                 <Route path='article/:articleId' component={DashboardArticlePage}/>
 
                 <Route path='dashboard' component={DashboardLayout}>
-                    <IndexRoute component={DashboardListTicketsPage} />
+                    <IndexRoute component={DashboardListTicketsPage}/>
                     <Route path='articles' component={DashboardListArticlesPage}/>
 
                     <Route path='create-ticket' component={DashboardCreateTicketPage}/>
@@ -96,71 +97,73 @@ export default (
 
                     <Route path='users' component={DashboardListUsersPage}/>
                     <Route path='users/:userId' component={DashboardViewUser}/>
+                    <Route path="users/edit/:userId" component={DashboardEditUser}
+                           render={props => <DashboardEditUser {...props} />}/>
                 </Route>
             </Route>
             <Route path="install" component={InstallLayout}>
-                <IndexRedirect to="step-1" />
+                <IndexRedirect to="step-1"/>
                 <Route path="step-1" component={InstallStep1Language}/>
-                <Route path="step-2" component={InstallStep2Requirements} />
-                <Route path="step-3" component={InstallStep3Database} />
-                <Route path="step-4" component={InstallStep4UserSystem} />
-                <Route path="step-5" component={InstallStep5Settings} />
-                <Route path="step-6" component={InstallStep6Admin} />
-                <Route path="completed" component={InstallCompleted} />
+                <Route path="step-2" component={InstallStep2Requirements}/>
+                <Route path="step-3" component={InstallStep3Database}/>
+                <Route path="step-4" component={InstallStep4UserSystem}/>
+                <Route path="step-5" component={InstallStep5Settings}/>
+                <Route path="step-6" component={InstallStep6Admin}/>
+                <Route path="completed" component={InstallCompleted}/>
             </Route>
             <Route path="admin">
-                <IndexRoute component={AdminLoginPage} />
+                <IndexRoute component={AdminLoginPage}/>
                 <Route path="panel" component={AdminPanelLayout}>
-                    <IndexRedirect to="activity" />
-                    <Route path="stats" component={AdminPanelStats} />
-                    <Route path="activity" component={AdminPanelActivity} />
-                    <Route path="my-account" component={AdminPanelMyAccount} />
+                    <IndexRedirect to="activity"/>
+                    <Route path="stats" component={AdminPanelStats}/>
+                    <Route path="activity" component={AdminPanelActivity}/>
+                    <Route path="my-account" component={AdminPanelMyAccount}/>
 
                     <Route path="tickets">
-                        <IndexRedirect to="my-tickets" />
-                        <Route path="my-tickets" component={AdminPanelMyTickets} />
-                        <Route path="new-tickets" component={AdminPanelNewTickets} />
-                        <Route path="search-tickets" component={AdminPanelSearchTickets} />
-                        <Route path="custom-responses" component={AdminPanelCustomResponses} />
-                        <Route path="view-ticket/:ticketNumber" component={AdminPanelViewTicket} />
+                        <IndexRedirect to="my-tickets"/>
+                        <Route path="my-tickets" component={AdminPanelMyTickets}/>
+                        <Route path="new-tickets" component={AdminPanelNewTickets}/>
+                        <Route path="search-tickets" component={AdminPanelSearchTickets}/>
+                        <Route path="custom-responses" component={AdminPanelCustomResponses}/>
+                        <Route path="view-ticket/:ticketNumber" component={AdminPanelViewTicket}/>
                     </Route>
 
                     <Route path="users">
-                        <IndexRedirect to="list-users" />
-                        <Route path="list-users" component={AdminPanelListUsers} />
-                        <Route path="companies" component={AdminPanelCompanies} />
-                        <Route path="view-user/:userId" component={AdminPanelViewUser} />
+                        <IndexRedirect to="list-users"/>
+                        <Route path="list-users" component={AdminPanelListUsers}/>
+                        <Route path="companies" component={AdminPanelCompanies}/>
+                        <Route path="view-user/:userId" component={AdminPanelViewUser}/>
                         <Route path="edit-user/:userId" component={AdminPanelEditUser}
-                               render={props => <AdminPanelEditUser {...props} />} />
-                        <Route path="view-company/:companyId" component={AdminPanelViewCompany} />
-                        <Route path="ban-users" component={AdminPanelBanUsers} />
-                        <Route path="custom-fields" component={AdminPanelCustomFields} />
+                               render={props => <AdminPanelEditUser {...props} />}/>
+                        <Route path="view-company/:companyId" component={AdminPanelViewCompany}/>
+                        <Route path="ban-users" component={AdminPanelBanUsers}/>
+                        <Route path="custom-fields" component={AdminPanelCustomFields}/>
                     </Route>
 
                     <Route path="articles">
-                        <IndexRedirect to="list-articles" />
-                        <Route path="list-articles" component={AdminPanelListArticles} />
-                        <Route path="view-article/:articleId" component={AdminPanelViewArticle} />
+                        <IndexRedirect to="list-articles"/>
+                        <Route path="list-articles" component={AdminPanelListArticles}/>
+                        <Route path="view-article/:articleId" component={AdminPanelViewArticle}/>
                     </Route>
 
                     <Route path="staff">
-                        <IndexRedirect to="staff-members" />
-                        <Route path="staff-members" component={AdminPanelStaffMembers} />
-                        <Route path="view-staff/:staffId" component={AdminPanelViewStaff} />
-                        <Route path="departments" component={AdminPanelDepartments} />
+                        <IndexRedirect to="staff-members"/>
+                        <Route path="staff-members" component={AdminPanelStaffMembers}/>
+                        <Route path="view-staff/:staffId" component={AdminPanelViewStaff}/>
+                        <Route path="departments" component={AdminPanelDepartments}/>
                     </Route>
 
                     <Route path="settings">
-                        <IndexRedirect to="system-preferences" />
-                        <Route path="system-preferences" component={AdminPanelSystemPreferences} />
-                        <Route path="advanced-settings" component={AdminPanelAdvancedSettings} />
-                        <Route path="email-settings" component={AdminPanelEmailSettings} />
-                        <Route path="custom-tags" component={AdminPanelCustomTags} />
+                        <IndexRedirect to="system-preferences"/>
+                        <Route path="system-preferences" component={AdminPanelSystemPreferences}/>
+                        <Route path="advanced-settings" component={AdminPanelAdvancedSettings}/>
+                        <Route path="email-settings" component={AdminPanelEmailSettings}/>
+                        <Route path="custom-tags" component={AdminPanelCustomTags}/>
                     </Route>
                 </Route>
             </Route>
 
-            <Route name='Demo' path='components-demo' component={DemoPage} />
+            <Route name='Demo' path='components-demo' component={DemoPage}/>
         </Route>
     </Router>
 );

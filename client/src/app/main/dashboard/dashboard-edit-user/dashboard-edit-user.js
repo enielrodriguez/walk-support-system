@@ -13,7 +13,7 @@ import Message from 'core-components/message';
 import Loading from "../../../../core-components/loading";
 
 
-class AdminPanelEditUser extends React.Component {
+class DashboardEditUser extends React.Component {
 
     static propTypes = {
         userCustomFields: React.PropTypes.object
@@ -333,4 +333,4 @@ class AdminPanelEditUser extends React.Component {
     }
 }
 
-export default AdminPanelEditUser;
+export default DashboardEditUser;
