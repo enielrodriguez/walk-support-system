@@ -11,8 +11,6 @@ import UserList from "app-components/user-list";
 import ModalContainer from "../../../../app-components/modal-container";
 import Button from "../../../../core-components/button";
 import AddUserWidget from "./add-user-widget";
-import SearchBox from "../../../../core-components/search-box";
-import Table from "../../../../core-components/table";
 import Icon from "../../../../core-components/icon";
 
 class DashboardListUsersPage extends React.Component {
@@ -42,7 +40,7 @@ class DashboardListUsersPage extends React.Component {
 
         return {
             users: userUsers.slice((page - 1) * 10, page * 10 + 1),
-            userPath: '/dashboard/user/',
+            userPath: '/dashboard/users/',
             onPageChange: this.onPageChange.bind(this),
             page: page,
             pages: userUsers.length / 10
@@ -69,7 +67,7 @@ class DashboardListUsersPage extends React.Component {
         );
     }
 
-    onAddUser(user) {
+    onAddUser() {
         ModalContainer.openModal(
             <div className="dashboard-user-list__add-user-form">
                 <AddUserWidget onSuccess={this.onAddUserSuccess.bind(this)}/>

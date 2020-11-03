@@ -95,7 +95,7 @@ export default (
                     <Route path='ticket/:ticketNumber' component={DashboardTicketPage}/>
 
                     <Route path='users' component={DashboardListUsersPage}/>
-                    <Route path='user/:userId' component={DashboardViewUser}/>
+                    <Route path='users/:userId' component={DashboardViewUser}/>
                 </Route>
             </Route>
             <Route path="install" component={InstallLayout}>
