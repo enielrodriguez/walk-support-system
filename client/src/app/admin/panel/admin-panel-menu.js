@@ -189,7 +189,7 @@ class AdminPanelMenu extends React.Component {
                     },                    {
                         name: i18n('COMPANIES'),
                         path: '/admin/panel/users/companies',
-                        level: 1
+                        level: 3
                     },
                     {
                         name: i18n('BAN_USERS'),
