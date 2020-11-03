@@ -195,9 +195,9 @@ class AdminPanelViewUser extends React.Component {
         );
     }
 
-    renderCustomField(customfield, id) {
+    renderCustomField(customfield) {
         return (
-            <div className="admin-panel-view-user__info-item" key={id}>
+            <div className="admin-panel-view-user__info-item" key={customfield.id}>
                 {customfield.customfield}
                 <div className="admin-panel-view-user__info-box">
                     {customfield.value}
