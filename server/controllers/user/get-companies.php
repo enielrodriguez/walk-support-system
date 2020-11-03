@@ -29,7 +29,7 @@ class GetCompaniesController extends Controller
     public function validations()
     {
         return [
-            'permission' => 'staff_3',
+            'permission' => 'staff_1',
             'requestData' => []
         ];
     }
