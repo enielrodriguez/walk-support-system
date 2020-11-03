@@ -14,6 +14,7 @@ use Respect\Validation\Validator as DataValidator;
  * @apiPermission user
  *
  * @apiParam {String} newEmail The new email that the user wants to change.
+ * @apiParam {Number} userId Optional. The user id whose email is to be changed. This option is for staffs and company admins to manage other users.
  *
  * @apiUse NO_PERMISSION
  * @apiUse INVALID_EMAIL
@@ -25,6 +26,8 @@ use Respect\Validation\Validator as DataValidator;
 class EditEmail extends Controller{
     const PATH = '/edit-email';
     const METHOD = 'POST';
+
+    private $user;
 
     public function validations() {
         return [
@@ -39,20 +42,44 @@ class EditEmail extends Controller{
     }
     
     public function handler() {
+
         $newEmail = Controller::request('newEmail');
-        $user = Controller::getLoggedUser();
-        $oldEmail = $user->email;
-        $user->email = $newEmail;
-        $user->store();
+        $userId = Controller::request('userId');
+
+        if (!$userId) {
+            $this->user = Controller::getLoggedUser();
+        } else if (Controller::isStaffLogged() || Controller::isCompanyAdminLogged()) {
+            $this->setupForSomeUser($userId);
+        } else {
+            throw new RequestException(ERRORS::NO_PERMISSION);
+        }
+
+        $oldEmail = $this->user->email;
+        $this->user->email = $newEmail;
+        $this->user->store();
         
         $mailSender = MailSender::getInstance();
         $mailSender->setTemplate('USER_EMAIL', [
             'to'=>$oldEmail,
-            'newemail'=>$user->email,
-            'name'=>$user->name
+            'newemail'=>$this->user->email,
+            'name'=>$this->user->name
         ]);
         $mailSender->send();
         
         Response::respondSuccess();
+    }
+
+    private function setupForSomeUser(string $userId)
+    {
+        $this->user = User::getUser($userId);
+
+        if ($this->user->isNull()) {
+            throw new RequestException(ERRORS::INVALID_USER);
+        }
+
+        $loggedUser = Controller::getLoggedUser();
+        if (Controller::isCompanyAdminLogged() && ($this->user->company->id !== $loggedUser->company->id)) {
+            throw new RequestException(ERRORS::NO_PERMISSION);
+        }
     }
 }

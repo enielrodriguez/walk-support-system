@@ -1,4 +1,5 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
 
 /**
@@ -13,8 +14,8 @@ use Respect\Validation\Validator as DataValidator;
  *
  * @apiPermission user
  *
- * @apiParam {String} userId Id of the user if it is not the one logged. Optional.
- * @apiParam {String} customfield_ Custom field values for this user.
+ * @apiParam {Number} userId Optional. The user id whose custom fields are to be changed. This option is for staffs and company admins to manage other users.
+ * @apiParam {String} customfield_<field name> Custom field values for this user.
  *
  * @apiUse NO_PERMISSION
  * @apiUse INVALID_CUSTOM_FIELD_OPTION
@@ -22,34 +23,53 @@ use Respect\Validation\Validator as DataValidator;
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class EditCustomFieldsController extends Controller {
+class EditCustomFieldsController extends Controller
+{
     const PATH = '/edit-custom-fields';
     const METHOD = 'POST';
 
-    public function validations() {
+    private $user;
+
+    public function validations()
+    {
         return [
             'permission' => 'user',
             'requestData' => []
         ];
     }
 
-    public function handler() {
-        $userId = Controller::request('userId') * 1;
-        $user = Controller::getLoggedUser();
+    public function handler()
+    {
+        $userId = Controller::request('userId');
 
-        if($userId && Controller::isStaffLogged(2)) {
-            $user = User::getDataStore($userId);
-
-            if($user->isNull())
-                throw new RequestException(ERRORS::INVALID_USER);
+        if (!$userId) {
+            $this->user = Controller::getLoggedUser();
+        } else if (Controller::isStaffLogged() || Controller::isCompanyAdminLogged()) {
+            $this->setupForSomeUser($userId);
+        } else {
+            throw new RequestException(ERRORS::NO_PERMISSION);
         }
 
-        $user->setProperties([
-            'xownCustomfieldvalueList' => $this->getCustomFieldValues()
+        $this->user->setProperties([
+            'xownCustomfieldvalueList' => self::getCustomFieldValues()
         ]);
 
-        $user->store();
+        $this->user->store();
+
         Response::respondSuccess();
+    }
+
+    private function setupForSomeUser(string $userId)
+    {
+        $this->user = User::getUser($userId);
+
+        if ($this->user->isNull()) {
+            throw new RequestException(ERRORS::INVALID_USER);
+        }
+
+        $loggedUser = Controller::getLoggedUser();
+        if (Controller::isCompanyAdminLogged() && ($this->user->company->id !== $loggedUser->company->id)) {
+            throw new RequestException(ERRORS::NO_PERMISSION);
+        }
     }
 }
