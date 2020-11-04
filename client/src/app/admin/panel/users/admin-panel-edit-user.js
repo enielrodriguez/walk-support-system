@@ -46,39 +46,47 @@ class AdminPanelEditUser extends React.Component {
     render() {
         return this.state.loadingData ? (<Loading backgrounded/>)
             : this.state.errorRetrievingData ? this.renderMessageError() : (
-                <div className="admin-panel-edit-user">
+                <div className="admin-panel-edit-user-cont">
                     <Header title={i18n('EDIT_USER')} description={i18n('EDIT_USER_DESCRIPTION')}/>
+                    <div className="admin-panel-edit-user">
+                        <Form loading={this.state.loadingName}
+                              onSubmit={this.onSubmitEditName.bind(this)}
+                              values={{newName: this.state.name}}
+                              onChange={form => this.setState({name: form.newName})}>
+                            <FormField name="newName" label={i18n('EDIT_NAME')} field="input"
+                                       fieldProps={{size: 'large'}} required/>
+                            <div className="admin-panel-edit-user__row">
+                                <SubmitButton>{i18n('CHANGE_NAME')}</SubmitButton>
+                            </div>
+                            {this.renderMessageName()}
+                        </Form>
 
-                    <Form loading={this.state.loadingName}
-                          onSubmit={this.onSubmitEditName.bind(this)}
-                          values={{newName: this.state.name}}
-                          onChange={form => this.setState({name: form.newName})}>
-                        <FormField name="newName" label={i18n('EDIT_NAME')} field="input"
-                                   fieldProps={{size: 'large'}} required/>
-                        <SubmitButton>{i18n('CHANGE_NAME')}</SubmitButton>
-                        {this.renderMessageName()}
-                    </Form>
+                        <Form loading={this.state.loadingEmail}
+                              onSubmit={this.onSubmitEditEmail.bind(this)}
+                              values={{newEmail: this.state.email}}
+                              onChange={form => this.setState({email: form.newEmail})}>
+                            <FormField name="newEmail" label={i18n('EDIT_EMAIL')} validation="EMAIL"
+                                       fieldProps={{size: 'large'}} required/>
+                            <div className="admin-panel-edit-user__row">
+                                <SubmitButton>{i18n('CHANGE_EMAIL')}</SubmitButton>
+                            </div>
+                            {this.renderMessageEmail()}
+                        </Form>
 
-                    <Form loading={this.state.loadingEmail}
-                          onSubmit={this.onSubmitEditEmail.bind(this)}
-                          values={{newEmail: this.state.email}}
-                          onChange={form => this.setState({email: form.newEmail})}>
-                        <FormField name="newEmail" label={i18n('EDIT_EMAIL')} validation="EMAIL"
-                                   fieldProps={{size: 'large'}} required/>
-                        <SubmitButton>{i18n('CHANGE_EMAIL')}</SubmitButton>
-                        {this.renderMessageEmail()}
-                    </Form>
+                        <Form loading={this.state.loadingPass} onSubmit={this.onSubmitEditPassword.bind(this)}>
+                            <FormField name="password" label={i18n('NEW_PASSWORD')} field="input" validation="PASSWORD"
+                                       fieldProps={{password: true, size: 'large'}} required/>
+                            <FormField name="repeatNewPassword" label={i18n('REPEAT_NEW_PASSWORD')} field="input"
+                                       validation="REPEAT_PASSWORD" fieldProps={{password: true, size: 'large'}}
+                                       required/>
+                            <div className="admin-panel-edit-user__row">
+                                <SubmitButton>{i18n('CHANGE_PASSWORD')}</SubmitButton>
+                            </div>
+                            {this.renderMessagePass()}
+                        </Form>
 
-                    <Form loading={this.state.loadingPass} onSubmit={this.onSubmitEditPassword.bind(this)}>
-                        <FormField name="password" label={i18n('NEW_PASSWORD')} field="input" validation="PASSWORD"
-                                   fieldProps={{password: true, size: 'large'}} required/>
-                        <FormField name="repeatNewPassword" label={i18n('REPEAT_NEW_PASSWORD')} field="input"
-                                   validation="REPEAT_PASSWORD" fieldProps={{password: true, size: 'large'}} required/>
-                        <SubmitButton>{i18n('CHANGE_PASSWORD')}</SubmitButton>
-                        {this.renderMessagePass()}
-                    </Form>
-
-                    {this.state.customFields.length ? this.renderCustomFields() : null}
+                        {this.state.customFields.length ? this.renderCustomFields() : null}
+                    </div>
                 </div>
             );
     }
@@ -93,7 +101,7 @@ class AdminPanelEditUser extends React.Component {
                     <div className="admin-panel-edit-user__custom-fields">
                         {this.state.customFields.map(this.renderCustomField.bind(this))}
                     </div>
-                    <div className="row">
+                    <div className="admin-panel-edit-user__row">
                         <SubmitButton>{i18n('SAVE')}</SubmitButton>
                     </div>
                 </Form>

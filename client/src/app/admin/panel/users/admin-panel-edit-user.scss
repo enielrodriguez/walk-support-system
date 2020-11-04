@@ -1,25 +1,37 @@
 @import '../../../../scss/vars';
 
-.admin-panel-edit-user {
+.admin-panel-edit-user-cont {
+
+  .admin-panel-edit-user {
+    text-align: center;
+    display: inline-block;
+    min-width: 470px;
 
     &__title {
-        color: $dark-grey;
-        font-size: 20px;
-        text-align: left;
-        margin-bottom: 20px;
+      color: $dark-grey;
+      font-size: 20px;
+      text-align: left;
+      margin-bottom: 20px;
     }
 
     &__message {
-        margin-top: 20px;
-        margin-bottom: 20px;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
     &__custom-fields {
-        text-align: left;
+      text-align: left;
     }
 
     &__custom-field {
-        display: inline-block;
-        margin-right: 20px;
+      display: inline-block;
+      margin-right: 20px;
     }
+
+    &__row {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+  }
 }
