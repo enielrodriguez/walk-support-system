@@ -15,14 +15,6 @@ import Loading from "../../../../core-components/loading";
 
 class AdminPanelEditUser extends React.Component {
 
-    static propTypes = {
-        userCustomFields: React.PropTypes.object
-    };
-
-    static defaultProps = {
-        userCustomFields: {}
-    };
-
     state = {
         name: '',
         email: '',
@@ -278,7 +270,6 @@ class AdminPanelEditUser extends React.Component {
         if (!this.props.location.state) {
             this.retrieveUser();
         } else {
-            console.log(this.props.location.state.customfields);
             this.setState({
                 name: this.props.location.state.name,
                 email: this.props.location.state.email
