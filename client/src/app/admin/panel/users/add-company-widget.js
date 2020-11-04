@@ -20,16 +20,9 @@ class AddCompanyWidget extends React.Component {
         className: React.PropTypes.string
     };
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            loading: false
-        };
-    }
-
-    componentDidMount() {
-    }
+    state = {
+        loading: false
+    };
 
     render() {
         return (
@@ -102,12 +95,11 @@ class AddCompanyWidget extends React.Component {
         };
     }
 
-    getInputProps(password) {
+    getInputProps() {
         return {
             className: 'add-company-widget__input',
             fieldProps: {
-                size: 'medium',
-                password: password
+                size: 'medium'
             }
         };
     }
