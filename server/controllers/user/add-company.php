@@ -55,10 +55,10 @@ class AddCompanyController extends Controller
                     'validation' => DataValidator::notBlank()->length(5, 100),
                     'error' => ERRORS::INVALID_CONTACT_NAME
                 ],
-                /*'admin_name' => [
+                'admin_name' => [
                     'validation' => DataValidator::notBlank()->length(2, 100),
                     'error' => ERRORS::INVALID_ADMIN_NAME
-                ],*/
+                ],
                 'admin_email' => [
                     'validation' => DataValidator::email(),
                     'error' => ERRORS::INVALID_ADMIN_EMAIL
@@ -128,25 +128,19 @@ class AddCompanyController extends Controller
 
     public function createUserAdmin()
     {
-        $existentUser = User::getUser($this->adminEmail, 'email');
+        $this->checkIfUserExists();
 
-        $this->checkUserAdmin($existentUser);
+        $this->userAdmin = new User();
 
-        if (!$existentUser->isNull()) {
-            $this->userAdmin = $existentUser;
-            $this->userAdmin->setProperties(['company' => $this->company]);
-        } else {
-            $this->userAdmin = new User();
+        $this->userAdmin->setProperties([
+            'name' => $this->adminName,
+            'tickets' => 0,
+            'email' => $this->adminEmail,
+            'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
+            'verificationToken' => null,
+            'company' => $this->company
+        ]);
 
-            $this->userAdmin->setProperties([
-                'name' => $this->adminName,
-                'tickets' => 0,
-                'email' => $this->adminEmail,
-                'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
-                'verificationToken' => null,
-                'company' => $this->company
-            ]);
-        }
         $this->userAdmin->store();
     }
 
@@ -166,22 +160,12 @@ class AddCompanyController extends Controller
     }
 
 
-    private function checkUserAdmin($existentUser)
+    private function checkIfUserExists()
     {
-
-        if (!$this->adminName && $existentUser->isNull()) {
-            throw new RequestException(ERRORS::INVALID_ADMIN_NAME);
-        }
-
-        if ($this->adminName && !$existentUser->isNull()) {
-            throw new RequestException(ERRORS::USER_EXISTS);
-        }
+        $existentUser = User::getUser($this->adminEmail, 'email');
 
         if (!$existentUser->isNull()) {
-            $existentCompany = Company::findOne('admin_id = ?', [$existentUser->id]);
-            if (!$existentCompany->isNull()) {
-                throw new RequestException(ERRORS::USER_ALREADY_ADMIN);
-            }
+            throw new RequestException(ERRORS::USER_EXISTS);
         }
 
         $banRow = Ban::getDataStore($this->adminEmail, 'email');

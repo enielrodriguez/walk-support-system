@@ -38,7 +38,7 @@ class AddCompanyWidget extends React.Component {
                         <FormField {...this.getInputProps()} label={i18n('CONTACT_NAME')} name="contact_name" required/>
 
                         <Header title={i18n('COMPANY_ADMIN')} description={i18n('COMPANY_ADMIN_WARNING')}/>
-                        <FormField {...this.getInputProps()} label={i18n('NAME')} name="admin_name"/>
+                        <FormField {...this.getInputProps()} label={i18n('NAME')} name="admin_name" required/>
                         <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="admin_email" required/>
                     </div>
 
@@ -61,8 +61,6 @@ class AddCompanyWidget extends React.Component {
                 return <Message type="error">{i18n('ERROR_NIT_EXISTS')}</Message>;
             case 'USER_EXISTS':
                 return <Message type="error">{i18n('ERROR_ADMIN_EXISTS')}</Message>;
-            case 'USER_ALREADY_ADMIN':
-                return <Message type="error">{i18n('ERROR_ALREADY_ADMIN')}</Message>;
             case 'INVALID_NAME':
                 return <Message type="error">{i18n('ERROR_BUSINESS_NAME')}</Message>;
             case 'INVALID_NIT':
