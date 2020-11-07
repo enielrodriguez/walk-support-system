@@ -65,6 +65,7 @@ class AdminPanelViewCompany extends React.Component {
                         </div>
                     </div>
 
+                    {this.state.company.nit !== 'default_company' &&
                     <div className="admin-panel-view-company__action-buttons">
                         <Button className="admin-panel-view-company__action-button"
                                 onClick={this.onDeleteClick.bind(this)} size="medium">
@@ -82,26 +83,34 @@ class AdminPanelViewCompany extends React.Component {
                             {i18n('EDIT')}
                         </Link>
                     </div>
+                    }
                 </div>
+
                 <span className="separator"/>
-                <div className="admin-panel-view-company__info">
-                    <div className="admin-panel-view-company__info-item">
-                        {i18n('COMPANY_ADMIN')}
-                        <div className="admin-panel-view-company__info-box">
-                            {i18n('NAME') + ': ' + (this.state.company.admin.name ?
-                                this.state.company.admin.name
-                                : '')}
+
+                {this.state.company.nit !== 'default_company' &&
+                <div>
+                    <div className="admin-panel-view-company__info">
+                        <div className="admin-panel-view-company__info-item">
+                            {i18n('COMPANY_ADMIN')}
+                            <div className="admin-panel-view-company__info-box">
+                                {i18n('NAME') + ': ' + (this.state.company.admin.name ?
+                                    this.state.company.admin.name
+                                    : '')}
+                            </div>
+                        </div>
+                        <div className="admin-panel-view-company__info-item">
+                            <div className="admin-panel-view-company__info-box">
+                                {i18n('EMAIL') + ': ' + (this.state.company.admin.email ?
+                                    this.state.company.admin.email
+                                    : '')}
+                            </div>
                         </div>
                     </div>
-                    <div className="admin-panel-view-company__info-item">
-                        <div className="admin-panel-view-company__info-box">
-                            {i18n('EMAIL') + ': ' + (this.state.company.admin.email ?
-                                this.state.company.admin.email
-                                : '')}
-                        </div>
-                    </div>
+                    <span className="separator"/>
                 </div>
-                <span className="separator"/>
+                }
+
                 <div className="admin-panel-view-company__users">
                     <div className="admin-panel-view-company__users-title">{i18n('USERS')}</div>
                     <UserList {...this.getUserListProps()}/>
