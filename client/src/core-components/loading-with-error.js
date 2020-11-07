@@ -8,7 +8,7 @@ class LoadingWithError extends React.Component {
     static propTypes = {
         backgrounded: React.PropTypes.bool,
         size: React.PropTypes.oneOf(['small', 'medium', 'large']),
-        loading: React.PropTypes.bool.required,
+        loading: React.PropTypes.bool,
         errorRetrievingData: React.PropTypes.bool,
         messageKey: React.PropTypes.string
     };
