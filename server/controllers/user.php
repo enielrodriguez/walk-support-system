@@ -29,5 +29,6 @@ $userControllers->addController(new GetSupervisedTicketController);
 $userControllers->addController(new AddCompanyController());
 $userControllers->addController(new GetCompanyByIdController());
 $userControllers->addController(new DeleteCompanyController());
+$userControllers->addController(new EditCompanyController());
 
 $userControllers->finalize();

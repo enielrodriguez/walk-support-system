@@ -68,6 +68,7 @@ import DashboardListUsersPage from "./main/dashboard/dashboard-list-users/dashbo
 import DashboardViewUser from "./main/dashboard/dashboard-view-user/dashboard-view-user";
 import AdminPanelEditUser from "./admin/panel/users/admin-panel-edit-user";
 import DashboardEditUser from "./main/dashboard/dashboard-edit-user/dashboard-edit-user";
+import AdminPanelEditCompany from "./admin/panel/users/admin-panel-edit-company";
 
 export default (
     <Router history={history}>
@@ -130,14 +131,18 @@ export default (
 
                     <Route path="users">
                         <IndexRedirect to="list-users"/>
+
                         <Route path="list-users" component={AdminPanelListUsers}/>
-                        <Route path="companies" component={AdminPanelCompanies}/>
                         <Route path="view-user/:userId" component={AdminPanelViewUser}/>
                         <Route path="edit-user/:userId" component={AdminPanelEditUser}
                                render={props => <AdminPanelEditUser {...props} />}/>
-                        <Route path="view-company/:companyId" component={AdminPanelViewCompany}/>
                         <Route path="ban-users" component={AdminPanelBanUsers}/>
                         <Route path="custom-fields" component={AdminPanelCustomFields}/>
+
+                        <Route path="companies" component={AdminPanelCompanies}/>
+                        <Route path="view-company/:companyId" component={AdminPanelViewCompany}/>
+                        <Route path="edit-company/:companyId" component={AdminPanelEditCompany}
+                               render={props => <AdminPanelEditUser {...props} />}/>
                     </Route>
 
                     <Route path="articles">

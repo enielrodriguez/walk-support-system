@@ -477,11 +477,16 @@ export default {
     'COMPANY_ADMIN': 'Administrador',
     'COMPANY_ADMIN_WARNING': 'Se creará un usuario con estos datos',
     'COMPANY_ADMIN_DESCRIPTION': 'Administrador de la empresa',
+    'EDIT_COMPANY': 'Editar empresa',
+    'EDIT_COMPANY_DESCRIPTION': 'Aquí puedes editar los datos de una empresa',
+    'WARNING_COMPANY_EDIT_ADMIN': 'Puede crear un nuevo administrador, esto eliminará al actual',
+    'WARNING_COMPANY_EDIT_ADMIN_DESC': 'Si desea convertir en administrador a un usuario existente de la empresa, solo ponga el email de este y deje el nombre en blanco',
 
     'DELETE_BAN_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán. Además, el correo electrónico ya no podrá utilizarse',
 
     'ADD_NEW': 'Añadir',
     'APPLY_CHANGES': 'Aplicar cambios',
+    'CHANGES_SAVED': 'Cambios guardados',
 
     'USER_LIST': 'Lista de usuarios',
     'USER_LIST_DESCRIPTION': 'Aquí puedes encontrar una lista de todos los usuarios de la empresa con acceso al sistema de soporte',
@@ -490,7 +495,7 @@ export default {
     'CHANGE_NAME': 'Cambiar nombre',
     'NAME_WILL_CHANGE': 'El nombre actual se cambiará',
     'NAME_CHANGED': 'Se ha cambiado correctamente el nombre',
-    'SUPERVISED_USER_WARNING': 'Estos usuarios pertenecen a la misma empresa, y son administrados por el usuario actual.',
+    'SUPERVISED_USER_WARNING': 'Estos usuarios pertenecen a la misma empresa, y son administrados por el usuario actual',
     'EDIT_USER': 'Editar Usuario',
     'EDIT_USER_DESCRIPTION': 'Aquí puedes editar los datos de un usuario',
 
@@ -503,6 +508,7 @@ export default {
     'ERROR_BUSINESS_NAME': 'Nombre de empresa no válido',
     'ERROR_CONTACT_NAME': 'Nombre de contacto no válido',
     'ERROR_COMPANY_ADMIN': 'Error en los datos del administrador',
-    'ERROR_ADMIN_EXISTS': 'Ya existe un usuario con este email, deje el nombre en blanco si quiere que sea el administrador de esta empresa',
-    'ERROR_ALREADY_ADMIN': 'El usuario ya es administrador de otra empresa.'
+    'ERROR_ADMIN_EXISTS': 'Ya existe un usuario con este email',
+    'ERROR_USER_FROM_OTHER_COMPANY': 'El usuario es de otra empresa',
+    'ERROR_ALREADY_ADMIN': 'El usuario ya es el administrador actual'
 };

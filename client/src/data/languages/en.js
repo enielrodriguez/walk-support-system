@@ -471,11 +471,16 @@ export default {
     'COMPANY_ADMIN': 'Administrator',
     'COMPANY_ADMIN_WARNING': 'A user will be created with this data',
     'COMPANY_ADMIN_DESCRIPTION': 'Company admin',
+    'EDIT_COMPANY': 'Edit company',
+    'EDIT_COMPANY_DESCRIPTION': 'Here you can edit some company data',
+    'WARNING_COMPANY_EDIT_ADMIN': 'You can create a new admin, this will delete the current one',
+    'WARNING_COMPANY_EDIT_ADMIN_DESC': 'If you want to convert an existing user of the company into admin, just put his email and leave the name blank',
 
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more',
 
     'ADD_NEW': 'Add new',
     'APPLY_CHANGES': 'Apply changes',
+    'CHANGES_SAVED': 'Changes saved successfully',
 
     'USER_LIST': 'User list',
     'USER_LIST_DESCRIPTION': 'Here you can find a list of all users in the company with access to the support system',
@@ -484,7 +489,7 @@ export default {
     'CHANGE_NAME': 'Change name',
     'NAME_WILL_CHANGE': 'The current name will be changed',
     'NAME_CHANGED': 'Name has been changed successfully',
-    'SUPERVISED_USER_WARNING': 'These users belong to the same company, and are managed by the current user.',
+    'SUPERVISED_USER_WARNING': 'These users belong to the same company, and are managed by the current user',
     'EDIT_USER': 'Edit User',
     'EDIT_USER_DESCRIPTION': 'Here you can edit some user data',
 
@@ -497,6 +502,7 @@ export default {
     'ERROR_BUSINESS_NAME': 'Invalid business name value',
     'ERROR_CONTACT_NAME': 'Invalid contact name value',
     'ERROR_COMPANY_ADMIN': 'The administrator data has an error',
-    'ERROR_ADMIN_EXISTS': 'There is already a user with this email, leave the name blank if you want him to be the administrator of this company',
-    'ERROR_ALREADY_ADMIN': 'The user is already an administrator of another company.'
+    'ERROR_ADMIN_EXISTS': 'There is already a user with this email',
+    'ERROR_USER_FROM_OTHER_COMPANY': 'The user is from another company',
+    'ERROR_ALREADY_ADMIN': 'The user is already the current administrator'
 };

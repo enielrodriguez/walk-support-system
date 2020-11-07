@@ -1,0 +1,70 @@
+@import '../../../../scss/vars';
+
+.admin-panel-edit-company-cont {
+
+  .admin-panel-edit-company {
+    display: inline-block;
+
+    &__warning {
+      text-align: left;
+      font-size: 18px;
+      color: $dark-grey;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      width: 350px;
+
+      &-card-badge {
+        display: inline-block;
+        width: 33%;
+
+        &-text {
+          display: block;
+        }
+
+        &-red,
+        &-green,
+        &-blue {
+          border-radius: 4px;
+          color: white;
+          display: inline-block;
+          width: 70%;
+          margin-bottom: 5px;
+        }
+
+        &-red {
+          background-color: $primary-red;
+        }
+
+        &-green {
+          background-color: $primary-green;
+        }
+
+        &-blue {
+          background-color: $secondary-blue;
+        }
+      }
+    }
+
+    &__message {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    &__row {
+      margin-bottom: 10px;
+    }
+
+    &__edit-admin-info {
+      width: 360px;
+      font-size: $font-size--sm;
+
+      &-box {
+        margin-top: 5px;
+      }
+
+      &-description {
+        color: $dark-grey;
+      }
+    }
+  }
+}

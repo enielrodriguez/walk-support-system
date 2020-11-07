@@ -12,6 +12,7 @@ import UserList from "../../../../app-components/user-list";
 import Icon from "../../../../core-components/icon";
 import ModalContainer from "../../../../app-components/modal-container";
 import InviteUserWidget from "./invite-user-widget";
+import {Link} from "react-router";
 
 class AdminPanelViewCompany extends React.Component {
 
@@ -69,6 +70,17 @@ class AdminPanelViewCompany extends React.Component {
                                 onClick={this.onDeleteClick.bind(this)} size="medium">
                             {i18n('DELETE')}
                         </Button>
+                        <Link className="admin-panel-view-company__link"
+                              to={
+                                  {
+                                      pathname: '/admin/panel/users/edit-company/' + this.props.params.companyId,
+                                      state: {
+                                          company: this.state.company
+                                      }
+                                  }
+                              }>
+                            {i18n('EDIT')}
+                        </Link>
                     </div>
                 </div>
                 <span className="separator"/>
