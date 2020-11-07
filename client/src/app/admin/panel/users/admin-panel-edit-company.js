@@ -11,6 +11,7 @@ import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
 import Loading from "../../../../core-components/loading";
+import LoadingWithError from "../../../../core-components/loading-with-error";
 
 
 class AdminPanelEditCompany extends React.Component {
@@ -28,8 +29,10 @@ class AdminPanelEditCompany extends React.Component {
     }
 
     render() {
-        return this.state.loadingData ? (<Loading backgrounded/>)
-            : this.state.errorRetrievingData ? this.renderMessageError() : (
+        return this.state.loadingData ?
+            <LoadingWithError loading={this.state.loadingData}
+                              errorRetrievingData={this.state.errorRetrievingData}/>
+            : (
                 <div className="admin-panel-edit-company-cont">
                     <Header title={i18n('EDIT_COMPANY')} description={i18n('EDIT_COMPANY_DESCRIPTION')}/>
                     <div className="admin-panel-edit-company">
