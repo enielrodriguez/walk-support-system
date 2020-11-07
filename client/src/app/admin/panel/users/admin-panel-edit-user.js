@@ -77,7 +77,7 @@ class AdminPanelEditUser extends React.Component {
                             {this.renderMessagePass()}
                         </Form>
 
-                        {this.state.customFields.length ? this.renderCustomFields() : null}
+                        {this.state.customFields.length && this.renderCustomFields()}
                     </div>
                 </div>
             );
