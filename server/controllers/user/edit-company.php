@@ -115,6 +115,7 @@ class EditCompanyController extends Controller
             $this->company->setProperties(array('admin' => $this->companyAdmin));
             $this->company->store();
 
+            $oldAdmin->supervisedrelation->delete();
             $oldAdmin->delete();
         }
 
@@ -179,6 +180,12 @@ class EditCompanyController extends Controller
             'company' => $this->company
         ]);
 
+        $oldAdmin = User::getUser($this->company->admin->id);
+        $companyUsers = $oldAdmin->supervisedrelation->sharedUserList;
+        $desiredCompanyAdmin->supervisedrelation = new Supervisedrelation();
+        $desiredCompanyAdmin->supervisedrelation->sharedUserList = $companyUsers;
+
+        $desiredCompanyAdmin->supervisedrelation->store();
         $desiredCompanyAdmin->store();
 
         $this->companyAdmin = $desiredCompanyAdmin;
