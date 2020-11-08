@@ -147,7 +147,7 @@ class DashboardEditUser extends React.Component {
                                 type="success">{i18n('EMAIL_CHANGED')}</Message>;
             case 'fail':
                 return <Message className="admin-panel-edit-user__message"
-                                type="error">{i18n('INVALID_EMAIL')}</Message>;
+                                type="error">{i18n('ERROR_EMAIL')}</Message>;
             default:
                 return null;
         }

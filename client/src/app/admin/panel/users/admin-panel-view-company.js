@@ -13,13 +13,15 @@ import Icon from "../../../../core-components/icon";
 import ModalContainer from "../../../../app-components/modal-container";
 import InviteUserWidget from "./invite-user-widget";
 import {Link} from "react-router";
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 class AdminPanelViewCompany extends React.Component {
 
     state = {
         company: {admin: {}},
         loading: true,
-        message: ''
+        message: '',
+        errorRetrievingData: false
     };
 
     componentDidMount() {
@@ -27,13 +29,15 @@ class AdminPanelViewCompany extends React.Component {
     }
 
     render() {
-        return (
-            <div className="admin-panel-view-company">
-                <Header title={i18n('COMPANY_VIEW_TITLE', {companyId: this.props.params.companyId})}
-                        description={i18n('COMPANY_VIEW_DESCRIPTION')}/>
-                {this.renderCompanyInfo()}
-            </div>
-        );
+        return this.state.loading ?
+            <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
+            : (
+                <div className="admin-panel-view-company">
+                    <Header title={i18n('COMPANY_VIEW_TITLE', {companyId: this.props.params.companyId})}
+                            description={i18n('COMPANY_VIEW_DESCRIPTION')}/>
+                    {this.renderCompanyInfo()}
+                </div>
+            );
     }
 
     renderCompanyInfo() {
@@ -72,14 +76,7 @@ class AdminPanelViewCompany extends React.Component {
                             {i18n('DELETE')}
                         </Button>
                         <Link className="admin-panel-view-company__link"
-                              to={
-                                  {
-                                      pathname: '/admin/panel/users/edit-company/' + this.props.params.companyId,
-                                      state: {
-                                          company: this.state.company
-                                      }
-                                  }
-                              }>
+                              to={'/admin/panel/users/edit-company/' + this.props.params.companyId}>
                             {i18n('EDIT')}
                         </Link>
                     </div>
@@ -127,7 +124,6 @@ class AdminPanelViewCompany extends React.Component {
     getUserListProps() {
         return {
             users: this.state.users,
-            loading: this.state.loading,
             userPath: '/admin/panel/users/view-user/'
         };
     }
@@ -160,7 +156,7 @@ class AdminPanelViewCompany extends React.Component {
                 companyId: this.props.params.companyId
             }
         }).then(this.onCompanyRetrieved.bind(this)).catch(() => this.setState({
-            invalid: true
+            errorRetrievingData: true
         }));
     }
 

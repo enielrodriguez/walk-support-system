@@ -134,15 +134,13 @@ export default (
 
                         <Route path="list-users" component={AdminPanelListUsers}/>
                         <Route path="view-user/:userId" component={AdminPanelViewUser}/>
-                        <Route path="edit-user/:userId" component={AdminPanelEditUser}
-                               render={props => <AdminPanelEditUser {...props} />}/>
+                        <Route path="edit-user/:userId" component={AdminPanelEditUser}/>
                         <Route path="ban-users" component={AdminPanelBanUsers}/>
                         <Route path="custom-fields" component={AdminPanelCustomFields}/>
 
                         <Route path="companies" component={AdminPanelCompanies}/>
                         <Route path="view-company/:companyId" component={AdminPanelViewCompany}/>
-                        <Route path="edit-company/:companyId" component={AdminPanelEditCompany}
-                               render={props => <AdminPanelEditUser {...props} />}/>
+                        <Route path="edit-company/:companyId" component={AdminPanelEditCompany}/>
                     </Route>
 
                     <Route path="articles">

@@ -11,9 +11,9 @@ import AreYouSure from 'app-components/are-you-sure';
 
 import Header from 'core-components/header';
 import Button from 'core-components/button';
-import Message from 'core-components/message';
 import InfoTooltip from 'core-components/info-tooltip';
 import UserList from "../../../../app-components/user-list";
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 
 class AdminPanelViewUser extends React.Component {
@@ -25,12 +25,13 @@ class AdminPanelViewUser extends React.Component {
         verified: true,
         tickets: [],
         customfields: [],
-        invalid: false,
-        loading: true,
         disabled: false,
         userList: [],
+        isCompanyAdmin: false,
         message: '',
-        isCompanyAdmin: false
+        loading: true,
+        errorRetrievingData: false,
+
     };
 
     componentDidMount() {
@@ -44,21 +45,15 @@ class AdminPanelViewUser extends React.Component {
     }
 
     render() {
-        return (
-            <div className="admin-panel-view-user">
-                <Header title={i18n('USER_VIEW_TITLE', {userId: this.props.params.userId})}
-                        description={i18n('USER_VIEW_DESCRIPTION')}/>
-                {(this.state.invalid) ? this.renderInvalid() : this.renderUserInfo()}
-            </div>
-        );
-    }
-
-    renderInvalid() {
-        return (
-            <div className="admin-panel-view-user__invalid">
-                <Message type="error">{i18n('INVALID_USER')}</Message>
-            </div>
-        );
+        return this.state.loading ?
+            <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
+            : (
+                <div className="admin-panel-view-user">
+                    <Header title={i18n('USER_VIEW_TITLE', {userId: this.props.params.userId})}
+                            description={i18n('USER_VIEW_DESCRIPTION')}/>
+                    {this.renderUserInfo()}
+                </div>
+            );
     }
 
     renderUserInfo() {
@@ -112,16 +107,7 @@ class AdminPanelViewUser extends React.Component {
                         </Button>
 
                         <Link className="admin-panel-view-user__link"
-                              to={
-                                  {
-                                      pathname: '/admin/panel/users/edit-user/' + this.props.params.userId,
-                                      state: {
-                                          name: this.state.name,
-                                          email: this.state.email,
-                                          customfields: this.state.customfields
-                                      }
-                                  }
-                              }>
+                              to={'/admin/panel/users/edit-user/' + this.props.params.userId}>
                             {i18n('EDIT')}
                         </Link>
 
@@ -164,7 +150,6 @@ class AdminPanelViewUser extends React.Component {
     getUserListProps() {
         return {
             users: this.state.userList,
-            loading: this.state.loading,
             userPath: '/admin/panel/users/view-user/'
         };
     }
@@ -200,7 +185,7 @@ class AdminPanelViewUser extends React.Component {
             <div className="admin-panel-view-user__info-item" key={customfield.id}>
                 {customfield.customfield}
                 <div className="admin-panel-view-user__info-box">
-                    {customfield.value}
+                    {customfield.value ? customfield.value : '-'}
                 </div>
             </div>
         );
@@ -210,7 +195,6 @@ class AdminPanelViewUser extends React.Component {
         return {
             type: 'secondary',
             tickets: this.state.tickets,
-            loading: this.state.loading,
             departments: this.props.departments,
             ticketPath: '/admin/panel/tickets/view-ticket/'
         };
@@ -226,8 +210,8 @@ class AdminPanelViewUser extends React.Component {
             tickets: result.data.tickets,
             disabled: result.data.disabled,
             customfields: result.data.customfields,
-            loading: false,
-            userList: result.data.userList
+            userList: result.data.userList,
+            loading: false
         });
     }
 
@@ -287,7 +271,7 @@ class AdminPanelViewUser extends React.Component {
                 userId: this.props.params.userId
             }
         }).then(this.onUserRetrieved.bind(this)).catch(() => this.setState({
-            invalid: true
+            errorRetrievingData: true
         }));
     }
 }

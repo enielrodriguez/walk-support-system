@@ -3,24 +3,22 @@ import _ from 'lodash';
 
 import API from 'lib-app/api-call';
 import i18n from 'lib-app/i18n';
-import {getCustomFieldParamName} from 'lib-core/APIUtils';
 
 import Header from 'core-components/header';
 import Form from 'core-components/form';
 import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
-import Loading from "../../../../core-components/loading";
-import LoadingWithError from "../../../../core-components/loading-with-error";
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 
 class AdminPanelEditCompany extends React.Component {
 
     state = {
         company: {},
-        loadingData: false,
         submitting: false,
         message: '',
+        loadingData: true,
         errorRetrievingData: false
     };
 
@@ -30,8 +28,7 @@ class AdminPanelEditCompany extends React.Component {
 
     render() {
         return this.state.loadingData ?
-            <LoadingWithError loading={this.state.loadingData}
-                              errorRetrievingData={this.state.errorRetrievingData}/>
+            <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
             : (
                 <div className="admin-panel-edit-company-cont">
                     <Header title={i18n('EDIT_COMPANY')} description={i18n('EDIT_COMPANY_DESCRIPTION')}/>
@@ -77,32 +74,12 @@ class AdminPanelEditCompany extends React.Component {
     }
 
     retrieveData() {
-        if (!this.props.location.state) {
-            this.retrieveCompany();
-        } else {
-            let company = this.props.location.state.company;
-            company['new_admin_name'] = '';
-            company['new_admin_email'] = '';
-
-            this.setState({
-                company: this.props.location.state.company
-            });
-        }
-    }
-
-    retrieveCompany() {
-        this.setState({
-            loadingData: true
-        });
-
         API.call({
             path: '/user/get-company',
             data: {
                 companyId: this.props.params.companyId
             }
-        }).then(this.onCompanyRetrieved.bind(this)).catch(
-            () => this.setState({
-                loadingData: false,
+        }).then(this.onCompanyRetrieved.bind(this)).catch(() => this.setState({
                 errorRetrievingData: true
             })
         );
@@ -113,8 +90,7 @@ class AdminPanelEditCompany extends React.Component {
         result.data.company['new_admin_email'] = '';
         this.setState({
             company: result.data.company,
-            loadingData: false,
-            errorRetrievingData: false
+            loadingData: false
         });
     }
 

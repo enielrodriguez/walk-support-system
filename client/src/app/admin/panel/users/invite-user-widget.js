@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import classNames from 'classnames';
 
@@ -14,6 +13,7 @@ import FormField from 'core-components/form-field';
 import Widget from 'core-components/widget';
 import Header from 'core-components/header';
 import CompanyDropdown from "../../../../app-components/company-dropdown";
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 class InviteUserWidget extends React.Component {
 
@@ -22,20 +22,59 @@ class InviteUserWidget extends React.Component {
         className: React.PropTypes.string
     };
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            loading: false,
-            email: null,
-            customFields: [],
-            companies: []
-        };
-    }
+    state = {
+        loading: false,
+        email: null,
+        customFields: [],
+        companies: [],
+        loadingData: true,
+        errorRetrievingData: false
+    };
 
     componentDidMount() {
-        this.setState({loading: true});
+        this.retrieveData();
+    }
 
+    render() {
+        return (
+            <Widget className={this.getClass()}>
+                <Header title={i18n('INVITE_USER')} description={i18n('INVITE_USER_VIEW_DESCRIPTION')}/>
+
+                {this.state.loadingData ?
+                    <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
+                    :
+                    <Form {...this.getFormProps()} >
+                        <div className="invite-user-widget__inputs">
+                            <FormField {...this.getInputProps()} label={i18n('FULL_NAME')} name="name" validation="NAME"
+                                       required/>
+                            <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL"
+                                       required/>
+                            {
+                                !this.props.companyId &&
+                                <FormField {...this.getInputProps()} label={i18n('COMPANY')} name="companyIndex"
+                                           field="select"
+                                           decorator={CompanyDropdown} fieldProps={
+                                    {
+                                        companies: this.state.companies,
+                                        size: "medium"
+                                    }
+                                }/>
+                            }
+                            {this.state.customFields.map(this.renderCustomField.bind(this))}
+                        </div>
+                        <div className="invite-user-widget__captcha">
+                            <Captcha ref="captcha"/>
+                        </div>
+                        <SubmitButton type="primary">{i18n('INVITE_USER')}</SubmitButton>
+                    </Form>
+                }
+
+                {this.renderMessage()}
+            </Widget>
+        );
+    }
+
+    retrieveData() {
         API.call({
             path: '/system/get-custom-fields',
             data: {}
@@ -46,42 +85,12 @@ class InviteUserWidget extends React.Component {
                 data: {
                     getAll: true
                 }
-            }).then(result => this.setState({companies: result.data.companies, loading: false}));
+            }).then(result => this.setState({
+                    companies: result.data.companies,
+                    loadingData: false
+                })
+            ).catch(() => this.setState({errorRetrievingData: true}));
         });
-    }
-
-    render() {
-        return (
-            <Widget className={this.getClass()}>
-                <Header title={i18n('INVITE_USER')} description={i18n('INVITE_USER_VIEW_DESCRIPTION')}/>
-                <Form {...this.getFormProps()}>
-                    <div className="invite-user-widget__inputs">
-                        <FormField {...this.getInputProps()} label={i18n('FULL_NAME')} name="name" validation="NAME"
-                                   required/>
-                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL"
-                                   required/>
-                        {
-                            !this.props.companyId &&
-                                <FormField {...this.getInputProps()} label={i18n('COMPANY')} name="companyIndex"
-                                           field="select"
-                                           decorator={CompanyDropdown} fieldProps={
-                                    {
-                                        companies: this.state.companies,
-                                        size: "medium"
-                                    }
-                                }/>
-                        }
-                        {this.state.customFields.map(this.renderCustomField.bind(this))}
-                    </div>
-                    <div className="invite-user-widget__captcha">
-                        <Captcha ref="captcha"/>
-                    </div>
-                    <SubmitButton type="primary">{i18n('INVITE_USER')}</SubmitButton>
-                </Form>
-
-                {this.renderMessage()}
-            </Widget>
-        );
     }
 
     renderCustomField(customField, key) {

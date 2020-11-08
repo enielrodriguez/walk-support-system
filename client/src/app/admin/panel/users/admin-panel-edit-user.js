@@ -10,7 +10,7 @@ import Form from 'core-components/form';
 import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
-import Loading from "../../../../core-components/loading";
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 
 class AdminPanelEditUser extends React.Component {
@@ -18,16 +18,17 @@ class AdminPanelEditUser extends React.Component {
     state = {
         name: '',
         email: '',
-        loadingData: true,
         loadingName: false,
         loadingEmail: false,
         loadingPass: false,
         loadingCustomFields: false,
         messageName: '',
         messageEmail: '',
+        messageCustomFields: '',
         messagePass: '',
         customFields: [],
         customFieldsFormValues: {},
+        loadingData: true,
         errorRetrievingData: false
     };
 
@@ -36,8 +37,9 @@ class AdminPanelEditUser extends React.Component {
     }
 
     render() {
-        return this.state.loadingData ? (<Loading backgrounded/>)
-            : this.state.errorRetrievingData ? this.renderMessageError() : (
+        return this.state.loadingData ?
+            <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
+            : (
                 <div className="admin-panel-edit-user-cont">
                     <Header title={i18n('EDIT_USER')} description={i18n('EDIT_USER_DESCRIPTION')}/>
                     <div className="admin-panel-edit-user">
@@ -96,6 +98,7 @@ class AdminPanelEditUser extends React.Component {
                     <div className="admin-panel-edit-user__row">
                         <SubmitButton>{i18n('SAVE')}</SubmitButton>
                     </div>
+                    {this.renderMessageCustomFields()}
                 </Form>
             </div>
         );
@@ -121,10 +124,6 @@ class AdminPanelEditUser extends React.Component {
         }
     }
 
-    renderMessageError() {
-        return <Message className="admin-panel-edit-user__message"
-                        type="error">{i18n('UNKNOWN_ERROR')}</Message>
-    }
 
     renderMessageName() {
         switch (this.state.messageName) {
@@ -147,7 +146,7 @@ class AdminPanelEditUser extends React.Component {
                                 type="success">{i18n('EMAIL_CHANGED')}</Message>;
             case 'fail':
                 return <Message className="admin-panel-edit-user__message"
-                                type="error">{i18n('INVALID_EMAIL')}</Message>;
+                                type="error">{i18n('ERROR_EMAIL')}</Message>;
             default:
                 return null;
         }
@@ -165,6 +164,20 @@ class AdminPanelEditUser extends React.Component {
             default:
                 return null;
         }
+    }
+
+    renderMessageCustomFields() {
+        switch (this.state.messageCustomFields) {
+            case 'success':
+                return <Message className="admin-panel-edit-user__message"
+                                type="success">{i18n('CHANGES_SAVED')}</Message>;
+            case 'fail':
+                return <Message className="admin-panel-edit-user__message"
+                                type="error">{i18n('UNKNOWN_ERROR')}</Message>;
+            default:
+                return null;
+        }
+
     }
 
     onCustomFieldsSubmit(form) {
@@ -189,7 +202,15 @@ class AdminPanelEditUser extends React.Component {
             path: '/user/edit-custom-fields',
             data: parsedFormValues
         }).then(() => {
-            this.setState({loadingCustomFields: false});
+            this.setState({
+                loadingCustomFields: false,
+                messageCustomFields: 'success'
+            });
+        }).catch(() => {
+            this.setState({
+                loadingCustomFields: false,
+                messageCustomFields: 'fail'
+            })
         });
 
     }
@@ -199,47 +220,49 @@ class AdminPanelEditUser extends React.Component {
         this.setState({
             loadingName: true
         });
-        return API.call({
+
+        API.call({
             path: "/user/edit-name",
             data: {
                 newName: formState.newName,
                 userId: this.props.params.userId
 
             }
-        }).then(function () {
+        }).then(() => {
             this.setState({
                 loadingName: false,
                 messageName: "success"
             });
-        }.bind(this)).catch(function () {
+        }).catch(() => {
             this.setState({
                 loadingName: false,
                 messageName: 'fail'
             })
-        }.bind(this));
+        });
     }
 
     onSubmitEditEmail(formState) {
         this.setState({
             loadingEmail: true
         });
-        return API.call({
+
+        API.call({
             path: "/user/edit-email",
             data: {
                 newEmail: formState.newEmail,
                 userId: this.props.params.userId
             }
-        }).then(function () {
+        }).then(() => {
             this.setState({
                 loadingEmail: false,
                 messageEmail: "success"
             });
-        }.bind(this)).catch(function () {
+        }).catch(() => {
             this.setState({
                 loadingEmail: false,
                 messageEmail: 'fail'
             })
-        }.bind(this));
+        });
     }
 
     onSubmitEditPassword(formState) {
@@ -247,34 +270,42 @@ class AdminPanelEditUser extends React.Component {
             loadingPass: true
         });
 
-        return API.call({
+        API.call({
             path: "/user/edit-password",
             data: {
                 newPassword: formState.password,
                 userId: this.props.params.userId
             }
-        }).then(function () {
+        }).then(() => {
             this.setState({
                 loadingPass: false,
                 messagePass: "success"
             });
-        }.bind(this)).catch(function () {
+        }).catch(() => {
             this.setState({
                 loadingPass: false,
                 messagePass: 'fail'
             })
-        }.bind(this));
+        });
     }
 
     retrieveData() {
-        if (!this.props.location.state) {
-            this.retrieveUser();
-        } else {
-            this.setState({
-                name: this.props.location.state.name,
-                email: this.props.location.state.email
-            }, () => this.retrieveCustomFields(this.props.location.state.customfields));
-        }
+        API.call({
+            path: '/user/get-user',
+            data: {
+                userId: this.props.params.userId
+            }
+        }).then(result => {
+                this.setState({
+                    name: result.data.name,
+                    email: result.data.email
+                });
+                this.retrieveCustomFields(result.data.customfields);
+            }
+        ).catch(() => this.setState({
+                errorRetrievingData: true
+            })
+        );
     }
 
     // customfields contains the name and the value of the fields, but it does not contain
@@ -304,31 +335,11 @@ class AdminPanelEditUser extends React.Component {
             this.setState({
                 customFields: result.data,
                 customFieldsFormValues: customFieldsFormValues,
-                loadingData: false,
-                errorRetrievingData: false
+                loadingData: false
             });
         }).catch(() => this.setState({
-            loadingData: false,
             errorRetrievingData: true
         }));
-    }
-
-    retrieveUser() {
-        API.call({
-            path: '/user/get-user',
-            data: {
-                userId: this.props.params.userId
-            }
-        }).then(result => this.setState({
-                name: result.data.name,
-                email: result.data.email
-            }, () => this.retrieveCustomFields(result.data.customfields))
-        ).catch(() => this.setState(
-            {
-                loadingData: false,
-                errorRetrievingData: true
-            })
-        );
     }
 }
 
