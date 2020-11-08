@@ -24,7 +24,6 @@ $userControllers->addController(new VerifyController);
 $userControllers->addController(new EnableUserController);
 $userControllers->addController(new DisableUserController);
 $userControllers->addController(new EditCustomFieldsController);
-$userControllers->addController(new EditSupervisedListController);
 $userControllers->addController(new GetSupervisedTicketController);
 $userControllers->addController(new AddCompanyController());
 $userControllers->addController(new GetCompanyByIdController());
