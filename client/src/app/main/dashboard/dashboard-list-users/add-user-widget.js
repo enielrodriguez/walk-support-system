@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import classNames from 'classnames';
 
@@ -13,6 +12,7 @@ import Form from 'core-components/form';
 import FormField from 'core-components/form-field';
 import Widget from 'core-components/widget';
 import Header from 'core-components/header';
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 class AddUserWidget extends React.Component {
 
@@ -27,42 +27,48 @@ class AddUserWidget extends React.Component {
         this.state = {
             loading: false,
             email: null,
-            customFields: []
+            customFields: [],
+            loadingData: true,
+            errorRetrievingData: false
         };
     }
 
     componentDidMount() {
-        this.setState({loading: true});
-
-        API.call({
-            path: '/system/get-custom-fields',
-            data: {}
-        }).then((result) => {
-            this.setState({customFields: result.data, loading: false});
-        });
+        this.retrieveData();
     }
 
     render() {
         return (
             <Widget className={this.getClass()}>
                 <Header title={i18n('INVITE_USER')} description={i18n('INVITE_USER_VIEW_DESCRIPTION')}/>
-                <Form {...this.getFormProps()}>
-                    <div className="add-user-widget__inputs">
-                        <FormField {...this.getInputProps()} label={i18n('FULL_NAME')} name="name" validation="NAME"
-                                   required/>
-                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL"
-                                   required/>
-                        {this.state.customFields.map(this.renderCustomField.bind(this))}
-                    </div>
-                    <div className="add-user-widget__captcha">
-                        <Captcha ref="captcha"/>
-                    </div>
-                    <SubmitButton type="primary">{i18n('INVITE_USER')}</SubmitButton>
-                </Form>
-
+                {this.state.loadingData ?
+                    <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
+                    : <Form {...this.getFormProps()}>
+                        <div className="add-user-widget__inputs">
+                            <FormField {...this.getInputProps()} label={i18n('FULL_NAME')} name="name" validation="NAME"
+                                       required/>
+                            <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="email" validation="EMAIL"
+                                       required/>
+                            {this.state.customFields.map(this.renderCustomField.bind(this))}
+                        </div>
+                        <div className="add-user-widget__captcha">
+                            <Captcha ref="captcha"/>
+                        </div>
+                        <SubmitButton type="primary">{i18n('INVITE_USER')}</SubmitButton>
+                    </Form>
+                }
                 {this.renderMessage()}
             </Widget>
         );
+    }
+
+    retrieveData() {
+        API.call({
+            path: '/system/get-custom-fields',
+            data: {}
+        }).then((result) => {
+            this.setState({customFields: result.data, loadingData: false});
+        }).catch(() => this.setState({errorRetrievingData: true}));
     }
 
     renderCustomField(customField, key) {

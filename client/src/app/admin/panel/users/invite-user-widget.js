@@ -80,17 +80,20 @@ class InviteUserWidget extends React.Component {
             data: {}
         }).then((result) => {
             this.setState({customFields: result.data});
-            API.call({
-                path: '/user/get-companies',
-                data: {
-                    getAll: true
-                }
-            }).then(result => this.setState({
-                    companies: result.data.companies,
-                    loadingData: false
-                })
-            ).catch(() => this.setState({errorRetrievingData: true}));
-        });
+            this.retrieveCompanies();
+        }).catch(() => this.setState({errorRetrievingData: true}));
+    }
+
+    retrieveCompanies() {
+        API.call({
+            path: '/user/get-companies',
+            data: {
+                getAll: true
+            }
+        }).then(result => this.setState({
+            companies: result.data.companies,
+            loadingData: false
+        })).catch(() => this.setState({errorRetrievingData: true}));
     }
 
     renderCustomField(customField, key) {

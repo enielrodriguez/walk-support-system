@@ -13,6 +13,7 @@ import Button from 'core-components/button';
 import Message from 'core-components/message';
 import InfoTooltip from 'core-components/info-tooltip';
 import {Link} from "react-router";
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 class DashboardViewUser extends React.Component {
 
@@ -22,11 +23,11 @@ class DashboardViewUser extends React.Component {
         verified: true,
         tickets: [],
         customfields: [],
-        invalid: false,
-        loading: true,
         disabled: false,
         userList: [],
-        message: ''
+        message: '',
+        loading: true,
+        errorRetrievingData: false,
     };
 
     componentDidMount() {
@@ -34,13 +35,15 @@ class DashboardViewUser extends React.Component {
     }
 
     render() {
-        return (
-            <div className="dashboard-view-user">
-                <Header title={i18n('USER_VIEW_TITLE', {userId: this.props.params.userId})}
-                        description={i18n('USER_VIEW_DESCRIPTION')}/>
-                {(this.state.invalid) ? this.renderInvalid() : this.renderUserInfo()}
-            </div>
-        );
+        return this.state.loading ?
+            <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
+            : (
+                <div className="dashboard-view-user">
+                    <Header title={i18n('USER_VIEW_TITLE', {userId: this.props.params.userId})}
+                            description={i18n('USER_VIEW_DESCRIPTION')}/>
+                    {(this.state.invalid) ? this.renderInvalid() : this.renderUserInfo()}
+                </div>
+            );
     }
 
     renderInvalid() {
@@ -123,7 +126,7 @@ class DashboardViewUser extends React.Component {
             <div className="dashboard-view-user__info-item" key={customfield.id}>
                 {customfield.customfield}
                 <div className="dashboard-view-user__info-box">
-                    {customfield.value}
+                    {customfield.value ? customfield.value : '-'}
                 </div>
             </div>
         );
@@ -133,7 +136,6 @@ class DashboardViewUser extends React.Component {
         return {
             type: 'secondary',
             tickets: this.state.tickets,
-            loading: this.state.loading,
             departments: this.props.departments,
             ticketPath: '/dashboard/ticket/'
         };
@@ -188,7 +190,7 @@ class DashboardViewUser extends React.Component {
                 userId: this.props.params.userId
             }
         }).then(this.onUserRetrieved.bind(this)).catch(() => this.setState({
-            invalid: true
+            errorRetrievingData: true
         }));
     }
 }

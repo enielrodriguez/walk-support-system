@@ -91,7 +91,7 @@ class AdminPanelEditUser extends React.Component {
                 <div className="admin-panel-edit-user__title">{i18n('ADDITIONAL_FIELDS')}</div>
                 <Form loading={this.state.loadingCustomFields} values={this.state.customFieldsFormValues}
                       onChange={form => this.setState({customFieldsFormValues: form})}
-                      onSubmit={this.onCustomFieldsSubmit.bind(this)}>
+                      onSubmit={this.onSubmitCustomFields.bind(this)}>
                     <div className="admin-panel-edit-user__custom-fields">
                         {this.state.customFields.map(this.renderCustomField.bind(this))}
                     </div>
@@ -180,7 +180,7 @@ class AdminPanelEditUser extends React.Component {
 
     }
 
-    onCustomFieldsSubmit(form) {
+    onSubmitCustomFields(form) {
         const customFields = this.state.customFields;
         const parsedFormValues = {}
 

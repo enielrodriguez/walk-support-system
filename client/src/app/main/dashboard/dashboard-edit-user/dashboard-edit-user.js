@@ -10,7 +10,7 @@ import Form from 'core-components/form';
 import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
-import Loading from "../../../../core-components/loading";
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 
 class DashboardEditUser extends React.Component {
@@ -26,7 +26,6 @@ class DashboardEditUser extends React.Component {
     state = {
         name: '',
         email: '',
-        loadingData: true,
         loadingName: false,
         loadingEmail: false,
         loadingPass: false,
@@ -36,6 +35,7 @@ class DashboardEditUser extends React.Component {
         messagePass: '',
         customFields: [],
         customFieldsFormValues: {},
+        loadingData: true,
         errorRetrievingData: false
     };
 
@@ -44,8 +44,9 @@ class DashboardEditUser extends React.Component {
     }
 
     render() {
-        return this.state.loadingData ? (<Loading backgrounded/>)
-            : this.state.errorRetrievingData ? this.renderMessageError() : (
+        return this.state.loadingData ?
+            <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
+            : (
                 <div className="admin-panel-edit-user">
                     <Header title={i18n('EDIT_USER')} description={i18n('EDIT_USER_DESCRIPTION')}/>
 
@@ -89,13 +90,14 @@ class DashboardEditUser extends React.Component {
                 <div className="admin-panel-edit-user__title">{i18n('ADDITIONAL_FIELDS')}</div>
                 <Form loading={this.state.loadingCustomFields} values={this.state.customFieldsFormValues}
                       onChange={form => this.setState({customFieldsFormValues: form})}
-                      onSubmit={this.onCustomFieldsSubmit.bind(this)}>
+                      onSubmit={this.onSubmitCustomFields.bind(this)}>
                     <div className="admin-panel-edit-user__custom-fields">
                         {this.state.customFields.map(this.renderCustomField.bind(this))}
                     </div>
                     <div className="row">
                         <SubmitButton>{i18n('SAVE')}</SubmitButton>
                     </div>
+                    {this.renderMessageCustomFields()}
                 </Form>
             </div>
         );
@@ -119,11 +121,6 @@ class DashboardEditUser extends React.Component {
                 </div>
             );
         }
-    }
-
-    renderMessageError() {
-        return <Message className="admin-panel-edit-user__message"
-                        type="error">{i18n('UNKNOWN_ERROR')}</Message>
     }
 
     renderMessageName() {
@@ -167,7 +164,21 @@ class DashboardEditUser extends React.Component {
         }
     }
 
-    onCustomFieldsSubmit(form) {
+    renderMessageCustomFields() {
+        switch (this.state.messageCustomFields) {
+            case 'success':
+                return <Message className="admin-panel-edit-user__message"
+                                type="success">{i18n('CHANGES_SAVED')}</Message>;
+            case 'fail':
+                return <Message className="admin-panel-edit-user__message"
+                                type="error">{i18n('UNKNOWN_ERROR')}</Message>;
+            default:
+                return null;
+        }
+
+    }
+
+    onSubmitCustomFields(form) {
         const customFields = this.state.customFields;
         const parsedFormValues = {}
 
@@ -189,7 +200,15 @@ class DashboardEditUser extends React.Component {
             path: '/user/edit-custom-fields',
             data: parsedFormValues
         }).then(() => {
-            this.setState({loadingCustomFields: false});
+            this.setState({
+                loadingCustomFields: false,
+                messageCustomFields: 'success'
+            });
+        }).catch(() => {
+            this.setState({
+                loadingCustomFields: false,
+                messageCustomFields: 'fail'
+            })
         });
 
     }
@@ -267,15 +286,21 @@ class DashboardEditUser extends React.Component {
     }
 
     retrieveData() {
-        if (!this.props.location.state) {
-            this.retrieveUser();
-        } else {
-            console.log(this.props.location.state.customfields);
-            this.setState({
-                name: this.props.location.state.name,
-                email: this.props.location.state.email
-            }, () => this.retrieveCustomFields(this.props.location.state.customfields));
-        }
+        API.call({
+            path: '/user/get-user',
+            data: {
+                userId: this.props.params.userId
+            }
+        }).then(result => {
+                this.setState({
+                    name: result.data.name,
+                    email: result.data.email
+                });
+                this.retrieveCustomFields(result.data.customfields);
+            }
+        ).catch(() => this.setState({
+            errorRetrievingData: true
+        }));
     }
 
     // customfields contains the name and the value of the fields, but it does not contain
@@ -305,31 +330,11 @@ class DashboardEditUser extends React.Component {
             this.setState({
                 customFields: result.data,
                 customFieldsFormValues: customFieldsFormValues,
-                loadingData: false,
-                errorRetrievingData: false
+                loadingData: false
             });
         }).catch(() => this.setState({
-            loadingData: false,
             errorRetrievingData: true
         }));
-    }
-
-    retrieveUser() {
-        API.call({
-            path: '/user/get-user',
-            data: {
-                userId: this.props.params.userId
-            }
-        }).then(result => this.setState({
-                name: result.data.name,
-                email: result.data.email
-            }, () => this.retrieveCustomFields(result.data.customfields))
-        ).catch(() => this.setState(
-            {
-                loadingData: false,
-                errorRetrievingData: true
-            })
-        );
     }
 }
 
