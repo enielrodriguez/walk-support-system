@@ -160,7 +160,7 @@ class AdminPanelCompanies extends React.Component {
         API.call({
             path: '/user/get-companies',
             data: data
-        }).catch(this.onCompaniesRejected.bind(this)).then(this.onCompaniesRetrieved.bind(this));
+        }).then(this.onCompaniesRetrieved.bind(this)).catch(this.onCompaniesRejected.bind(this));
     }
 
     onAddCompany() {
