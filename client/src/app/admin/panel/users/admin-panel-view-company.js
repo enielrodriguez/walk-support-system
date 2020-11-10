@@ -65,7 +65,7 @@ class AdminPanelViewCompany extends React.Component {
                     <div className="admin-panel-view-company__info-item">
                         {i18n('CONTACT_NAME')}
                         <div className="admin-panel-view-company__info-box">
-                            {this.state.company.contact_name}
+                            {this.state.company.contact_name || '-'}
                         </div>
                     </div>
 
@@ -91,16 +91,12 @@ class AdminPanelViewCompany extends React.Component {
                         <div className="admin-panel-view-company__info-item">
                             {i18n('COMPANY_ADMIN')}
                             <div className="admin-panel-view-company__info-box">
-                                {i18n('NAME') + ': ' + (this.state.company.admin.name ?
-                                    this.state.company.admin.name
-                                    : '')}
+                                {this.state.company.admin.name || '-'}
                             </div>
                         </div>
                         <div className="admin-panel-view-company__info-item">
                             <div className="admin-panel-view-company__info-box">
-                                {i18n('EMAIL') + ': ' + (this.state.company.admin.email ?
-                                    this.state.company.admin.email
-                                    : '')}
+                                {this.state.company.admin.email || '-'}
                             </div>
                         </div>
                     </div>
