@@ -481,6 +481,7 @@ export default {
     'EDIT_COMPANY_DESCRIPTION': 'Aquí puedes editar los datos de una empresa',
     'WARNING_COMPANY_EDIT_ADMIN': 'Puede crear un nuevo administrador, esto eliminará al actual',
     'WARNING_COMPANY_EDIT_ADMIN_DESC': 'Si desea convertir en administrador a un usuario existente de la empresa, solo ponga el email de este y deje el nombre en blanco',
+    'CHANGE_COMPANY': 'Cambiar Empresa',
 
     'DELETE_BAN_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán. Además, el correo electrónico ya no podrá utilizarse',
 

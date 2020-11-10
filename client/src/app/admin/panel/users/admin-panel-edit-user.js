@@ -11,6 +11,7 @@ import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
 import LoadingWithMessage from "../../../../core-components/loading-with-message";
+import CompanyDropdown from "../../../../app-components/company-dropdown";
 
 
 class AdminPanelEditUser extends React.Component {
@@ -18,14 +19,18 @@ class AdminPanelEditUser extends React.Component {
     state = {
         name: '',
         email: '',
+        companyId: '',
+        isCompanyAdmin: false,
         loadingName: false,
         loadingEmail: false,
         loadingPass: false,
+        loadingCompany: false,
         loadingCustomFields: false,
         messageName: '',
         messageEmail: '',
-        messageCustomFields: '',
         messagePass: '',
+        messageCompany: '',
+        messageCustomFields: '',
         customFields: [],
         customFieldsFormValues: {},
         loadingData: true,
@@ -79,6 +84,19 @@ class AdminPanelEditUser extends React.Component {
                             {this.renderMessagePass()}
                         </Form>
 
+                        {!this.state.isCompanyAdmin &&
+                        <Form loading={this.state.loadingCompany} onSubmit={this.onSubmitEditCompany.bind(this)}>
+                            <FormField label={i18n('COMPANY')} name="companyIndex"
+                                       field="select"
+                                       decorator={CompanyDropdown}
+                                       {...this.companyProps()}/>
+                            <div className="admin-panel-edit-user__row">
+                                <SubmitButton>{i18n('CHANGE_COMPANY')}</SubmitButton>
+                            </div>
+                            {this.renderMessageCompany()}
+                        </Form>
+                        }
+
                         {this.state.customFields.length && this.renderCustomFields()}
                     </div>
                 </div>
@@ -124,60 +142,58 @@ class AdminPanelEditUser extends React.Component {
         }
     }
 
-
-    renderMessageName() {
-        switch (this.state.messageName) {
+    renderMessage(state, successMessage, failMessage) {
+        switch (state) {
             case 'success':
                 return <Message className="admin-panel-edit-user__message"
-                                type="success">{i18n('NAME_CHANGED')}</Message>;
+                                type="success">{i18n(successMessage)}</Message>;
             case 'fail':
                 return <Message className="admin-panel-edit-user__message"
-                                type="error">{i18n('INVALID_NAME')}</Message>;
+                                type="error">{i18n(failMessage)}</Message>;
             default:
                 return null;
         }
+    }
 
+
+    renderMessageName() {
+        return this.renderMessage(
+            this.state.messageName,
+            'NAME_CHANGED',
+            'INVALID_NAME'
+        );
     }
 
     renderMessageEmail() {
-        switch (this.state.messageEmail) {
-            case 'success':
-                return <Message className="admin-panel-edit-user__message"
-                                type="success">{i18n('EMAIL_CHANGED')}</Message>;
-            case 'fail':
-                return <Message className="admin-panel-edit-user__message"
-                                type="error">{i18n('ERROR_EMAIL')}</Message>;
-            default:
-                return null;
-        }
-
+        return this.renderMessage(
+            this.state.messageEmail,
+            'EMAIL_CHANGED',
+            'ERROR_EMAIL'
+        );
     }
 
     renderMessagePass() {
-        switch (this.state.messagePass) {
-            case 'success':
-                return <Message className="admin-panel-edit-user__message"
-                                type="success">{i18n('PASSWORD_CHANGED')}</Message>;
-            case 'fail':
-                return <Message className="admin-panel-edit-user__message"
-                                type="error">{i18n('OLD_PASSWORD_INCORRECT')}</Message>;
-            default:
-                return null;
-        }
+        return this.renderMessage(
+            this.state.messagePass,
+            'PASSWORD_CHANGED',
+            'OLD_PASSWORD_INCORRECT'
+        );
+    }
+
+    renderMessageCompany() {
+        return this.renderMessage(
+            this.state.messageCompany,
+            'COMPANY_CHANGED',
+            'UNKNOWN_ERROR'
+        );
     }
 
     renderMessageCustomFields() {
-        switch (this.state.messageCustomFields) {
-            case 'success':
-                return <Message className="admin-panel-edit-user__message"
-                                type="success">{i18n('CHANGES_SAVED')}</Message>;
-            case 'fail':
-                return <Message className="admin-panel-edit-user__message"
-                                type="error">{i18n('UNKNOWN_ERROR')}</Message>;
-            default:
-                return null;
-        }
-
+        return this.renderMessage(
+            this.state.messageCustomFields,
+            'CHANGES_SAVED',
+            'UNKNOWN_ERROR'
+        );
     }
 
     onSubmitCustomFields(form) {
@@ -289,6 +305,32 @@ class AdminPanelEditUser extends React.Component {
         });
     }
 
+    onSubmitEditCompany(formState) {
+        this.setState({
+            loadingCompany: true
+        });
+
+        const newCompanyId = this.state.companies[formState['companyIndex']].id;
+
+        API.call({
+            path: "/user/edit-user-company",
+            data: {
+                newCompanyId: newCompanyId,
+                userId: this.props.params.userId
+            }
+        }).then(() => {
+            this.setState({
+                loadingCompany: false,
+                messageCompany: "success"
+            });
+        }).catch(() => {
+            this.setState({
+                loadingCompany: false,
+                messageCompany: 'fail'
+            })
+        });
+    }
+
     retrieveData() {
         API.call({
             path: '/user/get-user',
@@ -298,7 +340,9 @@ class AdminPanelEditUser extends React.Component {
         }).then(result => {
                 this.setState({
                     name: result.data.name,
-                    email: result.data.email
+                    email: result.data.email,
+                    companyId: result.data.company.id,
+                    isCompanyAdmin: result.data.isCompanyAdmin
                 });
                 this.retrieveCustomFields(result.data.customfields);
             }
@@ -335,11 +379,36 @@ class AdminPanelEditUser extends React.Component {
             this.setState({
                 customFields: result.data,
                 customFieldsFormValues: customFieldsFormValues,
-                loadingData: false
             });
+
+            this.retrieveCompanies();
         }).catch(() => this.setState({
             errorRetrievingData: true
         }));
+    }
+
+    retrieveCompanies() {
+        API.call({
+            path: '/user/get-companies',
+            data: {
+                getAll: true
+            }
+        }).then(result => this.setState({
+            companies: result.data.companies,
+            loadingData: false
+        })).catch(() => this.setState({errorRetrievingData: true}));
+    }
+
+    companyProps() {
+        const index = _.indexOf(this.state.companies.map(company => company.id), this.state.companyId);
+
+        return {
+            fieldProps: {
+                companies: this.state.companies,
+                size: "medium"
+            },
+            value: index
+        };
     }
 }
 

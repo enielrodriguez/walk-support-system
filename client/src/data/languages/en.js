@@ -475,6 +475,7 @@ export default {
     'EDIT_COMPANY_DESCRIPTION': 'Here you can edit some company data',
     'WARNING_COMPANY_EDIT_ADMIN': 'You can create a new admin, this will delete the current one',
     'WARNING_COMPANY_EDIT_ADMIN_DESC': 'If you want to convert an existing user of the company into admin, just put his email and leave the name blank',
+    'CHANGE_COMPANY': 'Change Company',
 
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more',
 
