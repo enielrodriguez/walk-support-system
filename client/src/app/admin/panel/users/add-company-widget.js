@@ -35,11 +35,11 @@ class AddCompanyWidget extends React.Component {
                         <FormField {...this.getInputProps()} label={i18n('NIT')} name="nit" required/>
                         <FormField {...this.getInputProps()} label={i18n('PHONE')} name="phone" validation="PHONE"
                                    required/>
-                        <FormField {...this.getInputProps()} label={i18n('CONTACT_NAME')} name="contact_name" required/>
+                        <FormField {...this.getInputProps()} label={i18n('CONTACT_NAME')} name="contact_name"/>
 
                         <Header title={i18n('COMPANY_ADMIN')} description={i18n('COMPANY_ADMIN_WARNING')}/>
-                        <FormField {...this.getInputProps()} label={i18n('NAME')} name="admin_name" required/>
-                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="admin_email" required/>
+                        <FormField {...this.getInputProps()} label={i18n('NAME')} name="admin_name"/>
+                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="admin_email" validation="EMAIL"/>
                     </div>
 
                     <SubmitButton type="primary">{i18n('ADD_COMPANY')}</SubmitButton>
@@ -103,6 +103,13 @@ class AddCompanyWidget extends React.Component {
     }
 
     onAddCompanyFormSubmit(formState) {
+
+        if (!!(!!formState.admin_name ^ !!formState.admin_email)) {
+            this.setState({
+                message: 'INVALID_ADMIN_NAME'
+            });
+            return;
+        }
 
         this.setState({
             loading: true

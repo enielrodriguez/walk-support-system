@@ -30,7 +30,6 @@ class AddCompanyController extends Controller
     private $token;
 
     private Company $company;
-    private User $userAdmin;
 
     private $business_name;
     private $nit;
@@ -52,15 +51,24 @@ class AddCompanyController extends Controller
                     'validation' => DataValidator::notBlank()->length(6, 100),
                     'error' => ERRORS::INVALID_PHONE
                 ], 'contact_name' => [
-                    'validation' => DataValidator::notBlank()->length(5, 100),
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::notBlank()->length(5, 100),
+                        DataValidator::falseVal()
+                    ),
                     'error' => ERRORS::INVALID_CONTACT_NAME
                 ],
                 'admin_name' => [
-                    'validation' => DataValidator::notBlank()->length(2, 100),
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::notBlank()->length(2, 100),
+                        DataValidator::falseVal()
+                    ),
                     'error' => ERRORS::INVALID_ADMIN_NAME
                 ],
                 'admin_email' => [
-                    'validation' => DataValidator::email(),
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::email(),
+                        DataValidator::falseVal()
+                    ),
                     'error' => ERRORS::INVALID_ADMIN_EMAIL
                 ],
             ]
@@ -77,30 +85,22 @@ class AddCompanyController extends Controller
         $this->adminName = Controller::request('admin_name');
         $this->adminEmail = Controller::request('admin_email');
 
-
-        $this->createCompany();
-        try {
-            $this->createUserAdmin();
-        } catch (Exception $e) {
-            $this->company->delete();
-            throw $e;
+        if ($this->adminName xor $this->adminEmail) {
+            throw new RequestException(ERRORS::INVALID_USER);
         }
 
-        $this->company->setProperties(array('admin' => $this->userAdmin));
-        $this->company->store();
+        $this->createCompany();
 
-
-        $this->token = Hashing::generateRandomToken();
-
-        $recoverPassword = new RecoverPassword();
-        $recoverPassword->setProperties(array(
-            'email' => $this->adminEmail,
-            'token' => $this->token,
-            'staff' => false
-        ));
-        $recoverPassword->store();
-
-        $this->sendInvitationMail();
+        if ($this->adminName) {
+            try {
+                $userAdmin = $this->createUserAdmin();
+                $this->company->setProperties(array('admin' => $userAdmin));
+                $this->company->store();
+            } catch (Exception $e) {
+                $this->company->delete();
+                throw $e;
+            }
+        }
 
 
         Response::respondSuccess();
@@ -130,9 +130,9 @@ class AddCompanyController extends Controller
     {
         $this->checkIfUserExists();
 
-        $this->userAdmin = new User();
+        $userAdmin = new User();
 
-        $this->userAdmin->setProperties([
+        $userAdmin->setProperties([
             'name' => $this->adminName,
             'tickets' => 0,
             'email' => $this->adminEmail,
@@ -141,14 +141,27 @@ class AddCompanyController extends Controller
             'company' => $this->company
         ]);
 
-        $this->userAdmin->store();
+        $userAdmin->store();
+
+        $this->sendInvitationMail();
+
+        return $userAdmin;
     }
 
 
     public function sendInvitationMail()
     {
-        $mailSender = MailSender::getInstance();
+        $this->token = Hashing::generateRandomToken();
+        $recoverPassword = new RecoverPassword();
+        $recoverPassword->setProperties(array(
+            'email' => $this->adminEmail,
+            'token' => $this->token,
+            'staff' => false
+        ));
+        $recoverPassword->store();
 
+
+        $mailSender = MailSender::getInstance();
         $mailSender->setTemplate(MailTemplate::USER_INVITE, [
             'to' => $this->adminEmail,
             'name' => $this->adminName,
