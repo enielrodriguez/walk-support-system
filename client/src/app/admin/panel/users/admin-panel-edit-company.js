@@ -48,7 +48,7 @@ class AdminPanelEditCompany extends React.Component {
                                        field="input" fieldProps={{size: 'large'}} required/>
 
                             <FormField name="contact_name" label={i18n('CONTACT_NAME')} field="input"
-                                       fieldProps={{size: 'large'}} required/>
+                                       fieldProps={{size: 'large'}}/>
 
 
                             <div className="admin-panel-edit-company__warning">
@@ -59,7 +59,7 @@ class AdminPanelEditCompany extends React.Component {
                                        infoMessage={this.getEditAdminInfo()} fieldProps={{size: 'large'}}/>
 
                             <FormField name="new_admin_email" label={i18n('ADMIN_EMAIL')} field="input"
-                                       validation="EMAIL" fieldProps={{size: 'large'}}/>
+                                       fieldProps={{size: 'large'}}/>
 
                             <div className="admin-panel-edit-company__row">
                                 <SubmitButton>{i18n('SAVE')}</SubmitButton>
