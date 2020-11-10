@@ -42,7 +42,6 @@ class InviteUserController extends Controller
     private $userEmail;
     private $userName;
     private $companyId;
-    private $token;
 
     public function validations()
     {
@@ -56,6 +55,13 @@ class InviteUserController extends Controller
                 'email' => [
                     'validation' => DataValidator::email(),
                     'error' => ERRORS::INVALID_EMAIL
+                ],
+                'companyId' => [
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::dataStoreId('company'),
+                        DataValidator::falseVal()
+                    ),
+                    'error' => ERRORS::INVALID_COMPANY
                 ]
             ]
         ];
@@ -86,26 +92,14 @@ class InviteUserController extends Controller
 
         $userId = $this->createNewUserAndRetrieveId();
 
-        $this->addSupervised($userId);
-
-        $this->token = Hashing::generateRandomToken();
-
-        $recoverPassword = new RecoverPassword();
-        $recoverPassword->setProperties(array(
-            'email' => $this->userEmail,
-            'token' => $this->token,
-            'staff' => false
-        ));
-        $recoverPassword->store();
-
         $this->sendInvitationMail();
+
+        Log::createLog('ADD_USER', $this->userName);
 
         Response::respondSuccess([
             'userId' => $userId,
             'userEmail' => $this->userEmail
         ]);
-
-        Log::createLog('INVITE', $this->userName);
     }
 
     public function storeRequestData()
@@ -126,9 +120,9 @@ class InviteUserController extends Controller
 
     public function createNewUserAndRetrieveId()
     {
-        $userInstance = new User();
+        $user = new User();
 
-        $userInstance->setProperties([
+        $user->setProperties([
             'name' => $this->userName,
             //'signupDate' => Date::getCurrentDate(), //is set in the database
             'tickets' => 0,
@@ -139,34 +133,27 @@ class InviteUserController extends Controller
             'company' => Company::getCompany($this->companyId)
         ]);
 
-        return $userInstance->store();
-    }
-
-    public function addSupervised($userId)
-    {
-        $superUser = Company::getCompany($this->companyId)->admin;
-
-        if ($superUser) {
-            if (!$superUser->supervisedrelation) {
-                $superUser->supervisedrelation = new Supervisedrelation();
-            }
-
-            $superUser->supervisedrelation->sharedUserList->add(User::getUser($userId));
-
-            $superUser->supervisedrelation->store();
-            $superUser->store();
-        }
+        return $user->store();
     }
 
     public function sendInvitationMail()
     {
-        $mailSender = MailSender::getInstance();
+        $token = Hashing::generateRandomToken();
 
+        $recoverPassword = new RecoverPassword();
+        $recoverPassword->setProperties(array(
+            'email' => $this->userEmail,
+            'token' => $token,
+            'staff' => false
+        ));
+        $recoverPassword->store();
+
+        $mailSender = MailSender::getInstance();
         $mailSender->setTemplate(MailTemplate::USER_INVITE, [
             'to' => $this->userEmail,
             'name' => $this->userName,
             'url' => Setting::getSetting('url')->getValue(),
-            'token' => $this->token
+            'token' => $token
         ]);
 
         $mailSender->send();

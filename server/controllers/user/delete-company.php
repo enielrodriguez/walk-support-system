@@ -47,7 +47,7 @@ class DeleteCompanyController extends Controller
     {
         $company = Company::getCompany(Controller::request('companyId'));
 
-        // just removes the tickets, supervised relations, and writes the logs
+        // just removes the tickets, and writes the logs
         // company users are deleted by cascade in the DB
         $this->deleteUsers($company);
 
@@ -61,10 +61,7 @@ class DeleteCompanyController extends Controller
 
     private function deleteUsers($company)
     {
-
         $users = User::find(' company_id = ? ', [$company->id]);
-
-        $company->admin->supervisedrelation->delete();
 
         foreach ($users as $user) {
             Log::createLog('DELETE_USER', $user->name);

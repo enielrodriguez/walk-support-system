@@ -70,9 +70,10 @@ class GetUserByIdController extends Controller
 
         if (Controller::isStaffLogged()) {
             $staff = Controller::getLoggedUser();
+            $isCompanyAdmin = User::isCompanyAdmin($user);
             $response['company'] = $user->company->toArray(true);
-            $response['isCompanyAdmin'] = User::isCompanyAdmin($user);
-            $response['userList'] = $user->supervisedrelation ? $user->supervisedrelation->sharedUserList->toArray() : [];
+            $response['isCompanyAdmin'] = $isCompanyAdmin;
+            $response['userList'] = User::getSupervisedUsers($user)->toArray();
 
             // Add only the tickets sent to the departments to which the staff belongs.
             foreach ($user->sharedTicketList as $ticket) {
@@ -81,7 +82,8 @@ class GetUserByIdController extends Controller
                 }
             }
 
-        } else { // Is company_admin, a regular user who manages a company
+        } // Is company_admin, a regular user who manages a company, he can see all the tickets of his users
+        else {
             $tickets = $user->sharedTicketList;
         }
 

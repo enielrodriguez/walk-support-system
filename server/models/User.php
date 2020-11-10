@@ -56,6 +56,16 @@ class User extends DataStore
         return $user->company->admin && $user->id === $user->company->admin->id;
     }
 
+    public static function getSupervisedUsers($user)
+    {
+        return self::isCompanyAdmin($user) ?
+            User::find(' company_id = :companyId AND id != :userId ', [
+                ':companyId' => $user->company->id,
+                ':userId' => $user->id
+            ])
+            : [];
+    }
+
     public function canManageTicket(Ticket $ticket)
     {
         $ticketNumberInstanceValidation = true;
