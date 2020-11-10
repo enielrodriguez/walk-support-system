@@ -62,7 +62,7 @@ class User extends DataStore
             User::find(' company_id = :companyId AND id != :userId ', [
                 ':companyId' => $user->company->id,
                 ':userId' => $user->id
-            ])
+            ])->toArray()
             : [];
     }
 
