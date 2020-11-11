@@ -42,7 +42,6 @@ class EditCompanyController extends Controller
     private $contactName;
     private $newAdminName;
     private $newAdminEmail;
-    private $token;
 
 
     public function validations()
@@ -64,22 +63,23 @@ class EditCompanyController extends Controller
                     'validation' => DataValidator::notBlank()->length(6, 100),
                     'error' => ERRORS::INVALID_PHONE
                 ], 'contact_name' => [
-                    'validation' => DataValidator::notBlank()->length(5, 100),
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::notBlank()->length(5, 100),
+                        DataValidator::falseVal()
+                    ),
                     'error' => ERRORS::INVALID_CONTACT_NAME
                 ],
                 'new_admin_name' => [
                     'validation' => DataValidator::oneOf(
                         DataValidator::notBlank()->length(2, 100),
-                        DataValidator::nullType(),
-                        DataValidator::length(0)
+                        DataValidator::falseVal()
                     ),
                     'error' => ERRORS::INVALID_ADMIN_NAME
                 ],
                 'new_admin_email' => [
                     'validation' => DataValidator::oneOf(
                         DataValidator::email(),
-                        DataValidator::nullType(),
-                        DataValidator::length(0)
+                        DataValidator::falseVal()
                     ),
                     'error' => ERRORS::INVALID_ADMIN_EMAIL
                 ],
@@ -100,26 +100,22 @@ class EditCompanyController extends Controller
 
         $this->company = Company::getCompany($this->companyId);
 
-        // The company Default (the only one without an administrator) cannot be edited
-        if (!$this->company->admin) {
+
+        if ($this->company->nit === 'default_company') {
             throw new RequestException(ERRORS::INVALID_COMPANY);
         }
 
         $this->updateCompany();
 
-        if ($this->newAdminName || $this->newAdminEmail) {
+        if ($this->newAdminEmail) {
             $this->createUserAdmin();
-
-            $oldAdmin = User::getUser($this->company->admin->id);
 
             $this->company->setProperties(array('admin' => $this->companyAdmin));
             $this->company->store();
-
-            $oldAdmin->supervisedrelation->delete();
-            $oldAdmin->delete();
         }
 
         Response::respondSuccess();
+
     }
 
 
@@ -144,13 +140,67 @@ class EditCompanyController extends Controller
     public function createUserAdmin()
     {
         $desiredCompanyAdmin = User::getUser($this->newAdminEmail, 'email');
+        $oldAdmin = $this->company->admin;
 
+        $this->validateAdmin($desiredCompanyAdmin, $oldAdmin);
+
+        if ($desiredCompanyAdmin->isNull()) {
+            $desiredCompanyAdmin = new User();
+            $desiredCompanyAdmin->setProperties([
+                'name' => $this->newAdminName,
+                'tickets' => 0,
+                'email' => $this->newAdminEmail,
+                'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
+                'verificationToken' => null
+            ]);
+            $desiredCompanyAdmin->store();
+            $this->sendInvitationMail();
+        }
+
+        $desiredCompanyAdmin->setProperties([
+            'company' => $this->company
+        ]);
+
+        $desiredCompanyAdmin->store();
+
+        if ($oldAdmin) {
+            $oldAdmin->delete();
+        }
+
+        $this->companyAdmin = $desiredCompanyAdmin;
+    }
+
+
+    public function sendInvitationMail()
+    {
+        $token = Hashing::generateRandomToken();
+        $recoverPassword = new RecoverPassword();
+        $recoverPassword->setProperties(array(
+            'email' => $this->newAdminEmail,
+            'token' => $token,
+            'staff' => false
+        ));
+        $recoverPassword->store();
+
+        $mailSender = MailSender::getInstance();
+        $mailSender->setTemplate(MailTemplate::USER_INVITE, [
+            'to' => $this->newAdminEmail,
+            'name' => $this->newAdminName,
+            'url' => Setting::getSetting('url')->getValue(),
+            'token' => $token
+        ]);
+
+        $mailSender->send();
+    }
+
+    private function validateAdmin($desiredCompanyAdmin, $oldAdmin)
+    {
         if (!$desiredCompanyAdmin->isNull()) {
             if ($this->newAdminName) {
                 throw new RequestException(ERRORS::USER_EXISTS);
             }
 
-            if ($desiredCompanyAdmin->id === $this->company->admin->id) {
+            if ($oldAdmin && $oldAdmin->id === $desiredCompanyAdmin->id) {
                 throw new RequestException(ERRORS::USER_ALREADY_ADMIN);
             }
 
@@ -164,57 +214,5 @@ class EditCompanyController extends Controller
         if (!$banRow->isNull()) {
             throw new RequestException(ERRORS::ALREADY_BANNED);
         }
-
-        if ($desiredCompanyAdmin->isNull()) {
-            $desiredCompanyAdmin = new User();
-            $desiredCompanyAdmin->setProperties([
-                'name' => $this->newAdminName,
-                'tickets' => 0,
-                'email' => $this->newAdminEmail,
-                'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
-                'verificationToken' => null
-            ]);
-        }
-
-        $desiredCompanyAdmin->setProperties([
-            'company' => $this->company
-        ]);
-
-        $oldAdmin = User::getUser($this->company->admin->id);
-        $companyUsers = $oldAdmin->supervisedrelation->sharedUserList;
-        $desiredCompanyAdmin->supervisedrelation = new Supervisedrelation();
-        $desiredCompanyAdmin->supervisedrelation->sharedUserList = $companyUsers;
-
-        $desiredCompanyAdmin->supervisedrelation->store();
-        $desiredCompanyAdmin->store();
-
-        $this->companyAdmin = $desiredCompanyAdmin;
-
-        $this->token = Hashing::generateRandomToken();
-
-        $recoverPassword = new RecoverPassword();
-        $recoverPassword->setProperties(array(
-            'email' => $this->newAdminEmail,
-            'token' => $this->token,
-            'staff' => false
-        ));
-        $recoverPassword->store();
-
-        $this->sendInvitationMail();
-    }
-
-
-    public function sendInvitationMail()
-    {
-        $mailSender = MailSender::getInstance();
-
-        $mailSender->setTemplate(MailTemplate::USER_INVITE, [
-            'to' => $this->newAdminEmail,
-            'name' => $this->newAdminName,
-            'url' => Setting::getSetting('url')->getValue(),
-            'token' => $this->token
-        ]);
-
-        $mailSender->send();
     }
 }
