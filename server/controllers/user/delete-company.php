@@ -53,7 +53,7 @@ class DeleteCompanyController extends Controller
 
         $company->delete();
 
-        Log::createLog('DELETE_COMPANY', $company->nit);
+        Log::createLog('DELETE_COMPANY', $company->business_name);
 
         Response::respondSuccess();
     }

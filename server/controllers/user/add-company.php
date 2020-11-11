@@ -102,6 +102,7 @@ class AddCompanyController extends Controller
             }
         }
 
+        Log::createLog('ADD_COMPANY', $this->business_name);
 
         Response::respondSuccess();
     }
@@ -144,6 +145,8 @@ class AddCompanyController extends Controller
         $userAdmin->store();
 
         $this->sendInvitationMail();
+
+        Log::createLog('ADD_USER', $userAdmin->name);
 
         return $userAdmin;
     }

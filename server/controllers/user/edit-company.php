@@ -115,7 +115,6 @@ class EditCompanyController extends Controller
         }
 
         Response::respondSuccess();
-
     }
 
 
@@ -154,6 +153,9 @@ class EditCompanyController extends Controller
                 'verificationToken' => null
             ]);
             $desiredCompanyAdmin->store();
+
+            Log::createLog('ADD_USER', $desiredCompanyAdmin->name);
+
             $this->sendInvitationMail();
         }
 
@@ -164,6 +166,12 @@ class EditCompanyController extends Controller
         $desiredCompanyAdmin->store();
 
         if ($oldAdmin) {
+            Log::createLog('DELETE_USER', $oldAdmin->name);
+            RedBean::exec('DELETE FROM log WHERE author_user_id = ?', [$oldAdmin->id]);
+
+            foreach ($oldAdmin->sharedTicketList as $ticket) {
+                $ticket->delete();
+            }
             $oldAdmin->delete();
         }
 
