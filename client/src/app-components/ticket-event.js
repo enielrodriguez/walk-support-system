@@ -270,9 +270,9 @@ class TicketEvent extends React.Component {
         );
     }
 
-    renderCustomFieldValue(customField) {
+    renderCustomFieldValue(customField, index) {
         return (
-            <span className="ticket-event__comment-badge-container">
+            <span key={index} className="ticket-event__comment-badge-container">
                 <span className="ticket-event__comment-badge">
                     {customField.customfield}: <span className="ticket-event__comment-badge-value">{customField.value}</span>
                 </span>
