@@ -73,7 +73,7 @@ class GetUserByIdController extends Controller
             $isCompanyAdmin = User::isCompanyAdmin($user);
             $response['company'] = $user->company->toArray(true);
             $response['isCompanyAdmin'] = $isCompanyAdmin;
-            $response['userList'] = User::getSupervisedUsers($user);
+            $response['userList'] = User::getSupervisedUsers($user)->toArray();
 
             // Add only the tickets sent to the departments to which the staff belongs.
             foreach ($user->sharedTicketList as $ticket) {

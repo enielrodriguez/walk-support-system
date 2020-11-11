@@ -62,8 +62,8 @@ class User extends DataStore
             User::find(' company_id = :companyId AND id != :userId ', [
                 ':companyId' => $user->company->id,
                 ':userId' => $user->id
-            ])->toArray()
-            : [];
+            ])
+            : new DataStoreList();
     }
 
     public function canManageTicket(Ticket $ticket)
@@ -74,11 +74,13 @@ class User extends DataStore
         if ($this->ticketNumber) {
             $ticketNumberInstanceValidation = $this->ticketNumber == $ticket->ticketNumber;
         }
-        if ($this->supervisedrelation) {
-            foreach ($this->supervisedrelation->sharedUserList as $user) {
-                if ($ticket->isAuthor($user)) $ticketOfSupervisedUser = true;
-            }
+
+        $userList = User::getSupervisedUsers($this);
+
+        foreach ($userList as $usr) {
+            if ($ticket->isAuthor($usr)) $ticketOfSupervisedUser = true;
         }
+
         return (($ticket->isAuthor($this) || $ticketOfSupervisedUser) && $ticketNumberInstanceValidation);
     }
 

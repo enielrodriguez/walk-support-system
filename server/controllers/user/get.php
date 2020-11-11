@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -25,35 +27,35 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {[Ticket](#api-Data_Structures-ObjectTicket)[]} data.tickets Array of tickets of the user
  *
  */
-
-class GetUserController extends Controller {
+class GetUserController extends Controller
+{
     const PATH = '/get';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'user',
             'requestData' => []
         ];
     }
 
-    public function handler() {
-        
+    public function handler()
+    {
+
         if (Controller::isStaffLogged()) {
             throw new RequestException(ERRORS::INVALID_CREDENTIALS);
         }
 
         $user = Controller::getLoggedUser();
 
-        $userList = null;
+        $userList = User::getSupervisedUsers($user);
+        $userListArray = $userList->toArray();
 
-        if($user->supervisedrelation){
-            $userList = $user->supervisedrelation->sharedUserList->toArray();
-            foreach ($user->supervisedrelation->sharedUserList as $idx => $usr) {
-                $userList[$idx]['tickets'] = $usr->tickets;
-            }
+        foreach ($userList as $idx => $usr) {
+            $userListArray[$idx]['tickets'] = $usr->tickets;
         }
-        
+
         Response::respondSuccess([
             'name' => $user->name,
             'email' => $user->email,
@@ -63,7 +65,7 @@ class GetUserController extends Controller {
             'verified' => !$user->verificationToken,
             'tickets' => $user->sharedTicketList->toArray(true),
             'customfields' => $user->xownCustomfieldvalueList->toArray(),
-            'users' => $userList
+            'users' => $userListArray
         ]);
     }
 }
