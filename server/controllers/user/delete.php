@@ -54,7 +54,9 @@ class DeleteUserController extends Controller
         }
 
         if (User::isCompanyAdmin($user)) {
-            throw new RequestException(ERRORS::NO_PERMISSION);
+            $company = $user->company;
+            $company->setProperties(['admin' => null]);
+            $company->store();
         }
 
         Log::createLog('DELETE_USER', $user->name);

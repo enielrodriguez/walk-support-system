@@ -94,14 +94,12 @@ class AdminPanelViewUser extends React.Component {
                         </Button>
                         <Button className="admin-panel-view-user__action-button"
                                 onClick={this.onDeleteAndBanClick.bind(this)}
-                                size="medium"
-                                disabled={this.state.isCompanyAdmin}>
+                                size="medium">
                             {i18n('DELETE_AND_BAN')}
                             {this.state.isCompanyAdmin && this.renderForbiddenDelete()}
                         </Button>
                         <Button className="admin-panel-view-user__action-button" onClick={this.onDeleteClick.bind(this)}
-                                size="medium"
-                                disabled={this.state.isCompanyAdmin}>
+                                size="medium">
                             {i18n('DELETE')}
                             {this.state.isCompanyAdmin && this.renderForbiddenDelete()}
                         </Button>
