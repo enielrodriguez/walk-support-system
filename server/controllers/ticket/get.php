@@ -1,6 +1,9 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
+
 /**
  * @api {post} /ticket/get Get ticket
  * @apiVersion 4.8.0
@@ -22,16 +25,15 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {[Ticket](#api-Data_Structures-ObjectTicket)} data Information about the requested ticket.
  *
  */
-
-
-class TicketGetController extends Controller {
+class TicketGetController extends Controller
+{
     const PATH = '/get';
     const METHOD = 'POST';
 
     private $ticket;
 
-    public function validations() {
-        $session = Session::getInstance();
+    public function validations()
+    {
         return [
             'permission' => 'user',
             'requestData' => [
@@ -43,9 +45,10 @@ class TicketGetController extends Controller {
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
         $this->ticket = Ticket::getByTicketNumber(Controller::request('ticketNumber'));
-        
+
         if ($this->shouldDenyPermission()) {
             throw new RequestException(ERRORS::NO_PERMISSION);
         } else {
@@ -53,7 +56,8 @@ class TicketGetController extends Controller {
         }
     }
 
-    private function shouldDenyPermission() {
+    private function shouldDenyPermission()
+    {
         $user = Controller::getLoggedUser();
         return !$user->canManageTicket($this->ticket);
     }
