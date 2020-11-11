@@ -109,7 +109,7 @@ class TicketViewer extends React.Component {
                         userId={userId}
                         date={ticket.date}
                         onEdit={this.onEdit.bind(this,0)}
-                        edited={ticket.edited}
+                        edited={!!Number(ticket.edited)}
                         file={ticket.file}
                         edit={this.state.edit && this.state.editId == 0}
                         onToggleEdit={this.onToggleEdit.bind(this, 0)}
