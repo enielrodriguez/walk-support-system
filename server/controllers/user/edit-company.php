@@ -1,6 +1,7 @@
 <?php
 
 use Respect\Validation\Validator as DataValidator;
+use RedBeanPHP\Facade as RedBean;
 
 DataValidator::with('CustomValidations', true);
 
