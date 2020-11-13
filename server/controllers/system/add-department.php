@@ -1,4 +1,5 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
 
 /**
@@ -21,12 +22,13 @@ use Respect\Validation\Validator as DataValidator;
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class AddDepartmentController extends Controller {
+class AddDepartmentController extends Controller
+{
     const PATH = '/add-department';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'staff_3',
             'requestData' => [
@@ -38,21 +40,37 @@ class AddDepartmentController extends Controller {
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
         $name = Controller::request('name');
         $private = Controller::request('private');
 
         $departmentInstance = new Department();
 
         $departmentInstance->setProperties([
-            'name' => $name ,
+            'name' => $name,
             'private' => $private ? 1 : 0
         ]);
         $departmentInstance->store();
+
+        $this->addStaffsLevel3($departmentInstance);
 
         Log::createLog('ADD_DEPARTMENT', $name);
 
         Response::respondSuccess();
 
+    }
+
+    private function addStaffsLevel3($departmentInstance)
+    {
+        $staffs = Staff::find(' level = 3 ');
+
+        foreach ($staffs as $staff) {
+            $staff->sharedDepartmentList->add($departmentInstance);
+            $staff->store();
+            $departmentInstance->owners++;
+        }
+
+        $departmentInstance->store();
     }
 }
