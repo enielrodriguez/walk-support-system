@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -31,8 +33,8 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {Number} data.id Staff id
  *
  */
-
-class InviteStaffController extends Controller {
+class InviteStaffController extends Controller
+{
     const PATH = '/invite';
     const METHOD = 'POST';
 
@@ -42,7 +44,8 @@ class InviteStaffController extends Controller {
     private $level;
     private $departments;
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'staff_3',
             'requestData' => [
@@ -62,18 +65,19 @@ class InviteStaffController extends Controller {
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
         $this->storeRequestData();
 
         $staffRow = Staff::getDataStore($this->email, 'email');
 
-        if(!$staffRow->isNull()) throw new RequestException(ERRORS::ALREADY_A_STAFF);
+        if (!$staffRow->isNull()) throw new RequestException(ERRORS::ALREADY_A_STAFF);
 
         $staff = new Staff();
         $staff->setProperties([
-            'name'=> $this->name,
+            'name' => $this->name,
             'email' => $this->email,
-            'password'=> Hashing::hashPassword(Hashing::generateRandomToken()),
+            'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
             'profilePic' => $this->profilePic,
             'level' => $this->level,
             'sharedDepartmentList' => $this->getDepartmentList()
@@ -100,7 +104,8 @@ class InviteStaffController extends Controller {
         Log::createLog('INVITE', $this->name);
     }
 
-    public function storeRequestData() {
+    public function storeRequestData()
+    {
         $this->name = Controller::request('name');
         $this->email = Controller::request('email');
         $this->profilePic = Controller::request('profilePic');
@@ -108,11 +113,16 @@ class InviteStaffController extends Controller {
         $this->departments = Controller::request('departments');
     }
 
-    public function getDepartmentList() {
+    public function getDepartmentList()
+    {
+        if ((int)$this->level === 3) {
+            return Department::getAll();
+        }
+
         $listDepartments = new DataStoreList();
         $departmentIds = json_decode($this->departments);
 
-        foreach($departmentIds as $id) {
+        foreach ($departmentIds as $id) {
             $department = Department::getDataStore($id);
             $listDepartments->add($department);
         }
@@ -120,17 +130,19 @@ class InviteStaffController extends Controller {
         return $listDepartments;
     }
 
-    public function addOwner() {
+    public function addOwner()
+    {
         $departmentIds = json_decode($this->departments);
 
-        foreach($departmentIds as $id) {
+        foreach ($departmentIds as $id) {
             $departmentRow = Department::getDataStore($id);
             $departmentRow->owners++;
             $departmentRow->store();
         }
     }
 
-    public function sendInvitationMail() {
+    public function sendInvitationMail()
+    {
         $mailSender = MailSender::getInstance();
 
         $mailSender->setTemplate(MailTemplate::USER_INVITE, [

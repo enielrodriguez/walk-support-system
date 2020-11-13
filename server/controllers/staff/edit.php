@@ -77,7 +77,7 @@ class EditStaffController extends Controller
             throw new RequestException(ERRORS::NO_PERMISSION);
         }
 
-        if (Controller::request('departments')) {
+        if (Controller::request('departments') || Controller::request('level') === '3') {
             $this->updateDepartmentsOwners();
         }
 
@@ -104,7 +104,7 @@ class EditStaffController extends Controller
             $this->staffInstance->level = Controller::request('level');
         }
 
-        if (Controller::request('departments') && Controller::isStaffLogged(3)) {
+        if (Controller::isStaffLogged(3) && (Controller::request('departments') || Controller::request('level') === '3')) {
             $departmentList = $this->getDepartmentList();
             $ticketList = $this->staffInstance->sharedTicketList;
 
@@ -142,6 +142,10 @@ class EditStaffController extends Controller
 
     private function getDepartmentList()
     {
+        if ((int)Controller::request('level') === 3) {
+            return Department::getAll();
+        }
+
         $listDepartments = new DataStoreList();
         $departmentIds = json_decode(Controller::request('departments'));
 
