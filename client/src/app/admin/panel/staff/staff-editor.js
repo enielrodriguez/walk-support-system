@@ -65,7 +65,7 @@ class StaffEditor extends React.Component {
                                 <div className="staff-editor__card-info">
                                     <div className="staff-editor__card-badge">
                                         <span className="staff-editor__card-badge-blue">
-                                            {this.props.level}
+                                            {this.props.level === 3 ? 'Admin' : this.props.level}
                                         </span>
                                         <span className="staff-editor__card-badge-text">{i18n('STAFF_LEVEL')}</span>
                                     </div>
