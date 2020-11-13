@@ -482,6 +482,7 @@ export default {
     'WARNING_COMPANY_EDIT_ADMIN': 'Puede crear un nuevo administrador, esto eliminará al actual',
     'WARNING_COMPANY_EDIT_ADMIN_DESC': 'Si desea convertir en administrador a un usuario existente de la empresa, solo ponga el email de este y deje el nombre en blanco',
     'CHANGE_COMPANY': 'Cambiar Empresa',
+    'COMPANY_CHANGED': 'La empresa se cambió correctamente',
 
     'DELETE_BAN_USER_DESCRIPTION': 'El usuario no podrá iniciar sesión y todos sus tickets se borrarán. Además, el correo electrónico ya no podrá utilizarse',
 
@@ -499,6 +500,7 @@ export default {
     'SUPERVISED_USER_WARNING': 'Estos usuarios pertenecen a la misma empresa, y son administrados por el usuario actual',
     'EDIT_USER': 'Editar Usuario',
     'EDIT_USER_DESCRIPTION': 'Aquí puedes editar los datos de un usuario',
+    'EDIT_COMPANY_ADMIN_WARNING': 'Si cambia este valor, la empresa actual quedará sin administrador, y el usuario pasará a ser uno regular de la empresa escogida',
 
     'UNKNOWN_ERROR': 'Ocurrió un error',
     'ERROR_RETRIEVING_COMPANIES': 'Error al acceder a la lista de empresas',

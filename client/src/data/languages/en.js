@@ -476,6 +476,7 @@ export default {
     'WARNING_COMPANY_EDIT_ADMIN': 'You can create a new admin, this will delete the current one',
     'WARNING_COMPANY_EDIT_ADMIN_DESC': 'If you want to convert an existing user of the company into admin, just put his email and leave the name blank',
     'CHANGE_COMPANY': 'Change Company',
+    'COMPANY_CHANGED': 'The company was successfully changed',
 
     'DELETE_BAN_USER_DESCRIPTION': 'The user will not be able to log in aging and all its tickets will be erased. Also, the email can not be used any more',
 
@@ -493,6 +494,7 @@ export default {
     'SUPERVISED_USER_WARNING': 'These users belong to the same company, and are managed by the current user',
     'EDIT_USER': 'Edit User',
     'EDIT_USER_DESCRIPTION': 'Here you can edit some user data',
+    'EDIT_COMPANY_ADMIN_WARNING': 'If you change this value, the current company will be left without an administrator, and the user will become a regular user of the chosen company',
 
     'UNKNOWN_ERROR': 'An error occurred',
     'ERROR_RETRIEVING_COMPANIES': 'An error occurred while trying to retrieve companies',

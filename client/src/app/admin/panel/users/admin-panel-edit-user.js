@@ -12,6 +12,7 @@ import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
 import LoadingWithMessage from "../../../../core-components/loading-with-message";
 import CompanyDropdown from "../../../../app-components/company-dropdown";
+import InfoTooltip from "../../../../core-components/info-tooltip";
 
 
 class AdminPanelEditUser extends React.Component {
@@ -84,18 +85,24 @@ class AdminPanelEditUser extends React.Component {
                             {this.renderMessagePass()}
                         </Form>
 
-                        {!this.state.isCompanyAdmin &&
+
                         <Form loading={this.state.loadingCompany} onSubmit={this.onSubmitEditCompany.bind(this)}>
-                            <FormField label={i18n('COMPANY')} name="companyIndex"
+                            <FormField label={this.state.isCompanyAdmin ? this.renderAdminWarning() : i18n('COMPANY')}
+                                       name="companyIndex"
                                        field="select"
                                        decorator={CompanyDropdown}
-                                       {...this.companyProps()}/>
+                                       {...this.companyProps()}>
+                            </FormField>
+
                             <div className="admin-panel-edit-user__row">
-                                <SubmitButton>{i18n('CHANGE_COMPANY')}</SubmitButton>
+                                <SubmitButton>
+                                    {i18n('CHANGE_COMPANY')}
+
+                                </SubmitButton>
                             </div>
                             {this.renderMessageCompany()}
                         </Form>
-                        }
+
 
                         {this.state.customFields.length && this.renderCustomFields()}
                     </div>
@@ -193,6 +200,16 @@ class AdminPanelEditUser extends React.Component {
             this.state.messageCustomFields,
             'CHANGES_SAVED',
             'UNKNOWN_ERROR'
+        );
+    }
+
+    renderAdminWarning() {
+        return (
+            <span>
+                {i18n('COMPANY')}
+                <InfoTooltip className="admin-panel-view-user__unverified" type="warning"
+                             text={i18n('EDIT_COMPANY_ADMIN_WARNING')}/>
+            </span>
         );
     }
 

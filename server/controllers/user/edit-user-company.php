@@ -51,34 +51,18 @@ class EditUserCompany extends Controller
         $oldCompany = $user->company;
         $oldCompanyAdmin = $user->company->admin;
 
-        if ($oldCompanyAdmin && ($oldCompanyAdmin->id === $userId)) {
-            throw new RequestException(ERRORS::INVALID_USER);
-        }
-
         if ($oldCompany->id === $newCompanyId) {
             Response::respondSuccess();
         }
 
-
-        if ($oldCompanyAdmin) {
-            $oldCompanyAdmin->supervisedrelation->sharedUserList->remove($user);
-            $oldCompanyAdmin->supervisedrelation->store();
+        if ($oldCompanyAdmin && ($oldCompanyAdmin->id === $userId)) {
+            $oldCompany->admin = null;
+            $oldCompany->store();
         }
-
 
         $newCompany = Company::getCompany($newCompanyId);
         $user->company = $newCompany;
         $user->store();
-
-
-        $companyAdmin = $newCompany->admin;
-        if (!$companyAdmin->supervisedrelation) {
-            $companyAdmin->supervisedrelation = new Supervisedrelation();
-            $companyAdmin->store();
-        }
-        $companyAdmin->supervisedrelation->sharedUserList->add($user);
-        $companyAdmin->supervisedrelation->store();
-
 
         Response::respondSuccess();
     }

@@ -22,7 +22,7 @@ class User extends DataStore
 
     public static function authenticate($userEmail, $userPassword)
     {
-        $user = User::getUser($userEmail, 'email');
+        $user = self::getUser($userEmail, 'email');
 
         return ($user && Hashing::verifyPassword($userPassword, $user->password) && !$user->notRegistered) ? $user : new NullDataStore();
     }
@@ -41,7 +41,6 @@ class User extends DataStore
             'xownCustomfieldvalueList',
             'notRegistered',
             'sharedUserList',
-            'supervisedrelation',
             'company'
         ];
     }
@@ -75,7 +74,7 @@ class User extends DataStore
             $ticketNumberInstanceValidation = $this->ticketNumber == $ticket->ticketNumber;
         }
 
-        $userList = User::getSupervisedUsers($this);
+        $userList = self::getSupervisedUsers($this);
 
         foreach ($userList as $usr) {
             if ($ticket->isAuthor($usr)) $ticketOfSupervisedUser = true;
@@ -104,7 +103,6 @@ class User extends DataStore
             'disabled' => $this->disabled,
             'customfields' => $this->xownCustomfieldvalueList->toArray(),
             'notRegistered' => $this->notRegistered,
-            'supervisedrelation' => $this->supervisedrelation,
             'tickets' => $this->tickets,
             'company' => $this->companyToArray()
         ];
