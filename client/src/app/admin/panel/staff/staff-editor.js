@@ -26,7 +26,7 @@ class StaffEditor extends React.Component {
         staffId: React.PropTypes.number,
         email: React.PropTypes.string.isRequired,
         name: React.PropTypes.string.isRequired,
-        profilePic: React.PropTypes.string.isRequired,
+        profilePic: React.PropTypes.string,
         level: React.PropTypes.number.isRequired,
         tickets: React.PropTypes.array.isRequired,
         departments: React.PropTypes.array.isRequired,
@@ -46,7 +46,9 @@ class StaffEditor extends React.Component {
         message: null,
         loadingPicture: false,
         departments: this.getUserDepartments(),
-        sendEmailOnNewTicket: this.props.sendEmailOnNewTicket
+        sendEmailOnNewTicket: this.props.sendEmailOnNewTicket,
+        actualLevel: this.props.level - 1,
+        isAdmin: this.props.level - 1 === 2
     };
 
     render() {
@@ -200,7 +202,7 @@ class StaffEditor extends React.Component {
             <div>
                 <span className="separator staff-editor__separator"/>
                 <Form className="staff-editor__update-level" values={{level: this.state.level}}
-                      onChange={form => this.setState({level: form.level})}
+                      onChange={this.onLevelChange.bind(this)}
                       onSubmit={this.onSubmit.bind(this, 'LEVEL')}>
                     <FormField name="level" label={i18n('LEVEL')} field="select" infoMessage={this.getStaffLevelInfo()}
                                fieldProps={{
@@ -219,8 +221,11 @@ class StaffEditor extends React.Component {
             <Form values={{departments: this.state.departments}}
                   onChange={form => this.setState({departments: form.departments})}
                   onSubmit={this.onSubmit.bind(this, 'DEPARTMENTS')}>
-                <FormField name="departments" field="checkbox-group" fieldProps={{items: this.getDepartments()}}/>
-                <SubmitButton size="medium">{i18n('UPDATE_DEPARTMENTS')}</SubmitButton>
+                <FormField name="departments" field="checkbox-group" fieldProps={{
+                    items: this.getDepartments(),
+                    disabled: this.state.isAdmin
+                }}/>
+                <SubmitButton disabled={this.state.isAdmin} size="medium">{i18n('UPDATE_DEPARTMENTS')}</SubmitButton>
             </Form>
         );
     }
@@ -349,13 +354,20 @@ class StaffEditor extends React.Component {
                 name: (eventType === 'NAME') ? form.name : null,
                 email: (eventType === 'EMAIL') ? form.email : null,
                 password: (eventType === 'PASSWORD') ? form.password : null,
-                level: (form.level !== undefined && eventType == 'LEVEL') ? form.level + 1 : null,
+                level: (form.level !== undefined && eventType === 'LEVEL') ? form.level + 1 : null,
                 departments: (eventType === 'DEPARTMENTS') ? (departments && JSON.stringify(departments)) : null,
             }
         }).then(() => {
             this.retrieveStaffMembers();
             window.scrollTo(0, 0);
-            this.setState({message: eventType});
+            let state = {message: eventType};
+
+            if (form.level !== undefined && eventType === 'LEVEL') {
+                state['actualLevel'] = form.level;
+                state['isAdmin'] = form.level === 2;
+            }
+
+            this.setState(state);
 
             if (this.props.onChange) {
                 this.props.onChange();
@@ -406,6 +418,23 @@ class StaffEditor extends React.Component {
 
     retrieveStaffMembers() {
         this.props.dispatch(AdminDataActions.retrieveStaffMembers());
+    }
+
+    onLevelChange(form) {
+        let state = {level: form.level};
+        let actualLevel = this.state.actualLevel;
+
+        if (actualLevel !== 2) {
+            if (form.level === 2) {
+                state['departments'] = SessionStore.getDepartments().map((depart, key) => key);
+                state['isAdmin'] = true;
+            } else if (this.state.isAdmin) {
+                state['departments'] = this.props.departments.map((depart, key) => key);
+                state['isAdmin'] = false;
+            }
+        }
+
+        this.setState(state);
     }
 }
 
