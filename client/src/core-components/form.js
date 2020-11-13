@@ -170,10 +170,13 @@ class Form extends React.Component {
 
     handleFieldChange(fieldName, event) {
         let form = _.clone(this.getFormValue());
+        let values = this.props.values || {};
 
         form[fieldName] = event.target.value;
 
-        if(this.props.values === undefined) this.setState({form});
+        if (!values[fieldName]) {
+            this.setState({form});
+        }
 
         if (this.props.onChange) {
             this.props.onChange(form);
