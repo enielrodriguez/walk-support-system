@@ -203,7 +203,14 @@ class Form extends React.Component {
     }
 
     getFormValue() {
-        return (this.props.values !== undefined) ? this.props.values : this.state.form;
+        let formValues = this.state.form;
+        let propsValues = this.props.values || {};
+
+        Object.keys(propsValues).forEach(key => {
+            formValues[key] = propsValues[key];
+        });
+
+        return formValues;
     }
 
     focusFirstErrorField() {

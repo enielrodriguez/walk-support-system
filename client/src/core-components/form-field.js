@@ -40,28 +40,26 @@ class FormField extends React.Component {
             'date-range',
             'search-box'
         ]),
-        fieldProps: React.PropTypes.object
+        fieldProps: React.PropTypes.object,
+        disabled: React.PropTypes.bool
     };
 
     static defaultProps = {
         field: 'input',
-        fieldProps: {}
+        fieldProps: {},
+        disabled: false
     };
 
     static getDefaultValue(field) {
         if (field === 'input') {
             return '';
-        }
-        else if (field === 'checkbox') {
+        } else if (field === 'checkbox') {
             return false;
-        }
-        else if (field === 'checkbox-group') {
+        } else if (field === 'checkbox-group') {
             return [];
-        }
-        else if (field === 'textarea') {
-             return TextEditor.createEmpty();
-        }
-        else if (field === 'select') {
+        } else if (field === 'textarea') {
+            return TextEditor.createEmpty();
+        } else if (field === 'select') {
             return 0;
         }
     }
@@ -90,10 +88,10 @@ class FormField extends React.Component {
             <span className="form-field__label" key="label">
                 {this.props.label}
                 {(this.props.infoMessage) ?
-                <InfoTooltip
-                    text={this.props.infoMessage}
-                    className="form-field__info" /> :
-                null}
+                    <InfoTooltip
+                        text={this.props.infoMessage}
+                        className="form-field__info"/> :
+                    null}
             </span>
         )
     }
@@ -112,7 +110,7 @@ class FormField extends React.Component {
             'search-box': SearchBox,
         }[this.props.field];
 
-        if(this.props.decorator) {
+        if (this.props.decorator) {
             Field = this.props.decorator;
         }
 
@@ -171,31 +169,31 @@ class FormField extends React.Component {
             required
         });
 
-        if(field === 'select') {
+        if (field === 'select') {
             props.selectedIndex = value;
         }
 
-        if(decorator === 'textarea') {
+        if (decorator === 'textarea') {
             delete props.errored;
         }
 
-        if(field === 'date-range') {
+        if (field === 'date-range') {
             props.value = {
                 startDate: value[0],
                 endDate: value[1],
                 valid: false,
             };
         }
-        
-        if(field === 'tag-selector') {
-            props.values = value;
-        }
-        
-        if(field === 'autocomplete') {
+
+        if (field === 'tag-selector') {
             props.values = value;
         }
 
-        if(field === 'checkbox') {
+        if (field === 'autocomplete') {
+            props.values = value;
+        }
+
+        if (field === 'checkbox') {
             props.value = !!value;
         } else {
             props.value = value;
@@ -220,7 +218,7 @@ class FormField extends React.Component {
             onChange
         } = this.props;
         let event = nativeEvent;
-        if(field === 'checkbox' && !decorator) {
+        if (field === 'checkbox' && !decorator) {
             event = {
                 target: {
                     value: event.target.checked
@@ -228,7 +226,7 @@ class FormField extends React.Component {
             };
         }
 
-        if(field === 'select' && !decorator) {
+        if (field === 'select' && !decorator) {
             event = {
                 target: {
                     value: event.index
@@ -236,7 +234,7 @@ class FormField extends React.Component {
             };
         }
 
-        if(field === 'autocomplete' && !decorator) {
+        if (field === 'autocomplete' && !decorator) {
             event = {
                 target: {
                     value: nativeEvent
@@ -244,7 +242,7 @@ class FormField extends React.Component {
             };
         }
 
-        if(field === 'tag-selector' && !decorator) {
+        if (field === 'tag-selector' && !decorator) {
             event = {
                 target: {
                     value: nativeEvent
@@ -252,7 +250,7 @@ class FormField extends React.Component {
             };
         }
 
-        if(field === 'search-box' && !decorator) {
+        if (field === 'search-box' && !decorator) {
             event = {
                 target: {
                     value: nativeEvent
@@ -260,7 +258,7 @@ class FormField extends React.Component {
             };
         }
 
-        if(field === 'date-range' && !decorator) {
+        if (field === 'date-range' && !decorator) {
             event = {
                 target: {
                     value: nativeEvent

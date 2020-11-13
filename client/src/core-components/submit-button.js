@@ -14,11 +14,13 @@ class SubmitButton extends React.Component {
     };
 
     static propTypes = {
-        children: React.PropTypes.node
+        children: React.PropTypes.node,
+        disabled: React.PropTypes.bool
     };
 
     static defaultProps = {
-        type: 'primary'
+        type: 'primary',
+        disabled: false
     };
 
     render() {
@@ -31,13 +33,13 @@ class SubmitButton extends React.Component {
 
     renderLoading() {
         return (
-            <Loading className="submit-button__loader" />
+            <Loading className="submit-button__loader"/>
         );
     }
 
     getProps() {
         return _.extend({}, this.props, {
-            disabled: this.context.loading,
+            disabled: this.props.disabled || this.context.loading,
             className: this.getClass()
         });
     }

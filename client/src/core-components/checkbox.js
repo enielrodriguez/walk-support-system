@@ -1,10 +1,10 @@
-import React              from 'react';
-import classNames         from 'classnames';
-import _                  from 'lodash';
-import keyCode            from 'keycode';
+import React from 'react';
+import classNames from 'classnames';
+import _ from 'lodash';
+import keyCode from 'keycode';
 
-import callback           from 'lib-core/callback';
-import getIcon            from 'lib-core/get-icon';
+import callback from 'lib-core/callback';
+import getIcon from 'lib-core/get-icon';
 
 class CheckBox extends React.Component {
 
@@ -13,12 +13,14 @@ class CheckBox extends React.Component {
         label: React.PropTypes.node,
         value: React.PropTypes.bool,
         wrapInLabel: React.PropTypes.bool,
-        onChange: React.PropTypes.func
+        onChange: React.PropTypes.func,
+        disabled: React.PropTypes.bool
     };
 
     static defaultProps = {
         wrapInLabel: false,
-        alignment: 'right'
+        alignment: 'right',
+        disabled: false
     };
 
     state = {
@@ -31,7 +33,7 @@ class CheckBox extends React.Component {
         return (
             <Wrapper className={this.getClass()}>
                 <span {...this.getIconProps()}>
-                    {getIcon((this.getValue()) ? 'check-square' : 'square', 'lg') }
+                    {getIcon((this.getValue()) ? 'check-square' : 'square', 'lg')}
                 </span>
                 <input {...this.getProps()}/>
                 {(this.props.label) ? this.renderLabel() : null}

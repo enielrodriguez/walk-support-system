@@ -9,13 +9,18 @@ class CheckboxGroup extends React.Component {
         items: React.PropTypes.array.isRequired,
         errored: React.PropTypes.bool,
         value: React.PropTypes.arrayOf(React.PropTypes.number),
-        onChange: React.PropTypes.func
+        onChange: React.PropTypes.func,
+        disabled: React.PropTypes.bool
     };
-    
+
+    static defaultProps = {
+        disabled: false
+    };
+
     state = {
         value: []
     };
-    
+
     render() {
         return (
             <ul className={this.getClass()}>
@@ -23,13 +28,15 @@ class CheckboxGroup extends React.Component {
             </ul>
         );
     }
-    
+
     renderItem(label, index) {
         const checked = (_.includes(this.getValue(), index));
-        
+        const disabled = this.props.disabled;
+
         return (
             <li className="checkbox-group__item" key={index}>
-                <Checkbox label={label} value={checked} onChange={this.onCheckboxChange.bind(this, index)} wrapInLabel/>
+                <Checkbox disabled={disabled} label={label} value={(checked)}
+                          onChange={this.onCheckboxChange.bind(this, index)} wrapInLabel/>
             </li>
         );
     }
@@ -44,24 +51,24 @@ class CheckboxGroup extends React.Component {
 
         return classNames(classes);
     }
-    
+
     onCheckboxChange(index) {
         let value = _.clone(this.getValue());
-        
-        if(_.includes(value, index)) {
+
+        if (_.includes(value, index)) {
             _.pull(value, index);
         } else {
             value.push(index);
             value.sort();
         }
-        
+
         this.setState({value});
-        
-        if(this.props.onChange) {
+
+        if (this.props.onChange) {
             this.props.onChange({target: {value}});
         }
     }
-    
+
     getValue() {
         return (this.props.value !== undefined) ? this.props.value : this.state.value;
     }
