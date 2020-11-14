@@ -5,20 +5,7 @@ class Language extends DataStore {
     const TABLE = 'language';
     const LANGUAGES = [
         'en',
-        'es',
-        'de',
-        'fr',
-        'pt',
-        'jp',
-        'ru',
-        'cn',
-        'in',
-        'tr',
-        'it',
-        'br',
-        'gr',
-        'nl',
-        'pl'
+        'es'
     ];
 
     public static function getProps() {
