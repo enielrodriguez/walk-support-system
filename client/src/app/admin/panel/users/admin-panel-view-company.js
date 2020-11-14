@@ -33,8 +33,8 @@ class AdminPanelViewCompany extends React.Component {
             <LoadingWithMessage showMessage={this.state.errorRetrievingData}/>
             : (
                 <div className="admin-panel-view-company">
-                    <Header title={i18n('COMPANY_VIEW_TITLE', {companyId: this.props.params.companyId})}
-                            description={i18n('COMPANY_VIEW_DESCRIPTION')}/>
+                    <Header title={i18n('VIEW_COMPANY_TITLE', {companyId: this.props.params.companyId})}
+                            description={i18n('VIEW_COMPANY_DESCRIPTION')}/>
                     {this.renderCompanyInfo()}
                 </div>
             );

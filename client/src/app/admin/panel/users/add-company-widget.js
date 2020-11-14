@@ -27,7 +27,7 @@ class AddCompanyWidget extends React.Component {
     render() {
         return (
             <Widget className={this.getClass()}>
-                <Header title={i18n('ADD_COMPANY')} description={i18n('ADD_COMPANY_VIEW_DESCRIPTION')}/>
+                <Header title={i18n('ADD_COMPANY')} description={i18n('ADD_COMPANY_DESCRIPTION')}/>
                 <Form {...this.getFormProps()}>
                     <div className="add-company-widget__inputs">
                         <FormField {...this.getInputProps()} label={i18n('BUSINESS_NAME')} name="business_name"

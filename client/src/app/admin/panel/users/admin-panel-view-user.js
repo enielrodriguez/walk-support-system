@@ -137,7 +137,7 @@ class AdminPanelViewUser extends React.Component {
                         {i18n('SUPERVISED_USER')}
                     </div>
                     <div className="admin-panel-view-user__supervised-users-desc">
-                        {i18n('SUPERVISED_USER_WARNING')}
+                        {i18n('SUPERVISED_USERS_INFO')}
                     </div>
                 </div>
                 <UserList {...this.getUserListProps()}/>
