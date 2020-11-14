@@ -484,6 +484,8 @@ export default {
     'APPLY_CHANGES': 'Apply changes',
     'CHANGES_SAVED': 'Changes saved successfully',
 
+    'SUPPORT_CENTER_LAYOUT_INFO': 'This configuration applies only to the client interface',
+
     'USER_LIST': 'User list',
     'USER_LIST_DESCRIPTION': 'Here you can find a list of all users in the company with access to the support system',
     'EDIT_NAME': 'Edit name',

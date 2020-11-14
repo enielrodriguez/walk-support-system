@@ -64,10 +64,12 @@ class AdminPanelSystemPreferences extends React.Component {
                                            label={i18n('SUPPORT_CENTER_URL')} fieldProps={{size: 'large'}} name="url"
                                            validation="URL" required/>
                                 <FormField className="admin-panel-system-preferences__form-fields__select"
-                                           label={i18n('SUPPORT_CENTER_LAYOUT')} fieldProps={{
-                                    size: 'large',
-                                    items: [{content: i18n('BOXED')}, {content: i18n('FULL_WIDTH')}]
-                                }} field="select" name="layout"/>
+                                           label={i18n('SUPPORT_CENTER_LAYOUT')}
+                                           fieldProps={{
+                                               size: 'large',
+                                               items: [{content: i18n('BOXED')}, {content: i18n('FULL_WIDTH')}]
+                                           }} field="select" name="layout"
+                                           infoMessage={i18n('SUPPORT_CENTER_LAYOUT_INFO')}/>
                             </div>
                             <div className="col-md-6">
                                 <FormField label={i18n('SUPPORT_CENTER_TITLE')} fieldProps={{size: 'large'}}
@@ -82,15 +84,17 @@ class AdminPanelSystemPreferences extends React.Component {
                             <div className="col-md-6">
                                 <div className="row admin-panel-system-preferences__languages">
                                     <div className="col-md-6 admin-panel-system-preferences__languages-allowed">
-                                        <div>{i18n('ALLOWED_LANGUAGES')} <InfoTooltip
-                                            text={i18n('ALLOWED_LANGUAGES_INFO')}/></div>
+                                        <div>{i18n('ALLOWED_LANGUAGES')}
+                                            <InfoTooltip text={i18n('ALLOWED_LANGUAGES_INFO')}/>
+                                        </div>
                                         <FormField name="allowedLanguages" field="checkbox-group"
                                                    fieldProps={{items: this.getLanguageList()}} validation="LIST"
                                                    required/>
                                     </div>
                                     <div className="col-md-6 admin-panel-system-preferences__languages-supported">
-                                        <div>{i18n('SUPPORTED_LANGUAGES')} <InfoTooltip
-                                            text={i18n('SUPPORTED_LANGUAGES_INFO')}/></div>
+                                        <div>{i18n('SUPPORTED_LANGUAGES')}
+                                            <InfoTooltip text={i18n('SUPPORTED_LANGUAGES_INFO')}/>
+                                        </div>
                                         <FormField name="supportedLanguages" field="checkbox-group"
                                                    fieldProps={{items: this.getLanguageList()}} validation="LIST"
                                                    required/>
@@ -128,11 +132,13 @@ class AdminPanelSystemPreferences extends React.Component {
                         <div className="row admin-panel-system-preferences__container">
                             <div className="col-md-4 col-md-offset-2">
                                 <SubmitButton className="admin-panel-system-preferences__container__button"
-                                              type="secondary">{i18n('UPDATE_SETTINGS')}</SubmitButton>
+                                              type="secondary">{i18n('UPDATE_SETTINGS')}
+                                </SubmitButton>
                             </div>
                             <div className="col-md-4">
                                 <Button className="admin-panel-system-preferences__container__button"
-                                        onClick={this.onDiscardChangesSubmit.bind(this)}>{i18n('DISCARD_CHANGES')}</Button>
+                                        onClick={this.onDiscardChangesSubmit.bind(this)}>{i18n('DISCARD_CHANGES')}
+                                </Button>
                             </div>
                         </div>
                     </Form>

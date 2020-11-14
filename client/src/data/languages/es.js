@@ -490,6 +490,8 @@ export default {
     'APPLY_CHANGES': 'Aplicar cambios',
     'CHANGES_SAVED': 'Cambios guardados',
 
+    'SUPPORT_CENTER_LAYOUT_INFO': 'Esta configuración aplica solo para la interfaz de los clientes',
+
     'USER_LIST': 'Lista de usuarios',
     'USER_LIST_DESCRIPTION': 'Aquí puedes encontrar una lista de todos los usuarios de la empresa con acceso al sistema de soporte',
     'EDIT_NAME': 'Editar nombre',
