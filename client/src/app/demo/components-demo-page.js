@@ -54,7 +54,7 @@ let chartData = {
     ]
 };
 let chartOptions = {};
-let dropDownItems = [{content: 'English'}, {content: 'Spanish'}, {content: 'German'}, {content: 'Portuguese'}, {content: 'Japanese'}];
+let dropDownItems = [{content: 'English'}, {content: 'Spanish'}];
 let secondaryMenuItems = [
     {content: 'My Tickets', icon: 'file-text'},
     {content: 'New Ticket', icon: 'plus'},

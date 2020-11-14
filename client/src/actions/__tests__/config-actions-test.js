@@ -55,9 +55,9 @@ describe('Config Actions,', function () {
                 payload: 'es'
             });
 
-            expect(ConfigActions.changeLanguage('de')).to.deep.equal({
+            expect(ConfigActions.changeLanguage('en')).to.deep.equal({
                 type: 'CHANGE_LANGUAGE',
-                payload: 'de'
+                payload: 'en'
             });
         });
     });
