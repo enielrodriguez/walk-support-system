@@ -37,9 +37,18 @@ class Validator
         foreach ($requestDataValidations as $requestDataKey => $requestDataValidationConfig) {
             $requestDataValue = Controller::request($requestDataKey);
             $requestDataValidator = $requestDataValidationConfig['validation'];
-            $requestDataValidationErrorMessage = $requestDataValidationConfig['error'];
 
-            $this->validateData($requestDataValue, $requestDataValidator, $requestDataValidationErrorMessage);
+            if (is_array($requestDataValidator)) {
+                foreach ($requestDataValidator as $validatorConfig) {
+                    $validator = $validatorConfig['validation'];
+                    $validationError = $validatorConfig['error'];
+
+                    $this->validateData($requestDataValue, $validator, $validationError);
+                }
+            } else {
+                $requestDataValidationErrorMessage = $requestDataValidationConfig['error'];
+                $this->validateData($requestDataValue, $requestDataValidator, $requestDataValidationErrorMessage);
+            }
         }
     }
 
