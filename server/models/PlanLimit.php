@@ -13,7 +13,9 @@ class PlanLimit extends DataStore
     {
         return [
             'users',
-            'companies'
+            'companies',
+            'staff',
+            'departments'
         ];
     }
 
@@ -21,7 +23,9 @@ class PlanLimit extends DataStore
     {
         return [
             'users' => $this->users,
-            'companies' => $this->companies
+            'companies' => $this->companies,
+            'staff' => $this->staff,
+            'departments' => $this->departments
         ];
     }
 }
