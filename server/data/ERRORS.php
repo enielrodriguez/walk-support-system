@@ -11,11 +11,11 @@
  * @apiDefine USER_EXISTS
  * @apiError {String} USER_EXISTS The user already exists.
  */
- /**
-  * @apiDefine TAG_EXISTS
-  * @apiError {String} TAG_EXISTS The tag already exists.
-  */
- /**
+/**
+ * @apiDefine TAG_EXISTS
+ * @apiError {String} TAG_EXISTS The tag already exists.
+ */
+/**
  * @apiDefine NO_PERMISSION
  * @apiError {String} NO_PERMISSION You have no permission to perform this operation.
  */
@@ -55,11 +55,11 @@
  * @apiDefine INVALID_TICKET
  * @apiError {String} INVALID_TICKET The ticket is invalid.
  */
- /**
-  * @apiDefine INVALID_TAG
-  * @apiError {String} INVALID_TAG The tag is invalid.
-  */
- /**
+/**
+ * @apiDefine INVALID_TAG
+ * @apiError {String} INVALID_TAG The tag is invalid.
+ */
+/**
  * @apiDefine INIT_SETTINGS_DONE
  * @apiError {String} INIT_SETTINGS_DONE The init settings are already done.
  */
@@ -280,17 +280,17 @@
  * @apiError {String} IMAP_CONNECTION Imap connection was unsuccesfull
  */
 /**
-* @apiDefine CUSTOM_FIELD_ALREADY_EXISTS
-* @apiError {String} CUSTOM_FIELD_ALREADY_EXISTS Custom field already exists
-*/
+ * @apiDefine CUSTOM_FIELD_ALREADY_EXISTS
+ * @apiError {String} CUSTOM_FIELD_ALREADY_EXISTS Custom field already exists
+ */
 /**
-* @apiDefine INVALID_CUSTOM_FIELD
-* @apiError {String} INVALID_CUSTOM_FIELD Custom field id is invalid
-*/
+ * @apiDefine INVALID_CUSTOM_FIELD
+ * @apiError {String} INVALID_CUSTOM_FIELD Custom field id is invalid
+ */
 /**
-* @apiDefine INVALID_CUSTOM_FIELD_TYPE
-* @apiError {String} INVALID_CUSTOM_FIELD_TYPE The type is invalid
-*/
+ * @apiDefine INVALID_CUSTOM_FIELD_TYPE
+ * @apiError {String} INVALID_CUSTOM_FIELD_TYPE The type is invalid
+ */
 /**
  * @apiDefine INVALID_CUSTOM_FIELD_OPTIONS
  * @apiError {String} INVALID_CUSTOM_FIELD_OPTIONS Options are not a json array
@@ -318,17 +318,18 @@
 /**
  * @apiDefine REGISTRATION_IS_DESACTIVATED
  * @apiError {String} REGISTRATION_IS_DESACTIVATED Registration is disactivated
-  */
+ */
 /**
  * @apiDefine INVALID_SUPERVISED_USERS
  * @apiError {String} INVALID_SUPERVISED_USERS supervised users are invalid
  */
+
 /**
  * @apiDefine INVALID_COMPANY
  * @apiError {String} INVALID_COMPANY company is invalid
  */
-
-class ERRORS {
+class ERRORS
+{
     const INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
     const SESSION_EXISTS = 'SESSION_EXISTS';
     const USER_EXISTS = 'USER_EXISTS';
@@ -421,4 +422,5 @@ class ERRORS {
     const INVALID_ADMIN_NAME = 'INVALID_ADMIN_NAME';
     const INVALID_ADMIN_EMAIL = 'INVALID_ADMIN_EMAIL';
     const USER_ALREADY_ADMIN = 'USER_ALREADY_ADMIN';
+    const LIMIT_PASSED = 'LIMIT_PASSED';
 }
