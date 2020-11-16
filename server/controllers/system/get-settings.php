@@ -84,6 +84,10 @@ class GetSettingsController extends Controller
                     'default-is-locked' => Setting::getSetting('default-is-locked')->getValue()
                 ];
             }
+
+            if (Controller::isStaffLogged(3)) {
+                $settingsList['plan_limit'] = PlanLimit::findOne()->toArray();
+            }
         }
 
         Response::respondSuccess($settingsList);
