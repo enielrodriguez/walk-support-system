@@ -4,8 +4,6 @@
  * @api {OBJECT} PlanLimit PlanLimit
  * @apiVersion 4.8.0
  * @apiGroup Data Structures
- * @apiParam {Number}  name The name of the tag.
- * @apiParam {Object}  color The color of the tag.
  */
 class PlanLimit extends DataStore
 {
@@ -15,35 +13,15 @@ class PlanLimit extends DataStore
     {
         return [
             'users',
-            'company'
+            'companies'
         ];
     }
 
-    public function toArray($minimized = false)
+    public function toArray()
     {
-        if ($minimized) {
-            return $this->company;
-        }
-
         return [
-            'id' => $this->id,
             'users' => $this->users,
-            'company' => $this->companyToArray()
+            'companies' => $this->companies
         ];
-    }
-
-    public function companyToArray()
-    {
-        $company = $this->company;
-
-        if ($company && !$company->isNull()) {
-            return [
-                'id' => $company->id,
-                'business_name' => $company->business_name,
-                'nit' => $company->nit
-            ];
-        }
-
-        return null;
     }
 }
