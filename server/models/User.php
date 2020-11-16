@@ -91,7 +91,7 @@ class User extends DataStore
                 'name' => $this->name,
                 'email' => $this->email,
                 'isStaff' => 0,
-                'company' => $this->companyToArray()
+                'company' => $this->company->toArray(true)
             ];
         }
 
@@ -104,18 +104,7 @@ class User extends DataStore
             'customfields' => $this->xownCustomfieldvalueList->toArray(),
             'notRegistered' => $this->notRegistered,
             'tickets' => $this->tickets,
-            'company' => $this->companyToArray()
-        ];
-    }
-
-    public function companyToArray()
-    {
-        $company = $this->company;
-
-        return [
-            'id' => $company->id,
-            'business_name' => $company->business_name,
-            'nit' => $company->nit
+            'company' => $this->company->toArray(true)
         ];
     }
 }
