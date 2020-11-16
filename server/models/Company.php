@@ -22,7 +22,8 @@ class Company extends DataStore
             'business_name',
             'phone',
             'contact_name',
-            'admin'
+            'admin',
+            'users_limit'
         ];
     }
 
@@ -54,7 +55,8 @@ class Company extends DataStore
             'business_name' => $this->business_name,
             'phone' => $this->phone,
             'contact_name' => $this->contact_name,
-            'admin' => $this->admin ? $this->admin->toArray() : array()
+            'admin' => $this->admin ? $this->admin->toArray() : array(),
+            'users_limit'
         ];
     }
 }
