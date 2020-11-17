@@ -17,8 +17,16 @@ class CheckLimit extends AbstractRule
         }
     }
 
-    public function validate($dataStoreId)
+    public function validate($value)
     {
+        // Useful in cases in which it is not mandatory to create an
+        // entity that is subject to limits.
+        // Eg. admin (a user, which is subject to plan limits) in add-company
+        // is not required.
+        if (!$value) {
+            return true;
+        }
+
         $planLimit = \PlanLimit::findOne()->toArray();
         $passedLimit = false;
 
