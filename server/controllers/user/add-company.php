@@ -42,8 +42,16 @@ class AddCompanyController extends Controller
             'permission' => 'staff_3',
             'requestData' => [
                 'business_name' => [
-                    'validation' => DataValidator::notBlank()->length(2, 100),
-                    'error' => ERRORS::INVALID_NAME
+                    'validation' => [
+                        [
+                            'validation' => DataValidator::notBlank()->length(2, 100),
+                            'error' => ERRORS::INVALID_NAME
+                        ],
+                        [
+                            'validation' => DataValidator::checkLimit('companies'),
+                            'error' => ERRORS::COMPANIES_LIMIT_EXCEEDED
+                        ]
+                    ]
                 ], 'nit' => [
                     'validation' => DataValidator::notBlank()->length(2, 100),
                     'error' => ERRORS::INVALID_NIT
@@ -58,11 +66,19 @@ class AddCompanyController extends Controller
                     'error' => ERRORS::INVALID_CONTACT_NAME
                 ],
                 'admin_name' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::notBlank()->length(2, 100),
-                        DataValidator::falseVal()
-                    ),
-                    'error' => ERRORS::INVALID_ADMIN_NAME
+                    'validation' => [
+                        [
+                            'validation' => DataValidator::oneOf(
+                                DataValidator::notBlank()->length(2, 100),
+                                DataValidator::falseVal()
+                            ),
+                            'error' => ERRORS::INVALID_NAME
+                        ],
+                        [
+                            'validation' => DataValidator::checkLimit('users'),
+                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                        ]
+                    ]
                 ],
                 'admin_email' => [
                     'validation' => DataValidator::oneOf(

@@ -71,11 +71,19 @@ class EditCompanyController extends Controller
                     'error' => ERRORS::INVALID_CONTACT_NAME
                 ],
                 'new_admin_name' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::notBlank()->length(2, 100),
-                        DataValidator::falseVal()
-                    ),
-                    'error' => ERRORS::INVALID_ADMIN_NAME
+                    'validation' => [
+                        [
+                            'validation' => DataValidator::oneOf(
+                                DataValidator::notBlank()->length(2, 100),
+                                DataValidator::falseVal()
+                            ),
+                            'error' => ERRORS::INVALID_NAME
+                        ],
+                        [
+                            'validation' => DataValidator::checkLimit('users'),
+                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                        ]
+                    ]
                 ],
                 'new_admin_email' => [
                     'validation' => DataValidator::oneOf(

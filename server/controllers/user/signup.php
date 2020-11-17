@@ -1,6 +1,7 @@
 <?php
 
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -36,8 +37,8 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {String} data.userEmail Email of the new user
  *
  */
-
-class SignUpController extends Controller {
+class SignUpController extends Controller
+{
     const PATH = '/signup';
     const METHOD = 'POST';
 
@@ -47,17 +48,27 @@ class SignUpController extends Controller {
     private $verificationToken;
     private $csvImported;
 
-    public function __construct($csvImported = false) {
+    public function __construct($csvImported = false)
+    {
         $this->csvImported = $csvImported;
     }
 
-    public function validations() {
+    public function validations()
+    {
         $validations = [
             'permission' => 'any',
             'requestData' => [
                 'name' => [
-                    'validation' => DataValidator::notBlank()->length(2, 55),
-                    'error' => ERRORS::INVALID_NAME
+                    'validation' => [
+                        [
+                            'validation' => DataValidator::notBlank()->length(2, 55),
+                            'error' => ERRORS::INVALID_NAME
+                        ],
+                        [
+                            'validation' => DataValidator::checkLimit('users'),
+                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                        ]
+                    ]
                 ],
                 'email' => [
                     'validation' => DataValidator::email(),
@@ -70,7 +81,7 @@ class SignUpController extends Controller {
             ]
         ];
 
-        if(!$this->csvImported) {
+        if (!$this->csvImported) {
             $validations['requestData']['captcha'] = [
                 'validation' => DataValidator::captcha(APIKey::REGISTRATION),
                 'error' => ERRORS::INVALID_CAPTCHA
@@ -80,17 +91,18 @@ class SignUpController extends Controller {
         return $validations;
     }
 
-    public function handler() {
+    public function handler()
+    {
 
         $this->storeRequestData();
         $apiKey = APIKey::getDataStore(Controller::request('apiKey'), 'token');
 
         $user = User::getUser($this->userEmail, 'email');
-        
+
         if (!$user->isNull() && !$user->notRegistered) {
             throw new RequestException(ERRORS::USER_EXISTS);
         }
-        $banRow = Ban::getDataStore($this->userEmail,'email');
+        $banRow = Ban::getDataStore($this->userEmail, 'email');
 
         if (!$banRow->isNull()) {
             throw new RequestException(ERRORS::ALREADY_BANNED);
@@ -100,13 +112,13 @@ class SignUpController extends Controller {
             throw new RequestException(ERRORS::NO_PERMISSION);
         }
 
-        if(!$apiKey->isNull() && $apiKey->type !== APIKey::REGISTRATION) {
+        if (!$apiKey->isNull() && $apiKey->type !== APIKey::REGISTRATION) {
             throw new RequestException(ERRORS::INVALID_API_KEY_TYPE);
         }
-        
+
         $userId = $this->createNewUserAndRetrieveId();
 
-        if(MailSender::getInstance()->isConnected()) {
+        if (MailSender::getInstance()->isConnected()) {
             $this->sendRegistrationMail();
         }
 
@@ -118,17 +130,19 @@ class SignUpController extends Controller {
         Log::createLog('SIGNUP', null, User::getDataStore($userId));
     }
 
-    public function storeRequestData() {
+    public function storeRequestData()
+    {
         $this->userName = Controller::request('name');
         $this->userEmail = Controller::request('email');
         $this->userPassword = Controller::request('password');
         $this->verificationToken = Hashing::generateRandomToken();
     }
 
-    public function createNewUserAndRetrieveId() {
-        $user = User::getUser($this->userEmail,'email');
-        
-        $userInstance = ($user->isNull() ? new User() : $user );
+    public function createNewUserAndRetrieveId()
+    {
+        $user = User::getUser($this->userEmail, 'email');
+
+        $userInstance = ($user->isNull() ? new User() : $user);
         $UserTickets = ($user->isNull() ? 0 : $user->tickets);
 
         $userInstance->setProperties([
@@ -138,14 +152,15 @@ class SignUpController extends Controller {
             'email' => $this->userEmail,
             'password' => Hashing::hashPassword($this->userPassword),
             'verificationToken' => (MailSender::getInstance()->isConnected()) ? $this->verificationToken : null,
-            'notRegistered' => Controller::request('indirectSignUp') ?  true : null,
+            'notRegistered' => Controller::request('indirectSignUp') ? true : null,
             'xownCustomfieldvalueList' => $this->getCustomFieldValues()
         ]);
 
         return $userInstance->store();
     }
 
-    public function sendRegistrationMail() {
+    public function sendRegistrationMail()
+    {
         $mailSender = MailSender::getInstance();
 
         $mailSender->setTemplate(MailTemplate::USER_SIGNUP, [
@@ -155,6 +170,6 @@ class SignUpController extends Controller {
             'verificationToken' => $this->verificationToken
         ]);
 
-        if(!Controller::request('indirectSignUp')) $mailSender->send();
+        if (!Controller::request('indirectSignUp')) $mailSender->send();
     }
 }

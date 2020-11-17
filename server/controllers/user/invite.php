@@ -49,8 +49,16 @@ class InviteUserController extends Controller
             'permission' => 'company_admin',
             'requestData' => [
                 'name' => [
-                    'validation' => DataValidator::notBlank()->length(2, 55),
-                    'error' => ERRORS::INVALID_NAME
+                    'validation' => [
+                        [
+                            'validation' => DataValidator::notBlank()->length(2, 55),
+                            'error' => ERRORS::INVALID_NAME
+                        ],
+                        [
+                            'validation' => DataValidator::checkLimit('users'),
+                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                        ]
+                    ]
                 ],
                 'email' => [
                     'validation' => DataValidator::email(),
