@@ -215,30 +215,4 @@ abstract class Controller
         }
         return $customFieldValues;
     }
-
-    public static function passedLimit($limitToCheck)
-    {
-        $planLimit = PlanLimit::findOne()->toArray();
-        $passedLimit = false;
-
-        switch ($limitToCheck) {
-            case 'users':
-                $passedLimit = User::count() >= $planLimit['users'];
-                break;
-            case 'companies':
-                // > because there is a default company
-                $passedLimit = Company::count() > $planLimit['companies'];
-                break;
-            case 'staff':
-                // > because there is a default staff (system admin)
-                $passedLimit = Staff::count() > $planLimit['staff'];
-                break;
-            case 'departments':
-                // > because there is a default department
-                $passedLimit = Department::count() > $planLimit['departments'];
-                break;
-        }
-
-        return $passedLimit;
-    }
 }
