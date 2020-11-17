@@ -109,19 +109,13 @@ class EditCompanyController extends Controller
 
         $this->company = Company::getCompany($this->companyId);
 
-
         if ($this->company->nit === 'default_company') {
             throw new RequestException(ERRORS::INVALID_COMPANY);
         }
 
+        $this->validateData();
+
         $this->updateCompany();
-
-        if ($this->newAdminEmail) {
-            $this->createUserAdmin();
-
-            $this->company->setProperties(array('admin' => $this->companyAdmin));
-            $this->company->store();
-        }
 
         Response::respondSuccess();
     }
@@ -129,17 +123,17 @@ class EditCompanyController extends Controller
 
     public function updateCompany()
     {
-        $existingCompany = Company::getDataStore($this->nit, 'nit');
-        if (!$existingCompany->isNull() && ($existingCompany->id !== $this->companyId)) {
-            throw new RequestException(ERRORS::COMPANY_EXISTS);
-        }
-
         $this->company->setProperties([
             'business_name' => $this->businessName,
             'nit' => $this->nit,
             'phone' => $this->phone,
             'contact_name' => $this->contactName
         ]);
+
+        if ($this->newAdminEmail) {
+            $this->createUserAdmin();
+            $this->company->setProperties(array('admin' => $this->companyAdmin));
+        }
 
         $this->company->store();
     }
@@ -149,8 +143,6 @@ class EditCompanyController extends Controller
     {
         $desiredCompanyAdmin = User::getUser($this->newAdminEmail, 'email');
         $oldAdmin = $this->company->admin;
-
-        $this->validateAdmin($desiredCompanyAdmin, $oldAdmin);
 
         if ($desiredCompanyAdmin->isNull()) {
             $desiredCompanyAdmin = new User();
@@ -210,19 +202,36 @@ class EditCompanyController extends Controller
         $mailSender->send();
     }
 
-    private function validateAdmin($desiredCompanyAdmin, $oldAdmin)
+    private function validateData()
     {
+        $existingCompany = Company::getDataStore($this->nit, 'nit');
+        if (!$existingCompany->isNull() && ($existingCompany->id !== $this->companyId)) {
+            throw new RequestException(ERRORS::COMPANY_EXISTS);
+        }
+
+
+        $desiredCompanyAdmin = User::getUser($this->newAdminEmail, 'email');
         if (!$desiredCompanyAdmin->isNull()) {
             if ($this->newAdminName) {
                 throw new RequestException(ERRORS::USER_EXISTS);
             }
 
+            $oldAdmin = $this->company->admin;
             if ($oldAdmin && $oldAdmin->id === $desiredCompanyAdmin->id) {
                 throw new RequestException(ERRORS::USER_ALREADY_ADMIN);
             }
 
             if ($desiredCompanyAdmin->company->id !== $this->companyId) {
                 throw new RequestException(ERRORS::INVALID_USER);
+            }
+
+        } else {
+            if ($this->newAdminEmail && !$this->newAdminName) {
+                throw new RequestException(ERRORS::INVALID_NAME);
+            }
+
+            if (!$this->newAdminEmail && $this->newAdminName) {
+                throw new RequestException(ERRORS::INVALID_EMAIL);
             }
         }
 
