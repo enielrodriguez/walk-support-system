@@ -11,6 +11,7 @@ import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Button from 'core-components/button';
 import Icon from 'core-components/icon';
+import Message from "../../../../core-components/message";
 
 class InviteStaffModal extends React.Component {
 
@@ -26,6 +27,7 @@ class InviteStaffModal extends React.Component {
         loading: false,
         errors: {},
         error: null,
+        generalError: null,
         departments: [],
         departmentsSelected: [],
         willBeAdmin: false
@@ -87,6 +89,14 @@ class InviteStaffModal extends React.Component {
                         {i18n('CANCEL')}
                     </Button>
 
+                    {this.state.generalError &&
+                    <div className="invite-staff-modal__message">
+                        <Message type='error'>
+                            {this.state.generalError}
+                        </Message>
+                    </div>
+                    }
+
                 </Form>
             </div>
         );
@@ -126,16 +136,33 @@ class InviteStaffModal extends React.Component {
                 this.props.onSuccess();
             }
         }).catch((result) => {
-            this.setState({
-                loading: false,
-                error: result.message
-            });
+            this.setErrors(result.message);
         });
     }
 
     onCancelClick(event) {
         event.preventDefault();
         this.context.closeModal();
+    }
+
+    setErrors(message) {
+        let state = {'loading': false};
+
+        if (message === 'ALREADY_A_STAFF') {
+            state['error'] = message;
+        } else {
+            let msgKey = 'UNKNOWN_ERROR';
+
+            switch (message) {
+                case 'STAFF_LIMIT_EXCEEDED':
+                    msgKey = message;
+                    break;
+            }
+
+            state['generalError'] = i18n(msgKey);
+        }
+
+        this.setState(state);
     }
 
     getErrors() {
