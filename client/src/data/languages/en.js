@@ -246,7 +246,7 @@ export default {
     'ACTIVITY_EDIT_TITLE': 'edited title of ticket',
     'ACTIVITY_EDIT_SETTINGS': 'edited settings',
     'ACTIVITY_SIGNUP': 'signed up',
-    'ACTIVITY_INVITE': 'added user',
+    'ACTIVITY_ADD_USER': 'added user',
     'ACTIVITY_ADD_TOPIC': 'added topic',
     'ACTIVITY_ADD_ARTICLE': 'added article',
     'ACTIVITY_DELETE_TOPIC': 'deleted topic',
@@ -507,5 +507,14 @@ export default {
     'ERROR_COMPANY_ADMIN': 'The administrator data has an error',
     'ERROR_ADMIN_EXISTS': 'There is already a user with this email',
     'ERROR_USER_FROM_OTHER_COMPANY': 'The user is from another company',
-    'ERROR_ALREADY_ADMIN': 'The user is already the current administrator'
+    'ERROR_ALREADY_ADMIN': 'The user is already the current administrator',
+
+    'ACTIVITY_ADD_COMPANY': 'added company',
+    'ACTIVITY_EDIT_COMPANY': 'edited company',
+    'ACTIVITY_DELETE_COMPANY': 'deleted company',
+
+    'USERS_LIMIT_EXCEEDED': 'Users limit exceeded',
+    'STAFF_LIMIT_EXCEEDED': 'Staff limit exceeded',
+    'COMPANIES_LIMIT_EXCEEDED': 'Companies limit exceeded',
+    'DEPARTMENTS_LIMIT_EXCEEDED': 'Departments limit exceeded'
 };

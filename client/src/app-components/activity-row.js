@@ -23,7 +23,7 @@ class ActivityRow extends React.Component {
 
             'EDIT_SETTINGS',
             'SIGNUP',
-            'INVITE',
+            'ADD_USER',
             'ADD_TOPIC',
             'ADD_ARTICLE',
             'DELETE_TOPIC',
@@ -38,7 +38,11 @@ class ActivityRow extends React.Component {
             'EDIT_CUSTOM_RESPONSE',
             'BAN_USER',
             'DELETE_USER',
-            'UN_BAN_USER'
+            'UN_BAN_USER',
+
+            'ADD_COMPANY',
+            'DELETE_COMPANY',
+            'EDIT_COMPANY'
         ]),
         to: React.PropTypes.string,
         ticketNumber: React.PropTypes.string,
@@ -71,7 +75,7 @@ class ActivityRow extends React.Component {
                 </span>
                 <span className="activity-row__message"> {i18n('ACTIVITY_' + this.props.type)} </span>
                 {_.includes(ticketRelatedTypes, this.props.type) ? this.renderTicketNumber() : this.props.to}
-                <span className="separator" />
+                <span className="separator"/>
             </div>
         );
     }
@@ -81,8 +85,8 @@ class ActivityRow extends React.Component {
 
         if (this.props.author.id) {
             name = <Link className="activity-row__name-link" to={this.getNameLinkDestination()}>
-                        {this.props.author.name}
-                   </Link>;
+                {this.props.author.name}
+            </Link>;
         }
 
         return name;
@@ -118,22 +122,26 @@ class ActivityRow extends React.Component {
 
             'EDIT_SETTINGS': 'wrench',
             'SIGNUP': 'user-plus',
-            'INVITE': 'user-plus',
+            'ADD_USER': 'user-plus',
             'ADD_TOPIC': 'book',
             'ADD_ARTICLE': 'book',
             'DELETE_TOPIC': 'book',
             'DELETE_ARTICLE': 'book',
             'EDIT_ARTICLE': 'book',
             'ADD_STAFF': 'id-card',
-            'ADD_DEPARTMENT': 'university',
-            'DELETE_DEPARTMENT': 'university',
-            'EDIT_DEPARTMENT': 'university',
+            'ADD_DEPARTMENT': 'cube',
+            'DELETE_DEPARTMENT': 'cube',
+            'EDIT_DEPARTMENT': 'cube',
             'ADD_CUSTOM_RESPONSE': 'file',
             'DELETE_CUSTOM_RESPONSE': 'file',
             'EDIT_CUSTOM_RESPONSE': 'file',
             'BAN_USER': 'user-times',
             'DELETE_USER': 'user-times',
-            'UN_BAN_USER': 'user'
+            'UN_BAN_USER': 'user',
+
+            'ADD_COMPANY': 'building',
+            'DELETE_COMPANY': 'building',
+            'EDIT_COMPANY': 'building'
         };
 
         return {

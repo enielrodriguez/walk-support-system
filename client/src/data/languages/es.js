@@ -254,7 +254,7 @@ export default {
     'ACTIVITY_DELETE_TOPIC': 'eliminó el tema',
     'ACTIVITY_DELETE_ARTICLE': 'eliminó el artículo',
     'ACTIVITY_EDIT_ARTICLE': 'editó el artículo',
-    'ACTIVITY_INVITE': 'añadió el usuario',
+    'ACTIVITY_ADD_USER': 'añadió el usuario',
     'ACTIVITY_ADD_STAFF': 'añadió el miembro del personal',
     'ACTIVITY_ADD_DEPARTMENT': 'añadió el departamento',
     'ACTIVITY_DELETE_DEPARTMENT': 'borró el departamento',
@@ -513,5 +513,14 @@ export default {
     'ERROR_COMPANY_ADMIN': 'Error en los datos del administrador',
     'ERROR_ADMIN_EXISTS': 'Ya existe un usuario con este email',
     'ERROR_USER_FROM_OTHER_COMPANY': 'El usuario es de otra empresa',
-    'ERROR_ALREADY_ADMIN': 'El usuario ya es el administrador actual'
+    'ERROR_ALREADY_ADMIN': 'El usuario ya es el administrador actual',
+
+    'ACTIVITY_ADD_COMPANY': 'añadió la empresa',
+    'ACTIVITY_EDIT_COMPANY': 'editó la empresa',
+    'ACTIVITY_DELETE_COMPANY': 'borró la empresa',
+
+    'USERS_LIMIT_EXCEEDED': 'Límite de usuarios excedido',
+    'STAFF_LIMIT_EXCEEDED': 'Límite de personal excedido',
+    'COMPANIES_LIMIT_EXCEEDED': 'Límite de empresas excedido',
+    'DEPARTMENTS_LIMIT_EXCEEDED': 'Límite de departamentos excedido'
 };
