@@ -28,27 +28,29 @@ class CheckLimit extends AbstractRule
         }
 
         $planLimit = \PlanLimit::findOne()->toArray();
-        $passedLimit = false;
+        $itsOk = (int)$planLimit[$this->limitToCheck] === 0;
 
-        switch ($this->limitToCheck) {
-            case 'users':
-                $passedLimit = \User::count() >= $planLimit['users'];
-                break;
-            case 'companies':
-                // > because there is a default company
-                $passedLimit = \Company::count() > $planLimit['companies'];
-                break;
-            case 'staff':
-                // > because there is a default staff (system admin)
-                $passedLimit = \Staff::count() > $planLimit['staff'];
-                break;
-            case 'departments':
-                // > because there is a default department
-                $passedLimit = \Department::count() > $planLimit['departments'];
-                break;
+        if (!$itsOk) {
+            switch ($this->limitToCheck) {
+                case 'users':
+                    $itsOk = \User::count() < $planLimit['users'];
+                    break;
+                case 'companies':
+                    // <= because there is a default company
+                    $itsOk = \Company::count() <= $planLimit['companies'];
+                    break;
+                case 'staff':
+                    // <= because there is a default staff (system admin)
+                    $itsOk = \Staff::count() <= $planLimit['staff'];
+                    break;
+                case 'departments':
+                    // <= because there is a default department
+                    $itsOk = \Department::count() <= $planLimit['departments'];
+                    break;
+            }
         }
 
-        return !$passedLimit;
+        return $itsOk;
     }
 
     private function isLimitNameValid($dataStoreName)
