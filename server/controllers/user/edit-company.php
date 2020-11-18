@@ -117,6 +117,8 @@ class EditCompanyController extends Controller
 
         $this->updateCompany();
 
+        Log::createLog('EDIT_COMPANY', $this->businessName);
+
         Response::respondSuccess();
     }
 
