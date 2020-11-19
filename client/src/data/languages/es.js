@@ -169,9 +169,9 @@ export default {
     'UPDATE_SETTINGS': 'Actualizar Configuraciones',
     'DEFAULT_LANGUAGE': 'Idioma predeterminado',
     'SUPPORTED_LANGUAGES': 'Idiomas Soportados',
-    'SUPPORTED_LANGUAGES_INFO': 'Los idiomas soportados son los idiomas en los que los usuarios pueden escribir los Tickets',
+    'SUPPORTED_LANGUAGES_INFO': 'Idiomas en los que los usuarios pueden escribir los Tickets',
     'ALLOWED_LANGUAGES': 'Idiomas de la Interfaz',
-    'ALLOWED_LANGUAGES_INFO': 'Los idiomas de la interfaz son los idiomas en los que un usuario puede ver el sitio',
+    'ALLOWED_LANGUAGES_INFO': 'Idiomas en los que los usuarios pueden ver el sitio',
     'SETTINGS_UPDATED': 'Se han actualizado las configuraciones',
     'ON': 'Sí',
     'OFF': 'No',
@@ -518,6 +518,11 @@ export default {
     'ACTIVITY_ADD_COMPANY': 'añadió la empresa',
     'ACTIVITY_EDIT_COMPANY': 'editó la empresa',
     'ACTIVITY_DELETE_COMPANY': 'borró la empresa',
+
+    'PLAN': 'Plan',
+    'PLAN_LIMITS': 'Estos son los límites definidos por el plan actual. Si algun valor le parece incorrecto, no dude en contactarnos',
+    'UNLIMITED': 'ilimitado',
+    'UP_TO': 'hasta {number}',
 
     'USERS_LIMIT_EXCEEDED': 'Límite de usuarios excedido',
     'STAFF_LIMIT_EXCEEDED': 'Límite de personal excedido',

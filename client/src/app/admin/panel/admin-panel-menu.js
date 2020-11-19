@@ -81,7 +81,7 @@ class AdminPanelMenu extends React.Component {
     }
 
     getGroupItemIndex() {
-        const { location } = this.props;
+        const {location} = this.props;
         const search = window.location.search;
         const filtersInURL = queryString.parse(search);
         const group = this.getRoutes()[this.getGroupIndex()];
@@ -92,7 +92,7 @@ class AdminPanelMenu extends React.Component {
             _.findIndex(
                 group.items,
                 (item) => {
-                    if(location.pathname === SEARCH_TICKETS_PATH) {
+                    if (location.pathname === SEARCH_TICKETS_PATH) {
                         const customTicketsListNumber = queryString.parse(item.path.slice(SEARCH_TICKETS_PATH.length)).custom;
                         return item.path.includes(SEARCH_TICKETS_PATH) && customTicketsListNumber === filtersInURL.custom;
                     }
@@ -112,7 +112,7 @@ class AdminPanelMenu extends React.Component {
     }
 
     getCustomlists() {
-        if(window.customTicketList){
+        if (window.customTicketList) {
             return window.customTicketList.map((item, index) => {
                 return {
                     name: item.title,
@@ -143,6 +143,11 @@ class AdminPanelMenu extends React.Component {
                     {
                         name: i18n('LAST_ACTIVITY'),
                         path: '/admin/panel/activity',
+                        level: 1
+                    },
+                    {
+                        name: i18n('PLAN'),
+                        path: '/admin/panel/plan',
                         level: 1
                     }
                 ])
@@ -186,7 +191,7 @@ class AdminPanelMenu extends React.Component {
                         name: i18n('LIST_USERS'),
                         path: '/admin/panel/users/list-users',
                         level: 1
-                    },                    {
+                    }, {
                         name: i18n('COMPANIES'),
                         path: '/admin/panel/users/companies',
                         level: 3

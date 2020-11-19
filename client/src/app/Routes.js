@@ -69,6 +69,7 @@ import DashboardViewUser from "./main/dashboard/dashboard-view-user/dashboard-vi
 import AdminPanelEditUser from "./admin/panel/users/admin-panel-edit-user";
 import DashboardEditUser from "./main/dashboard/dashboard-edit-user/dashboard-edit-user";
 import AdminPanelEditCompany from "./admin/panel/users/admin-panel-edit-company";
+import AdminPanelPlan from "./admin/panel/dashboard/admin-panel-plan";
 
 export default (
     <Router history={history}>
@@ -118,6 +119,7 @@ export default (
                     <IndexRedirect to="activity"/>
                     <Route path="stats" component={AdminPanelStats}/>
                     <Route path="activity" component={AdminPanelActivity}/>
+                    <Route path="plan" component={AdminPanelPlan}/>
                     <Route path="my-account" component={AdminPanelMyAccount}/>
 
                     <Route path="tickets">

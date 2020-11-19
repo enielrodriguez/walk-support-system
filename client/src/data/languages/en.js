@@ -513,6 +513,11 @@ export default {
     'ACTIVITY_EDIT_COMPANY': 'edited company',
     'ACTIVITY_DELETE_COMPANY': 'deleted company',
 
+    'PLAN': 'Plan',
+    'PLAN_LIMITS': 'These are the limits defined by the current plan. If any value seems wrong, do not hesitate to contact us',
+    'UNLIMITED': 'unlimited',
+    'UP_TO': 'up to {number}',
+
     'USERS_LIMIT_EXCEEDED': 'Users limit exceeded',
     'STAFF_LIMIT_EXCEEDED': 'Staff limit exceeded',
     'COMPANIES_LIMIT_EXCEEDED': 'Companies limit exceeded',
