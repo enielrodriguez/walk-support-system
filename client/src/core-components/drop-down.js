@@ -8,6 +8,8 @@ import Menu from 'core-components/menu';
 import Icon from 'core-components/icon';
 import Loading from 'core-components/loading'
 
+import i18n from "../lib-app/i18n";
+
 class DropDown extends React.Component {
 
     static propTypes = {
@@ -89,14 +91,11 @@ class DropDown extends React.Component {
     }
 
     renderCurrentItem() {
-        const item = this.props.items[this.getSelectedIndex()];
+        let item = this.props.items[this.getSelectedIndex()];
         let iconNode = null;
 
         if(!item){
-            return (
-                <div>
-                </div>
-            );
+            item = {content: i18n('EMPTY_SELECT')};
         }
 
         if (item.icon) {

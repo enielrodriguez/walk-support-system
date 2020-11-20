@@ -487,6 +487,7 @@ export default {
     'ADD_NEW': 'Añadir',
     'APPLY_CHANGES': 'Aplicar cambios',
     'CHANGES_SAVED': 'Cambios guardados',
+    'EMPTY_SELECT': '-seleccionar-',
 
     'SUPPORT_CENTER_LAYOUT_INFO': 'Esta configuración aplica solo para la interfaz de los clientes',
 

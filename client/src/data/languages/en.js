@@ -481,6 +481,7 @@ export default {
     'ADD_NEW': 'Add new',
     'APPLY_CHANGES': 'Apply changes',
     'CHANGES_SAVED': 'Changes saved successfully',
+    'EMPTY_SELECT': '-select-',
 
     'SUPPORT_CENTER_LAYOUT_INFO': 'This configuration applies only to the client interface',
 
