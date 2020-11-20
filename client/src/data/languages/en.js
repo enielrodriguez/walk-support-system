@@ -509,6 +509,7 @@ export default {
     'ERROR_ADMIN_EXISTS': 'There is already a user with this email',
     'ERROR_USER_FROM_OTHER_COMPANY': 'The user is from another company',
     'ERROR_ALREADY_ADMIN': 'The user is already the current administrator',
+    'MANDATORY_FIELD': 'This field is required',
 
     'ACTIVITY_ADD_COMPANY': 'added company',
     'ACTIVITY_EDIT_COMPANY': 'edited company',

@@ -515,6 +515,7 @@ export default {
     'ERROR_ADMIN_EXISTS': 'Ya existe un usuario con este email',
     'ERROR_USER_FROM_OTHER_COMPANY': 'El usuario es de otra empresa',
     'ERROR_ALREADY_ADMIN': 'El usuario ya es el administrador actual',
+    'MANDATORY_FIELD': 'Campo obligatorio',
 
     'ACTIVITY_ADD_COMPANY': 'añadió la empresa',
     'ACTIVITY_EDIT_COMPANY': 'editó la empresa',
