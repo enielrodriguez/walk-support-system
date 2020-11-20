@@ -1,4 +1,7 @@
 <?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+
 class MailSender {
     use SingletonTrait;
 
