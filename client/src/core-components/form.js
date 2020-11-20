@@ -174,7 +174,7 @@ class Form extends React.Component {
 
         form[fieldName] = event.target.value;
 
-        if (!values[fieldName]) {
+        if (values[fieldName] === undefined) {
             this.setState({form});
         }
 
