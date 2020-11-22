@@ -396,7 +396,7 @@ export default {
 
     //MESSAGES
     'SIGNUP_SUCCESS': 'You have registered successfully in our support system',
-    'INVITE_USER_SUCCESS': 'You have added a new user successfully to our support system',
+    'INVITE_USER_SUCCESS': 'You have added a new user',
     'TICKET_SENT': 'Ticket has been created successfully',
     'VALID_RECOVER': 'Password recovered successfully',
     'EMAIL_EXISTS': 'Email already exists',
@@ -462,7 +462,7 @@ export default {
     'PHONE': 'Phone',
     'CONTACT_NAME': 'Contact name',
     'ADD_COMPANY_DESCRIPTION': 'Here you can add a company to our support system',
-    'ADD_COMPANY_SUCCESS': 'You have added a new company successfully to our support system',
+    'ADD_COMPANY_SUCCESS': 'You have added a new company',
     'VIEW_COMPANY_TITLE': 'Company #{companyId}',
     'VIEW_COMPANY_DESCRIPTION': 'Here you can find all the information about a company. You can also delete it',
     'DELETE_COMPANY_DESCRIPTION': 'The company and all its users and tickets will be erased',
