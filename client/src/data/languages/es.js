@@ -525,11 +525,11 @@ export default {
 
     'PLAN': 'Plan',
     'PLAN_DOTS': 'Plan: ',
-    'PLAN_LIMITS': 'Estos son los límites definidos por el plan actual. Si algun valor le parece incorrecto, no dude en contactarnos',
+    'PLAN_LIMITS': 'Estos son los límites definidos por el plan actual. Si algun valor le parece incorrecto, contacte al proveedor.',
     'UNLIMITED': 'ilimitado',
     'UP_TO': 'Hasta: {number}',
     'LIMIT_REACHED': 'plan agotado',
-    'PLAN_USED': 'Utilizado: {value}',
+    'PLAN_USED': 'En uso: {value}',
 
     'USERS_LIMIT': 'Límite de usuarios',
     'AVAILABLE': 'Disponible: ',
@@ -540,7 +540,7 @@ export default {
     'MAX_VALUE_ALLOWED': 'Valor máximo permitido: {value}',
     'PLUS_YOUR_ACCOUNT': ' (+ tu cuenta)',
     'TOTAL_USERS_CURRENTLY': 'Total de usuarios en el sistema: {value}',
-    'USERS_PLAN_RESERVED': 'Total + reservados a empresas: {value}',
+    'USERS_PLAN_RESERVED': 'Total de usuarios + reservados a empresas: {value}',
     'FREE_QUOTA': 'Sin reservar a empresas (disponibles): {value}',
     'ASSIGNED_QUOTA_NOT_USED': 'Reservado a empresas pero sin utilizar: {value}',
     'TOTAL_USERS_PLAN_FREE': 'Total de capacidades disponibles: {value}',
