@@ -40,7 +40,7 @@ class AddDepartmentController extends Controller
                         ],
                         [
                             'validation' => DataValidator::checkLimit('departments'),
-                            'error' => ERRORS::DEPARTMENTS_LIMIT_EXCEEDED
+                            'error' => ERRORS::DEPARTMENTS_LIMIT_REACHED
                         ]
                     ]
                 ]

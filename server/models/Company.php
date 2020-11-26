@@ -56,7 +56,7 @@ class Company extends DataStore
             'phone' => $this->phone,
             'contact_name' => $this->contact_name,
             'admin' => $this->admin ? $this->admin->toArray() : array(),
-            'users_limit'
+            'users_limit' => $this->users_limit
         ];
     }
 }

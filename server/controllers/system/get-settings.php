@@ -1,5 +1,7 @@
 <?php
 
+use RedBeanPHP\Facade as RedBean;
+
 /**
  * @api {post} /system/get-settings Get settings
  * @apiVersion 4.8.0
@@ -17,7 +19,6 @@
  * @apiSuccess {Object} data Contains the information about the settings
  *
  */
-
 class GetSettingsController extends Controller
 {
     const PATH = '/get-settings';
@@ -86,10 +87,39 @@ class GetSettingsController extends Controller
             }
 
             if (Controller::isStaffLogged(3)) {
-                $settingsList['plan_limit'] = PlanLimit::findOne()->toArray();
+                $settingsList['plan_limit'] = $this->getPlanLimit();
+            } else if (Controller::isCompanyAdminLogged()) {
+                $settingsList['users_limit'] = Controller::getLoggedUser()->company->users_limit;
             }
         }
 
         Response::respondSuccess($settingsList);
+    }
+
+    private function getPlanLimit()
+    {
+        $planLimit = PlanLimit::findOne()->toArray();
+
+        $totalUsersCurrently = User::count();
+        // -1 because there is a default [entity]
+        $totalStaffCurrently = Staff::count() - 1;
+        $totalCompaniesCurrently = Company::count() - 1;
+        $totalDepartmentsCurrently = Department::count() - 1;
+
+        $planLimit['unassigned_users_quota'] = null;
+        $planLimit['total_users_currently'] = $totalUsersCurrently;
+        $planLimit['total_staff_currently'] = $totalStaffCurrently;
+        $planLimit['total_companies_currently'] = $totalCompaniesCurrently;
+        $planLimit['total_departments_currently'] = $totalDepartmentsCurrently;
+
+        if ($planLimit['users'] > 0) {
+            $usersInCompaniesWithoutLimit = (int)RedBean::getCell('SELECT COUNT(u.id) FROM `user` u INNER JOIN company c  ON u.company_id = c.id WHERE c.users_limit = 0 ');
+            $companiesLimit = (int)Company::getCell('SELECT SUM(users_limit) FROM company');
+            $unassignedUsersQuota = $planLimit['users'] - $companiesLimit - $usersInCompaniesWithoutLimit;
+
+            $planLimit['unassigned_users_quota'] = $unassignedUsersQuota;
+        }
+
+        return $planLimit;
     }
 }

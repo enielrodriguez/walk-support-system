@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+import {connect} from 'react-redux';
 
 import API from 'lib-app/api-call';
 import i18n from 'lib-app/i18n';
@@ -10,17 +10,32 @@ import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
 import LoadingWithMessage from "../../../../core-components/loading-with-message";
+import ConfigActions from "../../../../actions/config-actions";
 
 
 class AdminPanelEditCompany extends React.Component {
 
     state = {
         company: {},
+        usersInCompany: 0,
+        currentUsersLimit: 0,
         submitting: false,
         message: '',
         loadingData: true,
-        errorRetrievingData: false
+        errorRetrievingData: false,
+        hasAdmin: false,
+        limitReached: false
     };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.planLimit['unassigned_users_quota'] !== this.props.planLimit['unassigned_users_quota']) {
+            if (this.props.planLimit['unassigned_users_quota'] === 0) {
+                this.setState({limitReached: true});
+            } else {
+                this.setState({limitReached: false});
+            }
+        }
+    }
 
     componentDidMount() {
         this.retrieveData();
@@ -51,7 +66,18 @@ class AdminPanelEditCompany extends React.Component {
                                        fieldProps={{size: 'large'}}/>
 
 
-                            <div className="admin-panel-edit-company__warning">
+                            <div className="admin-panel-edit-company__field-header">
+                                {i18n('USERS_LIMIT')}
+                            </div>
+                            {this.getUsersLimitDescription()}
+                            <FormField label={i18n('USERS_LIMIT')}
+                                       name="users_limit"
+                                       infoMessage={this.getUsersLimitInfo()}
+                                       validation='NOT_SIGNED_INT'
+                                       fieldProps={{size: 'large'}}
+                                       required/>
+
+                            <div className="admin-panel-edit-company__field-header">
                                 {i18n('WARNING_COMPANY_EDIT_ADMIN')}
                             </div>
 
@@ -88,8 +114,14 @@ class AdminPanelEditCompany extends React.Component {
     onCompanyRetrieved(result) {
         result.data.company['new_admin_name'] = '';
         result.data.company['new_admin_email'] = '';
+
+        // delete current admin data
+        delete result.data.company['admin'];
+
         this.setState({
             company: result.data.company,
+            usersInCompany: result.data.users.length,
+            currentUsersLimit: result.data.company.users_limit,
             loadingData: false
         });
     }
@@ -99,17 +131,21 @@ class AdminPanelEditCompany extends React.Component {
             submitting: true
         });
 
-        const data = _.clone(formState);
-
-        delete data['admin'];
-
         return API.call({
             path: "/user/edit-company",
             data: {
-                ...data
+                ...formState
             }
         }).then(() => {
+            this.props.dispatch(ConfigActions.updateData());
+
+            let company = _.clone(formState);
+            company['new_admin_name'] = '';
+            company['new_admin_email'] = '';
+
             this.setState({
+                company: company,
+                currentUsersLimit: company.users_limit,
                 submitting: false,
                 message: "success"
             });
@@ -127,33 +163,54 @@ class AdminPanelEditCompany extends React.Component {
     }
 
     renderMessageResponse() {
+        let messageKey = 'UNKNOWN_ERROR';
+        let type = 'error';
+
         switch (this.state.message) {
             case '':
                 return null;
             case 'success':
-                return <Message type="success">{i18n('CHANGES_SAVED')}</Message>;
+                messageKey = 'CHANGES_SAVED';
+                type = 'success';
+                break;
             case 'COMPANY_EXISTS':
-                return <Message type="error">{i18n('ERROR_NIT_EXISTS')}</Message>;
+                messageKey = 'ERROR_NIT_EXISTS';
+                break;
             case 'USER_EXISTS':
-                return <Message type="error">{i18n('ERROR_ADMIN_EXISTS')}</Message>;
+                messageKey = 'ERROR_ADMIN_EXISTS';
+                break;
             case 'INVALID_USER':
-                return <Message type="error">{i18n('ERROR_USER_FROM_OTHER_COMPANY')}</Message>;
+                messageKey = 'ERROR_USER_FROM_OTHER_COMPANY';
+                break;
             case 'USER_ALREADY_ADMIN':
-                return <Message type="error">{i18n('ERROR_ALREADY_ADMIN')}</Message>;
+                messageKey = 'ERROR_ALREADY_ADMIN';
+                break;
             case 'INVALID_NAME':
-                return <Message type="error">{i18n('ERROR_BUSINESS_NAME')}</Message>;
+                messageKey = 'ERROR_BUSINESS_NAME';
+                break;
             case 'INVALID_NIT':
-                return <Message type="error">{i18n('ERROR_INVALID_NIT')}</Message>;
+                messageKey = 'ERROR_INVALID_NIT';
+                break;
             case 'INVALID_PHONE':
-                return <Message type="error">{i18n('ERROR_PHONE')}</Message>;
+                messageKey = 'ERROR_PHONE';
+                break;
             case 'INVALID_CONTACT_NAME':
-                return <Message type="error">{i18n('ERROR_CONTACT_NAME')}</Message>;
+                messageKey = 'ERROR_CONTACT_NAME';
+                break;
             case 'INVALID_ADMIN_NAME':
             case 'INVALID_ADMIN_EMAIL':
-                return <Message type="error">{i18n('ERROR_COMPANY_ADMIN')}</Message>;
+                messageKey = 'ERROR_COMPANY_ADMIN';
+                break;
+            case 'USERS_LIMIT_REACHED':
+                messageKey = 'USERS_LIMIT_REACHED';
+                break;
+            case 'INVALID_USERS_LIMIT':
+                messageKey = 'INVALID_USERS_LIMIT';
+                break;
             default:
                 return <Message type="error">{i18n('UNKNOWN_ERROR')}</Message>;
         }
+        return <Message type={type}>{i18n(messageKey)}</Message>;
     }
 
 
@@ -168,6 +225,69 @@ class AdminPanelEditCompany extends React.Component {
             </div>
         );
     }
+
+    getUsersLimitDescription() {
+        return (
+            <div className="admin-panel-edit-company__users-limit-description">
+                <div>
+                    {i18n('PLAN_DOTS')}
+                    {
+                        this.props.planLimit['users'] || i18n('UNLIMITED')
+                    }
+                </div>
+                <div>
+                    {i18n('AVAILABLE')}
+                    {
+                        this.props.planLimit['users'] ?
+                            this.state.limitReached ? i18n('LIMIT_REACHED') : this.props.planLimit['unassigned_users_quota']
+                            : i18n('UNLIMITED')
+                    }
+                </div>
+                <div>
+                    {i18n('USERS_IN_COMPANY', {'users': this.state.usersInCompany})}
+                </div>
+                <div>
+                    {i18n('MIN_VALUE_ALLOWED', {'value': this.state.usersInCompany})}
+                </div>
+                <div>
+                    {i18n('MAX_VALUE_ALLOWED', {
+                            'value': this.props.planLimit['users'] ?
+                                (this.state.limitReached ? i18n('LIMIT_REACHED') : this.state.usersInCompany + this.props.planLimit['unassigned_users_quota'])
+                                : i18n('UNLIMITED')
+                        }
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    getUsersLimitInfo() {
+        return (
+            <div className="admin-panel-edit-company__limit-info">
+                <div className="admin-panel-edit-company__limit-info-box">
+                    <span className="admin-panel-edit-company__limit-info-title"> - </span>
+                    <span
+                        className="admin-panel-edit-company__limit-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_1')}</span>
+                </div>
+                <div className="admin-panel-edit-company__limit-info-box">
+                    <span className="admin-panel-edit-company__limit-info-title"> - </span>
+                    <span
+                        className="admin-panel-edit-company__limit-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_2')}</span>
+                </div>
+                <div className="admin-panel-edit-company__limit-info-box">
+                    <span className="admin-panel-edit-company__limit-info-title"> - </span>
+                    <span
+                        className="admin-panel-edit-company__limit-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_3')}</span>
+                </div>
+            </div>
+        );
+    }
 }
 
-export default AdminPanelEditCompany;
+export default connect((store) => {
+    let config = store.config;
+    return {
+        config: config,
+        planLimit: config.plan_limit || {}
+    };
+})(AdminPanelEditCompany);

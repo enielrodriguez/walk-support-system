@@ -57,7 +57,7 @@ class InviteStaffController extends Controller
                         ],
                         [
                             'validation' => DataValidator::checkLimit('staff'),
-                            'error' => ERRORS::STAFF_LIMIT_EXCEEDED
+                            'error' => ERRORS::STAFF_LIMIT_REACHED
                         ]
                     ]
                 ],

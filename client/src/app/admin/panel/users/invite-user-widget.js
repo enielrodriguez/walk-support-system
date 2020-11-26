@@ -141,8 +141,8 @@ class InviteUserWidget extends React.Component {
             case 'INVALID_NAME':
                 messageKey = 'ERROR_NAME';
                 break;
-            case 'USERS_LIMIT_EXCEEDED':
-                messageKey = 'USERS_LIMIT_EXCEEDED';
+            case 'USERS_LIMIT_REACHED':
+                messageKey = 'USERS_LIMIT_REACHED';
                 break;
         }
 

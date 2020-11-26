@@ -4,8 +4,8 @@ import RepeatPasswordValidator from 'lib-app/validations/repeat-password-validat
 import LengthValidator from 'lib-app/validations/length-validator';
 import ListValidator from 'lib-app/validations/list-validator';
 import ImageSizeValidator from 'lib-app/validations/image-size-validator';
-import SpaceValidator from './space-validator';
 import PhoneValidator from "./phone-validator";
+import NotSignedIntValidator from "./notsignedint-validator";
 
 let validators = {
     'DEFAULT': new Validator(),
@@ -17,7 +17,8 @@ let validators = {
     'PASSWORD': new LengthValidator(6, 'ERROR_PASSWORD'),
     'REPEAT_PASSWORD': new RepeatPasswordValidator(),
     'URL': new LengthValidator(5, 'ERROR_URL'),
-    'LIST': new ListValidator()
+    'LIST': new ListValidator(),
+    'NOT_SIGNED_INT': new NotSignedIntValidator()
 };
 
 class ValidatorFactory {

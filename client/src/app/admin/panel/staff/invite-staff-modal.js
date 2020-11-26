@@ -154,7 +154,7 @@ class InviteStaffModal extends React.Component {
             let msgKey = 'UNKNOWN_ERROR';
 
             switch (message) {
-                case 'STAFF_LIMIT_EXCEEDED':
+                case 'STAFF_LIMIT_REACHED':
                     msgKey = message;
                     break;
             }

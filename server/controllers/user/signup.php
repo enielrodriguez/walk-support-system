@@ -66,7 +66,7 @@ class SignUpController extends Controller
                         ],
                         [
                             'validation' => DataValidator::checkLimit('users'),
-                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                            'error' => ERRORS::USERS_LIMIT_REACHED
                         ]
                     ]
                 ],

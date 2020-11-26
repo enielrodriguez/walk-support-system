@@ -24,7 +24,7 @@ class SessionStore {
     }
 
     isLoggedInWithTicket() {
-      return !!this.getItem('userId') && this.getItem('ticketNumber');
+        return !!this.getItem('userId') && this.getItem('ticketNumber');
     }
 
     closeSession() {
@@ -72,7 +72,8 @@ class SessionStore {
         this.setItem('tags', JSON.stringify(configs['tags']));
         this.setItem('max-size', configs['max-size']);
         this.setItem('default-is-locked', configs['default-is-locked']);
-        this.setItem('default-department-id',  configs['default-department-id']);
+        this.setItem('default-department-id', configs['default-department-id']);
+        this.setItem('users_limit', configs['users_limit']);
     }
 
     getConfigs() {
@@ -91,7 +92,8 @@ class SessionStore {
             'max-size': this.getItem('max-size'),
             'tags': JSON.parse(this.getItem('tags')),
             'default-is-locked': this.getItem('default-is-locked'),
-            'default-department-id':  this.getItem('default-department-id')
+            'default-department-id': this.getItem('default-department-id'),
+            'users_limit': this.getItem('users_limit')
         };
     }
 

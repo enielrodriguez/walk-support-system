@@ -1,5 +1,12 @@
+@import '../../../../scss/vars';
+
 .dashboard-user-list {
-  &__add-user-form {
-    max-width: 500px;
-  }
+    &__add-user-form {
+        max-width: 500px;
+    }
+
+    &__users-limit-description {
+        font-size: $font-size--sm;
+        text-align: left;
+    }
 }

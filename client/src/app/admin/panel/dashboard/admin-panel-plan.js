@@ -13,20 +13,79 @@ class AdminPanelPlan extends React.Component {
                 <Header title={i18n('PLAN')} description={i18n('PLAN_LIMITS')}/>
                 {_.isEmpty(planLimit) ? <Loading/> :
                     <div>
-                        <div>
-                            <span>{i18n('USERS')}: {this.getLimit(planLimit.users)}</span>
+                        <div className="admin-panel-plan__item">
+                            <div className="admin-panel-plan__item-title">
+                                {i18n('USERS')}
+                            </div>
+                            <div>
+                                {this.getLimit(planLimit.users)}
+                            </div>
+                            <div>
+                                {i18n('TOTAL_USERS_CURRENTLY', {'value': planLimit.total_users_currently})}
+                            </div>
+
+                            {planLimit.unassigned_users_quota &&
+                            <div>
+                                {i18n('USERS_PLAN_RESERVED', {'value': planLimit.users - planLimit.unassigned_users_quota})}
+                            </div>
+                            }
+
+                            {planLimit.unassigned_users_quota &&
+                            <div>
+                                {i18n('FREE_QUOTA', {'value': planLimit.unassigned_users_quota})}
+                            </div>
+                            }
+
+                            {planLimit.unassigned_users_quota &&
+                            <div>
+                                {i18n('ASSIGNED_QUOTA_NOT_USED', {'value': planLimit.users - planLimit.unassigned_users_quota - planLimit.total_users_currently})}
+                            </div>
+                            }
+
+                            {planLimit.users > 0 &&
+                            <div>
+                                {i18n('TOTAL_USERS_PLAN_FREE', {'value': planLimit.users - planLimit.total_users_currently})}
+                            </div>
+                            }
+
                         </div>
-                        <div>
-                            <span>{i18n('COMPANIES')}: {this.getLimit(planLimit.companies)}</span>
+
+                        <div className="admin-panel-plan__item">
+                            <div className="admin-panel-plan__item-title">
+                                {i18n('COMPANIES')}
+                            </div>
+                            <div>
+                                {this.getLimit(planLimit.companies)}
+                            </div>
+                            <div>
+                                {i18n('PLAN_USED', {'value': planLimit.total_companies_currently})}
+                            </div>
                         </div>
-                        <div>
-                            <span>
-                                {i18n('STAFF_MEMBERS')}: {this.getLimit(planLimit.staff)}
-                            </span>
+
+                        <div className="admin-panel-plan__item">
+                            <div className="admin-panel-plan__item-title">
+                                {i18n('STAFF_MEMBERS')}
+                            </div>
+                            <div>
+                                {this.getLimit(planLimit.staff)}
+                            </div>
+                            <div>
+                                {i18n('PLAN_USED', {'value': planLimit.total_staff_currently})}
+                            </div>
                         </div>
-                        <div>
-                            <span>{i18n('DEPARTMENTS')}: {this.getLimit(planLimit.departments)}</span>
+
+                        <div className="admin-panel-plan__item">
+                            <div className="admin-panel-plan__item-title">
+                                {i18n('DEPARTMENTS')}
+                            </div>
+                            <div>
+                                {this.getLimit(planLimit.departments)}
+                            </div>
+                            <div>
+                                {i18n('PLAN_USED', {'value': planLimit.total_departments_currently})}
+                            </div>
                         </div>
+
                     </div>
                 }
             </div>
@@ -34,8 +93,8 @@ class AdminPanelPlan extends React.Component {
     }
 
     getLimit(limit) {
-        if (limit == 0) {
-            return i18n('UNLIMITED');
+        if (limit === 0) {
+            limit = i18n('UNLIMITED');
         }
         return i18n('UP_TO', {'number': limit})
     }

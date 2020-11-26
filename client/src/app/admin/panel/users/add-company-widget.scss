@@ -1,3 +1,5 @@
+@import '../../../../scss/vars';
+
 .add-company-widget {
     padding: 30px;
     text-align: center;
@@ -9,5 +11,42 @@
     &__inputs {
         display: inline-block;
         margin: 0 auto;
+    }
+
+    &__warning {
+        color: $primary-red;
+        margin-bottom: 10px;
+    }
+
+    &__limit-label {
+        text-align: left;
+        font-size: 18px;
+        color: $dark-grey;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        width: 350px;
+    }
+
+    &__level-info {
+        width: 360px;
+        font-size: $font-size--sm;
+
+        &-box {
+            margin-top: 5px;
+        }
+
+        &-title {
+            color: $secondary-blue;
+        }
+
+        &-description {
+            color: $dark-grey;
+        }
+    }
+
+    &__users-limit-description {
+        text-align: left;
+        font-size: $font-size--sm;
+        margin-bottom: 10px;
     }
 }

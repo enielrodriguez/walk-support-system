@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
+
 import _ from 'lodash';
 import classNames from 'classnames';
 
@@ -17,12 +18,19 @@ class AddCompanyWidget extends React.Component {
 
     static propTypes = {
         onSuccess: React.PropTypes.func,
-        className: React.PropTypes.string
+        className: React.PropTypes.string,
     };
 
     state = {
-        loading: false
+        loading: false,
+        limitReached: false
     };
+
+    componentDidMount() {
+        if (this.props.planLimit['unassigned_users_quota'] === 0) {
+            this.setState({limitReached: true});
+        }
+    }
 
     render() {
         return (
@@ -35,13 +43,34 @@ class AddCompanyWidget extends React.Component {
                         <FormField {...this.getInputProps()} label={i18n('NIT')} name="nit" required/>
                         <FormField {...this.getInputProps()} label={i18n('PHONE')} name="phone" validation="PHONE"
                                    required/>
+
                         <FormField {...this.getInputProps()} label={i18n('CONTACT_NAME')} name="contact_name"/>
 
+                        <div className="add-company-widget__limit-label">
+                            {i18n('USERS_LIMIT')}
+                        </div>
+                        {this.getUsersLimitDescription()}
+                        <FormField {...this.getInputProps(this.state.limitReached)}
+                                   label={i18n('USERS_LIMIT')}
+                                   name="users_limit"
+                                   infoMessage={this.getUsersLimitInfo()}
+                                   validation='NOT_SIGNED_INT'
+                                   value='0'
+                                   required/>
+
                         <Header title={i18n('COMPANY_ADMIN')} description={i18n('COMPANY_ADMIN_WARNING')}/>
-                        <FormField {...this.getInputProps()} label={i18n('NAME')} name="admin_name"/>
-                        <FormField {...this.getInputProps()} label={i18n('EMAIL')} name="admin_email"
+                        <FormField {...this.getInputProps(this.state.limitReached)} label={i18n('NAME')}
+                                   name="admin_name"/>
+                        <FormField {...this.getInputProps(this.state.limitReached)} label={i18n('EMAIL')}
+                                   name="admin_email"
                                    validation="EMAIL"/>
                     </div>
+
+                    {this.state.limitReached &&
+                    <div className="add-company-widget__warning">
+                        {i18n('ADD_COMPANY_WITH_LIMIT_REACHED_INFO')}
+                    </div>
+                    }
 
                     <SubmitButton type="primary">{i18n('ADD_COMPANY')}</SubmitButton>
                 </Form>
@@ -85,11 +114,14 @@ class AddCompanyWidget extends React.Component {
             case 'INVALID_ADMIN_EMAIL':
                 messageKey = 'ERROR_COMPANY_ADMIN';
                 break;
-            case 'COMPANIES_LIMIT_EXCEEDED':
-                messageKey = 'COMPANIES_LIMIT_EXCEEDED';
+            case 'COMPANIES_LIMIT_REACHED':
+                messageKey = 'COMPANIES_LIMIT_REACHED';
                 break;
-            case 'USERS_LIMIT_EXCEEDED':
-                messageKey = 'USERS_LIMIT_EXCEEDED';
+            case 'USERS_LIMIT_REACHED':
+                messageKey = 'USERS_LIMIT_REACHED';
+                break;
+            case 'INVALID_USERS_LIMIT':
+                messageKey = 'INVALID_USERS_LIMIT';
                 break;
         }
 
@@ -112,11 +144,12 @@ class AddCompanyWidget extends React.Component {
         };
     }
 
-    getInputProps() {
+    getInputProps(disabled = false) {
         return {
             className: 'add-company-widget__input',
             fieldProps: {
-                size: 'medium'
+                size: 'medium',
+                disabled: disabled
             }
         };
     }
@@ -134,13 +167,10 @@ class AddCompanyWidget extends React.Component {
             loading: true
         });
 
-        const form = _.clone(formState);
-
         API.call({
             path: '/user/add-company',
-            data: form
+            data: formState
         }).then(this.onAddCompanySuccess.bind(this)).catch(this.onAddCompanyFail.bind(this));
-
     }
 
     onAddCompanySuccess() {
@@ -158,6 +188,53 @@ class AddCompanyWidget extends React.Component {
             message: reason ? reason.message : 'fail'
         });
     }
+
+    getUsersLimitDescription() {
+        return (
+            <div className="add-company-widget__users-limit-description">
+                <div>
+                    {i18n('PLAN_DOTS')}
+                    {
+                        this.props.planLimit['users'] || i18n('UNLIMITED')
+                    }
+                </div>
+                <div>
+                    {i18n('AVAILABLE')}
+                    {
+                        this.props.planLimit['users'] ?
+                            this.state.limitReached ? i18n('LIMIT_REACHED') : this.props.planLimit['unassigned_users_quota']
+                            : i18n('UNLIMITED')
+                    }
+                </div>
+            </div>
+        );
+    }
+
+    getUsersLimitInfo() {
+        return (
+            <div className="add-company-widget__level-info">
+                <div className="add-company-widget__level-info-box">
+                    <span className="add-company-widget__level-info-title"> - </span>
+                    <span
+                        className="add-company-widget__level-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_1')}</span>
+                </div>
+                <div className="add-company-widget__level-info-box">
+                    <span className="add-company-widget__level-info-title"> - </span>
+                    <span
+                        className="add-company-widget__level-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_2')}</span>
+                </div>
+                <div className="add-company-widget__level-info-box">
+                    <span className="add-company-widget__level-info-title"> - </span>
+                    <span
+                        className="add-company-widget__level-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_3')}</span>
+                </div>
+            </div>
+        );
+    }
 }
 
-export default AddCompanyWidget;
+export default connect((store) => {
+    return {
+        planLimit: store.config.plan_limit || {}
+    };
+})(AddCompanyWidget);

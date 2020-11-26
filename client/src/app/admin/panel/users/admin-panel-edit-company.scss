@@ -2,69 +2,61 @@
 
 .admin-panel-edit-company-cont {
 
-  .admin-panel-edit-company {
-    display: inline-block;
-
-    &__warning {
-      text-align: left;
-      font-size: 18px;
-      color: $dark-grey;
-      margin-top: 25px;
-      margin-bottom: 10px;
-      width: 350px;
-
-      &-card-badge {
+    .admin-panel-edit-company {
         display: inline-block;
-        width: 33%;
 
-        &-text {
-          display: block;
+        &__field-header {
+            text-align: left;
+            font-size: 18px;
+            color: $dark-grey;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            width: 350px;
         }
 
-        &-red,
-        &-green,
-        &-blue {
-          border-radius: 4px;
-          color: white;
-          display: inline-block;
-          width: 70%;
-          margin-bottom: 5px;
+        &__message {
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
-        &-red {
-          background-color: $primary-red;
+        &__row {
+            margin-bottom: 10px;
         }
 
-        &-green {
-          background-color: $primary-green;
+        &__edit-admin-info {
+            width: 360px;
+            font-size: $font-size--sm;
+
+            &-box {
+                margin-top: 5px;
+            }
+
+            &-description {
+                color: $dark-grey;
+            }
         }
 
-        &-blue {
-          background-color: $secondary-blue;
+        &__limit-info {
+            width: 360px;
+            font-size: $font-size--sm;
+
+            &-box {
+                margin-top: 5px;
+            }
+
+            &-title {
+                color: $secondary-blue;
+            }
+
+            &-description {
+                color: $dark-grey;
+            }
         }
-      }
+
+        &__users-limit-description {
+            text-align: left;
+            font-size: $font-size--sm;
+            margin-bottom: 10px;
+        }
     }
-
-    &__message {
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
-
-    &__row {
-      margin-bottom: 10px;
-    }
-
-    &__edit-admin-info {
-      width: 360px;
-      font-size: $font-size--sm;
-
-      &-box {
-        margin-top: 5px;
-      }
-
-      &-description {
-        color: $dark-grey;
-      }
-    }
-  }
 }

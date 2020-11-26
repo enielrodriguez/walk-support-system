@@ -52,6 +52,7 @@ class ConfigReducer extends Reducer {
             initDone: true,
             'default-department-id': payload.data['default-department-id'],
             'default-is-locked': payload.data['default-is-locked'],
+            'users_limit': +payload.data['users_limit'],
         });
     }
 

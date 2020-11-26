@@ -516,12 +516,34 @@ export default {
     'ACTIVITY_DELETE_COMPANY': 'deleted company',
 
     'PLAN': 'Plan',
+    'PLAN_DOTS': 'Plan: ',
     'PLAN_LIMITS': 'These are the limits defined by the current plan. If any value seems wrong, do not hesitate to contact us',
     'UNLIMITED': 'unlimited',
-    'UP_TO': 'up to {number}',
+    'UP_TO': 'Up to: {number}',
+    'LIMIT_REACHED': 'plan limit reached',
+    'PLAN_USED': 'Used: {value}',
 
-    'USERS_LIMIT_EXCEEDED': 'Users limit exceeded',
-    'STAFF_LIMIT_EXCEEDED': 'Staff limit exceeded',
-    'COMPANIES_LIMIT_EXCEEDED': 'Companies limit exceeded',
-    'DEPARTMENTS_LIMIT_EXCEEDED': 'Departments limit exceeded'
+    'USERS_LIMIT': 'Users limit',
+    'AVAILABLE': 'Available: ',
+    'USERS_LIMIT_REACHED': 'Users limit reached',
+    'INVALID_USERS_LIMIT': 'The specified limit is invalid',
+    'USERS_IN_COMPANY': 'Users in this company: {users}',
+    'MIN_VALUE_ALLOWED': 'Min value allowed: {value} o 0 (unlimited)',
+    'MAX_VALUE_ALLOWED': 'Max value allowed: {value}',
+    'PLUS_YOUR_ACCOUNT': ' (+ your account)',
+    'TOTAL_USERS_CURRENTLY': 'Total users in the system: {value}',
+    'USERS_PLAN_RESERVED': 'Total + reserved to companies: {value}',
+    'FREE_QUOTA': 'Unreserved to companies (available): {value}',
+    'ASSIGNED_QUOTA_NOT_USED': 'Reserved to companies but not used: {value}',
+    'TOTAL_USERS_PLAN_FREE': 'Total available capacities: {value}',
+
+    'COMPANY_USERS_LIMIT_INFO_1': 'This number will be reserved from the total number of users allowed by the current plan (if it is unlimited, it does not apply).',
+    'COMPANY_USERS_LIMIT_INFO_2': 'This feature is very useful if the company has an administrator, who could add too many users.',
+    'COMPANY_USERS_LIMIT_INFO_3': 'Leave 0 (zero) for unlimited. Be careful if you have a limited plan and also assign an administrator to this company. ',
+    'COMPANIES_LIMIT_REACHED': 'Companies limit reached',
+    'ADD_COMPANY_WITH_LIMIT_REACHED_INFO': 'The company will be added without limit of users, even so, it will not be possible to add new users to this company, since the plan limit has already been reached.',
+    
+    'STAFF_LIMIT_REACHED': 'Staff limit reached',
+    
+    'DEPARTMENTS_LIMIT_REACHED': 'Departments limit reached'
 };

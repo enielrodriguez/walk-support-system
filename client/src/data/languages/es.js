@@ -1,3 +1,5 @@
+import React from "react";
+
 export default {
     'WELCOME': 'Bienvenido',
     'TICKETS': 'Tickets',
@@ -522,12 +524,34 @@ export default {
     'ACTIVITY_DELETE_COMPANY': 'borró la empresa',
 
     'PLAN': 'Plan',
+    'PLAN_DOTS': 'Plan: ',
     'PLAN_LIMITS': 'Estos son los límites definidos por el plan actual. Si algun valor le parece incorrecto, no dude en contactarnos',
     'UNLIMITED': 'ilimitado',
-    'UP_TO': 'hasta {number}',
+    'UP_TO': 'Hasta: {number}',
+    'LIMIT_REACHED': 'plan agotado',
+    'PLAN_USED': 'Utilizado: {value}',
 
-    'USERS_LIMIT_EXCEEDED': 'Límite de usuarios excedido',
-    'STAFF_LIMIT_EXCEEDED': 'Límite de personal excedido',
-    'COMPANIES_LIMIT_EXCEEDED': 'Límite de empresas excedido',
-    'DEPARTMENTS_LIMIT_EXCEEDED': 'Límite de departamentos excedido'
+    'USERS_LIMIT': 'Límite de usuarios',
+    'AVAILABLE': 'Disponible: ',
+    'USERS_LIMIT_REACHED': 'Se alcanzó el límite de usuarios',
+    'INVALID_USERS_LIMIT': 'El límite especificado no es válido',
+    'USERS_IN_COMPANY': 'Usuarios en la empresa: {users}',
+    'MIN_VALUE_ALLOWED': 'Valor mínimo permitido: {value} o 0 (ilimitado)',
+    'MAX_VALUE_ALLOWED': 'Valor máximo permitido: {value}',
+    'PLUS_YOUR_ACCOUNT': ' (+ tu cuenta)',
+    'TOTAL_USERS_CURRENTLY': 'Total de usuarios en el sistema: {value}',
+    'USERS_PLAN_RESERVED': 'Total + reservados a empresas: {value}',
+    'FREE_QUOTA': 'Sin reservar a empresas (disponibles): {value}',
+    'ASSIGNED_QUOTA_NOT_USED': 'Reservado a empresas pero sin utilizar: {value}',
+    'TOTAL_USERS_PLAN_FREE': 'Total de capacidades disponibles: {value}',
+
+    'COMPANY_USERS_LIMIT_INFO_1': 'Este número se reservará del total de usuarios permitidos por el plan actual (si es ilimitado no aplica).',
+    'COMPANY_USERS_LIMIT_INFO_2': 'Esta característica es muy útil si la empresa tiene un administrador, el cual pudiera añadir usuarios de forma excesiva.',
+    'COMPANY_USERS_LIMIT_INFO_3': 'Dejar en 0 (cero) para ilimitado. Tenga precaución si tiene un plan limitado, y además le asigna administrador a esta empresa.',
+    'COMPANIES_LIMIT_REACHED': 'Se alcanzó el límite de empresas',
+    'ADD_COMPANY_WITH_LIMIT_REACHED_INFO': 'La empresa se añadirá sin límite de usuarios, aún así, no se podrá añadir nuevos usuarios a esta empresa, pues ya se alcanzó el límite del plan.',
+
+    'STAFF_LIMIT_REACHED': 'Se alcanzó el límite de personal',
+
+    'DEPARTMENTS_LIMIT_REACHED': 'Se alcanzó el límite de departamentos'
 };

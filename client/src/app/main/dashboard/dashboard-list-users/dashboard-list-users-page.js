@@ -27,6 +27,17 @@ class DashboardListUsersPage extends React.Component {
         return (
             <div className="dashboard-user-list">
                 <Header title={i18n('USER_LIST')} description={i18n('USER_LIST_DESCRIPTION')}/>
+                {this.props.usersLimit > 0 &&
+                <div className="dashboard-user-list__users-limit-description">
+                    <div>
+                        {i18n('USERS_LIMIT') + ': ' + (this.props.usersLimit - 1)}
+                        {i18n('PLUS_YOUR_ACCOUNT')}
+                    </div>
+                    <div>
+                        {i18n('AVAILABLE') + (this.props.usersLimit - (this.props.userUsers.length + 1))}
+                    </div>
+                </div>
+                }
                 <UserList {...this.getUserListProps()}/>
                 {this.renderAddButton()}
             </div>
@@ -86,6 +97,7 @@ class DashboardListUsersPage extends React.Component {
 
 export default connect((store) => {
     return {
-        userUsers: store.session.userUsers || []
+        userUsers: store.session.userUsers || [],
+        usersLimit: store.config.users_limit
     };
 })(DashboardListUsersPage);

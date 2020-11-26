@@ -70,6 +70,18 @@ class AdminPanelViewCompany extends React.Component {
                     </div>
 
                     {this.state.company.nit !== 'default_company' &&
+                    <div className="admin-panel-view-company__info-item">
+                        {i18n('USERS_LIMIT')}
+                        <div className="admin-panel-view-company__info-box">
+                            {this.state.company.users_limit > 0 ?
+                                this.state.company.users_limit + ' (' + i18n('AVAILABLE') + (this.state.company.users_limit - this.state.users.length) + ')'
+                                : this.state.company.users_limit + ' (' + i18n('UNLIMITED') + ')'
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    {this.state.company.nit !== 'default_company' &&
                     <div className="admin-panel-view-company__action-buttons">
                         <Button className="admin-panel-view-company__action-button"
                                 onClick={this.onDeleteClick.bind(this)} size="medium">

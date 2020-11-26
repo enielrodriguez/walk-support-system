@@ -243,7 +243,7 @@ class AdminPanelViewUser extends React.Component {
             data: {
                 userId: this.props.params.userId
             }
-        }).then(() => history.push('/admin/panel/users/list-users'));
+        }).then(() => history.goBack());
     }
 
     deleteAndBanUser() {
@@ -258,7 +258,7 @@ class AdminPanelViewUser extends React.Component {
                 data: {
                     email: this.state.email
                 }
-            }).then(() => history.push('/admin/panel/users/list-users'));
+            }).then(() => history.goBack());
         });
     }
 

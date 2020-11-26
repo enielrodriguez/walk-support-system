@@ -97,18 +97,28 @@ class AddUserWidget extends React.Component {
     }
 
     renderMessage() {
+        let messageKey = 'UNKNOWN_ERROR';
+        let type = 'error';
+
         switch (this.state.message) {
             case undefined:
                 return null;
             case 'success':
-                return <Message type="success">{i18n('INVITE_USER_SUCCESS')}</Message>;
+                messageKey = 'INVITE_USER_SUCCESS';
+                type = 'success';
+                break;
             case 'USER_EXISTS':
-                return <Message type="error">{i18n('EMAIL_EXISTS')}</Message>;
+                messageKey = 'EMAIL_EXISTS';
+                break;
             case 'INVALID_NAME':
-                return <Message type="error">{i18n('ERROR_NAME')}</Message>;
-            default:
-                return <Message type="error">{i18n('UNKNOWN_ERROR')}</Message>;
+                messageKey = 'ERROR_NAME';
+                break;
+            case 'USERS_LIMIT_REACHED':
+                messageKey = 'USERS_LIMIT_REACHED';
+                break;
         }
+
+        return <Message type={type}>{i18n(messageKey)}</Message>;
     }
 
     getClass() {

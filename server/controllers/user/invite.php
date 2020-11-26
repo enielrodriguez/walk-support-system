@@ -41,7 +41,8 @@ class InviteUserController extends Controller
 
     private $userEmail;
     private $userName;
-    private $companyId;
+
+    private $company;
 
     public function validations()
     {
@@ -56,7 +57,7 @@ class InviteUserController extends Controller
                         ],
                         [
                             'validation' => DataValidator::checkLimit('users'),
-                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                            'error' => ERRORS::USERS_LIMIT_REACHED
                         ]
                     ]
                 ],
@@ -98,6 +99,8 @@ class InviteUserController extends Controller
             throw new RequestException(ERRORS::ALREADY_BANNED);
         }
 
+        $this->checkCompanyUsersLimit();
+
         $userId = $this->createNewUserAndRetrieveId();
 
         $this->sendInvitationMail();
@@ -117,12 +120,13 @@ class InviteUserController extends Controller
 
 
         if (Controller::isCompanyAdminLogged()) {
-            $this->companyId = Controller::getLoggedUser()->company->id;
+            $this->company = Controller::getLoggedUser()->company;
         } else if (Controller::isStaffLogged()) {
-            $this->companyId = Controller::request('companyId');
-            if (!$this->companyId) {
+            $companyId = Controller::request('companyId');
+            if (!$companyId) {
                 throw new ValidationException(ERRORS::INVALID_COMPANY);
             }
+            $this->company = Company::getCompany($companyId);
         }
     }
 
@@ -138,7 +142,7 @@ class InviteUserController extends Controller
             'password' => Hashing::hashPassword(Hashing::generateRandomToken()),
             'verificationToken' => null,
             'xownCustomfieldvalueList' => self::getCustomFieldValues(),
-            'company' => Company::getCompany($this->companyId)
+            'company' => $this->company
         ]);
 
         return $user->store();
@@ -165,5 +169,29 @@ class InviteUserController extends Controller
         ]);
 
         $mailSender->send();
+    }
+
+    private function checkCompanyUsersLimit()
+    {
+        $company = $this->company;
+        $companyUsersLimit = (int)$company->users_limit;
+
+        // If the company does not have a user limit
+        if ($companyUsersLimit === 0) {
+            $globalUsersLimit = PlanLimit::findOne()->users;
+
+            $usersInCompaniesWithoutLimit = (int)Company::getCell('SELECT COUNT(u.id) FROM `user` u INNER JOIN company c  ON u.company_id = c.id WHERE c.users_limit = 0 ');
+            $companiesLimit = (int)Company::getCell('SELECT SUM(users_limit) FROM company');
+
+            $availablePositions = $globalUsersLimit - $companiesLimit - $usersInCompaniesWithoutLimit;
+        } else {
+            $availablePositions = $company->users_limit - User::count(' company_id = ? ', [$company->id]);
+        }
+
+        // $availablePositions should never be < 0, however, I don't know if due to concurrency
+        // issues there is any possibility that it will happen (the users limit is exceeded).
+        if ($availablePositions <= 0) {
+            throw new RequestException(ERRORS::USERS_LIMIT_REACHED);
+        }
     }
 }

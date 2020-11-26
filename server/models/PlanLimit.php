@@ -22,10 +22,10 @@ class PlanLimit extends DataStore
     public function toArray()
     {
         return [
-            'users' => $this->users,
-            'companies' => $this->companies,
-            'staff' => $this->staff,
-            'departments' => $this->departments
+            'users' => (int)$this->users,
+            'companies' => (int)$this->companies,
+            'staff' => (int)$this->staff,
+            'departments' => (int)$this->departments
         ];
     }
 }

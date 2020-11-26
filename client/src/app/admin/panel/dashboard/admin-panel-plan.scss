@@ -1,3 +1,11 @@
+@import '../../../../scss/vars';
+
 .admin-panel-plan {
   text-align: left;
+  &__item{
+    margin-bottom: 10px;
+    &-title{
+      font-size: $font-size--bg;
+    }
+  }
 }

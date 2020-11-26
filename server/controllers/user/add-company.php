@@ -31,10 +31,11 @@ class AddCompanyController extends Controller
 
     private Company $company;
 
-    private $business_name;
+    private $businessName;
     private $nit;
     private $phone;
-    private $contact_name;
+    private $contactName;
+    private $companyUsersLimit;
 
     public function validations()
     {
@@ -49,7 +50,7 @@ class AddCompanyController extends Controller
                         ],
                         [
                             'validation' => DataValidator::checkLimit('companies'),
-                            'error' => ERRORS::COMPANIES_LIMIT_EXCEEDED
+                            'error' => ERRORS::COMPANIES_LIMIT_REACHED
                         ]
                     ]
                 ], 'nit' => [
@@ -64,6 +65,9 @@ class AddCompanyController extends Controller
                         DataValidator::falseVal()
                     ),
                     'error' => ERRORS::INVALID_CONTACT_NAME
+                ], 'users_limit' => [
+                    'validation' => DataValidator::intVal()->min(0),
+                    'error' => ERRORS::INVALID_USERS_LIMIT
                 ],
                 'admin_name' => [
                     'validation' => [
@@ -76,7 +80,7 @@ class AddCompanyController extends Controller
                         ],
                         [
                             'validation' => DataValidator::checkLimit('users'),
-                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                            'error' => ERRORS::USERS_LIMIT_REACHED
                         ]
                     ]
                 ],
@@ -93,10 +97,11 @@ class AddCompanyController extends Controller
 
     public function handler()
     {
-        $this->business_name = Controller::request('business_name');
+        $this->businessName = Controller::request('business_name');
         $this->nit = Controller::request('nit');
         $this->phone = Controller::request('phone');
-        $this->contact_name = Controller::request('contact_name');
+        $this->contactName = Controller::request('contact_name');
+        $this->companyUsersLimit = (int)Controller::request('users_limit');
 
         $this->adminName = Controller::request('admin_name');
         $this->adminEmail = Controller::request('admin_email');
@@ -104,6 +109,26 @@ class AddCompanyController extends Controller
         if ($this->adminName xor $this->adminEmail) {
             throw new RequestException(ERRORS::INVALID_USER);
         }
+
+
+        $globalUsersLimit = PlanLimit::findOne()->users;
+        if ($globalUsersLimit > 0) {
+            $usersInDefaultCompany = User::count(' company_id = ? ', [1]);
+            $companiesLimit = (int)Company::getCell('SELECT SUM(users_limit) FROM company');
+
+            $availablePositions = $globalUsersLimit - $companiesLimit - $usersInDefaultCompany;
+
+            if ($this->companyUsersLimit > $availablePositions) {
+                throw new RequestException(ERRORS::INVALID_USERS_LIMIT);
+            }
+
+            // $availablePositions should never be < 0, however, I don't know if due to concurrency
+            // issues there is any possibility that it will happen (the users limit is exceeded).
+            if ($this->companyUsersLimit === 0 && $availablePositions <= 0 && $this->adminName) {
+                throw new RequestException(ERRORS::USERS_LIMIT_REACHED);
+            }
+        }
+
 
         $this->createCompany();
 
@@ -118,7 +143,7 @@ class AddCompanyController extends Controller
             }
         }
 
-        Log::createLog('ADD_COMPANY', $this->business_name);
+        Log::createLog('ADD_COMPANY', $this->businessName);
 
         Response::respondSuccess();
     }
@@ -133,10 +158,11 @@ class AddCompanyController extends Controller
         $this->company = new Company();
 
         $this->company->setProperties([
-            'business_name' => $this->business_name,
+            'business_name' => $this->businessName,
             'nit' => $this->nit,
             'phone' => $this->phone,
-            'contact_name' => $this->contact_name
+            'contact_name' => $this->contactName,
+            'users_limit' => $this->companyUsersLimit
         ]);
 
         $this->company->store();

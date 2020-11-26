@@ -41,6 +41,8 @@ class EditCompanyController extends Controller
     private $nit;
     private $phone;
     private $contactName;
+    private $companyUsersLimit;
+
     private $newAdminName;
     private $newAdminEmail;
 
@@ -69,6 +71,9 @@ class EditCompanyController extends Controller
                         DataValidator::falseVal()
                     ),
                     'error' => ERRORS::INVALID_CONTACT_NAME
+                ], 'users_limit' => [
+                    'validation' => DataValidator::intVal()->min(0),
+                    'error' => ERRORS::INVALID_USERS_LIMIT
                 ],
                 'new_admin_name' => [
                     'validation' => [
@@ -77,11 +82,11 @@ class EditCompanyController extends Controller
                                 DataValidator::notBlank()->length(2, 100),
                                 DataValidator::falseVal()
                             ),
-                            'error' => ERRORS::INVALID_NAME
+                            'error' => ERRORS::INVALID_ADMIN_NAME
                         ],
                         [
                             'validation' => DataValidator::checkLimit('users'),
-                            'error' => ERRORS::USERS_LIMIT_EXCEEDED
+                            'error' => ERRORS::USERS_LIMIT_REACHED
                         ]
                     ]
                 ],
@@ -103,6 +108,7 @@ class EditCompanyController extends Controller
         $this->nit = Controller::request('nit');
         $this->phone = Controller::request('phone');
         $this->contactName = Controller::request('contact_name');
+        $this->companyUsersLimit = (int)Controller::request('users_limit');
 
         $this->newAdminName = Controller::request('new_admin_name');
         $this->newAdminEmail = Controller::request('new_admin_email');
@@ -129,7 +135,8 @@ class EditCompanyController extends Controller
             'business_name' => $this->businessName,
             'nit' => $this->nit,
             'phone' => $this->phone,
-            'contact_name' => $this->contactName
+            'contact_name' => $this->contactName,
+            'users_limit' => $this->companyUsersLimit
         ]);
 
         if ($this->newAdminEmail) {
@@ -229,11 +236,11 @@ class EditCompanyController extends Controller
 
         } else {
             if ($this->newAdminEmail && !$this->newAdminName) {
-                throw new RequestException(ERRORS::INVALID_NAME);
+                throw new RequestException(ERRORS::INVALID_ADMIN_NAME);
             }
 
             if (!$this->newAdminEmail && $this->newAdminName) {
-                throw new RequestException(ERRORS::INVALID_EMAIL);
+                throw new RequestException(ERRORS::INVALID_ADMIN_EMAIL);
             }
         }
 
@@ -241,6 +248,76 @@ class EditCompanyController extends Controller
 
         if (!$banRow->isNull()) {
             throw new RequestException(ERRORS::ALREADY_BANNED);
+        }
+
+        $this->checkLimits();
+    }
+
+
+    private function checkLimits()
+    {
+        $company = $this->company;
+        $oldAdmin = $this->company->admin;
+        $usersInCompany = User::count(' company_id = ? ', [$company->id]);
+
+        $globalUsersLimit = PlanLimit::findOne()->users;
+
+        // These companies do not have reserved user positions (limit), so the actual number of users they have is the "reserved" positions they have.
+        // Do not include the users of the current company (if it is a company without limits), as they would be part of the possible limit to be established.
+        $usersInCompaniesWithoutLimit = (int)RedBean::getCell('SELECT COUNT(u.id) FROM `user` u INNER JOIN company c  ON u.company_id = c.id WHERE c.users_limit = 0 and c.id != ? ', [$this->companyId]);
+
+        // The sum of all companies users-limit (reserved positions)
+        // Do not include the limit of the current company (if it is a company with limit), as it would be part of the possible limit to be established.
+        $companiesLimit = (int)Company::getCell('SELECT SUM(users_limit) FROM company WHERE id != ?', [$this->companyId]);
+
+        // This is the number of positions that are not reserved (reserved = the companies users_limit) or occupied,
+        // plus the number of reserved positions in the current company (or the number of users in the company, if it has no users_limit).
+        $availablePositions = $globalUsersLimit - $companiesLimit - $usersInCompaniesWithoutLimit;
+
+        // If there is an admin, it will be replaced by the new one (no problem here),
+        // if not, a new admin (user) will be created (+1 user for the company and this can affect the users_limit)
+        $tryingToAddNewAdmin = !$oldAdmin && $this->newAdminName;
+        if ($tryingToAddNewAdmin) {
+            $usersInCompany++;
+        }
+
+
+        // If tying to set a new users_limit
+        if ($this->companyUsersLimit !== (int)$company->users_limit) {
+
+            // If there is a global limit (zero = unlimited) and the there is not available positions
+            if ($globalUsersLimit > 0 && $this->companyUsersLimit > $availablePositions) {
+                throw new RequestException(ERRORS::INVALID_USERS_LIMIT);
+            }
+
+            // If the new limit does not cover existing users (including the new admin, in case of trying to
+            // modify the users_limit and the admin at the same time)
+            if ($this->companyUsersLimit > 0 && $this->companyUsersLimit < $usersInCompany) {
+
+                // If the new limit match with the current number of users in the company (minus the new user that is not in the DB yet)
+                if ($tryingToAddNewAdmin && $this->companyUsersLimit === ($usersInCompany - 1)) {
+                    throw new RequestException(ERRORS::USERS_LIMIT_REACHED);
+                }
+                // else the problem is the new limit, is too low
+                throw new RequestException(ERRORS::INVALID_USERS_LIMIT);
+            }
+        }
+
+
+        // If trying to add a new admin (+1 user for the company)
+        if ($tryingToAddNewAdmin) {
+            // available user positions, excluding those of this company (-1 for the new user that is not in the DB yet)
+            $realAvailablePositions = $availablePositions - ($usersInCompany - 1);
+
+            // If the company does not have a user limit, but there is not available positions (plan limit reached).
+            if ($this->companyUsersLimit === 0 && $realAvailablePositions === 0) {
+                throw new RequestException(ERRORS::USERS_LIMIT_REACHED);
+            }
+
+            // If the new number of users (remember: + 1 for the new admin) is going to exceed the limit
+            if ($this->companyUsersLimit > 0 && $usersInCompany > $this->companyUsersLimit) {
+                throw new RequestException(ERRORS::USERS_LIMIT_REACHED);
+            }
         }
     }
 }
