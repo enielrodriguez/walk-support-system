@@ -212,21 +212,21 @@ class AddCompanyWidget extends React.Component {
 
     getUsersLimitInfo() {
         return (
-            <div className="add-company-widget__level-info">
-                <div className="add-company-widget__level-info-box">
-                    <span className="add-company-widget__level-info-title"> - </span>
+            <div className="add-company-widget__limit-info">
+                <div className="add-company-widget__limit-info-box">
+                    <span className="add-company-widget__limit-info-title"> - </span>
                     <span
-                        className="add-company-widget__level-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_1')}</span>
+                        className="add-company-widget__limit-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_1')}</span>
                 </div>
-                <div className="add-company-widget__level-info-box">
-                    <span className="add-company-widget__level-info-title"> - </span>
+                <div className="add-company-widget__limit-info-box">
+                    <span className="add-company-widget__limit-info-title"> - </span>
                     <span
-                        className="add-company-widget__level-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_2')}</span>
+                        className="add-company-widget__limit-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_2')}</span>
                 </div>
-                <div className="add-company-widget__level-info-box">
-                    <span className="add-company-widget__level-info-title"> - </span>
+                <div className="add-company-widget__limit-info-box">
+                    <span className="add-company-widget__limit-info-title"> - </span>
                     <span
-                        className="add-company-widget__level-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_3')}</span>
+                        className="add-company-widget__limit-info-description">{i18n('COMPANY_USERS_LIMIT_INFO_3')}</span>
                 </div>
             </div>
         );

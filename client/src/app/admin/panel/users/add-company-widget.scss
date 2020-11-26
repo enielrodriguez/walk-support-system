@@ -1,8 +1,6 @@
 @import '../../../../scss/vars';
 
 .add-company-widget {
-    padding: 30px;
-    text-align: center;
 
     &__form {
         margin-bottom: 20px;
@@ -10,7 +8,6 @@
 
     &__inputs {
         display: inline-block;
-        margin: 0 auto;
     }
 
     &__warning {
@@ -24,10 +21,9 @@
         color: $dark-grey;
         margin-top: 25px;
         margin-bottom: 10px;
-        width: 350px;
     }
 
-    &__level-info {
+    &__limit-info {
         width: 360px;
         font-size: $font-size--sm;
 
