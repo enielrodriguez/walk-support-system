@@ -8,7 +8,8 @@ class NotSignedIntValidator extends Validator {
     }
 
     validate(value, form) {
-        if (value === '' || Number.isNaN(+value) || +value < 0) return this.getError(this.errorKey);
+        if (value === '' || !Number.isInteger(+value) || +value < 0)
+            return this.getError(this.errorKey);
     }
 }
 
