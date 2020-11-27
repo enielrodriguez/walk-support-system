@@ -21,7 +21,7 @@ class Validator
         $permissions = [
             'any' => true,
             'user' => Controller::isUserLogged(),
-            'company_admin' => Controller::isUserLogged() && (Controller::isCompanyAdminLogged() || Controller::isStaffLogged()),
+            'company_admin' => Controller::isCompanyAdminLogged() || Controller::isStaffLogged(),
             'staff_1' => Controller::isStaffLogged(1),
             'staff_2' => Controller::isStaffLogged(2),
             'staff_3' => Controller::isStaffLogged(3)
