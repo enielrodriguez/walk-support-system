@@ -22,8 +22,13 @@ class Autocomplete extends React.Component {
         onItemSelected: React.PropTypes.func,
         getItemListFromQuery: React.PropTypes.func,
         disabled: React.PropTypes.bool,
-        comparerFunction: React.PropTypes.func
+        comparerFunction: React.PropTypes.func,
+        allowOneValue: React.PropTypes.bool
     };
+
+    static defPropTypes = {
+        allowOneValue: false
+    }
 
     searchApiRequestId = 1;
 
@@ -47,37 +52,39 @@ class Autocomplete extends React.Component {
     render() {
         let inputWidth = 0;
 
-        if(this.span) {
+        if (this.span) {
             this.span.style.display = 'inline';
             this.span.textContent = this.state.inputValue;
-            inputWidth = Math.ceil(this.span.getBoundingClientRect().width)-31;
+            inputWidth = Math.ceil(this.span.getBoundingClientRect().width) - 31;
             this.span.style.display = 'none';
         }
 
         return (
             <div className="autocomplete">
                 <label className="autocomplete__label" onClick={(e) => e.stopPropagation()}>
+
                     <DropDown
                         className="autocomplete__drop-down"
                         items={this.getDropdownList()}
                         size="large"
                         onChange={e => this.onChangeDropDown(e)}
                         onMenuToggle={e => this.onMenuToggle(e)}
-                        opened={this.state.opened}
+                        opened={this.state.opened && !(this.props.allowOneValue && this.state.selectedItems.length > 0)}
                         onHighlightedIndexChange={n => this.onHighlightedIndexChange(n)}
                         highlightedIndex={this.state.highlightedIndex}
                         loading={this.state.loading}
                     >
                         {this.renderSelectedItems()}
                         <input
+                            disabled={this.props.allowOneValue && this.state.selectedItems.length > 0}
                             className="autocomplete__input"
                             ref={input => this.input = input}
                             value={this.state.inputValue}
                             onFocus={() => this.searchApi('')}
                             onKeyDown={e => this.onKeyDown(e)}
                             onChange={e => this.onChangeInput(e.target.value)}
-                            style={this.span ? {width: inputWidth} : {}} />
-                        <span className="sizer" ref={span => this.span = span} />
+                            style={this.span ? {width: inputWidth} : {}}/>
+                        <span className="sizer" ref={span => this.span = span}/>
                     </DropDown>
                 </label>
             </div>
@@ -89,12 +96,12 @@ class Autocomplete extends React.Component {
     }
 
     renderSelectedItem(item) {
-        return  <Tag
-                    name={item.contentOnSelected || item.name}
-                    color={item.color}
-                    showDeleteButton
-                    onRemoveClick={this.onRemoveClick.bind(this, item.id, item.isStaff)}
-                    key={"tagId__" + item.id + (item.isStaff ? "__staff" : null)} />
+        return <Tag
+            name={item.contentOnSelected || item.name}
+            color={item.color}
+            showDeleteButton
+            onRemoveClick={this.onRemoveClick.bind(this, item.id, item.isStaff)}
+            key={"tagId__" + item.id + (item.isStaff ? "__staff" : null)}/>
     }
 
     getDropdownList() {
@@ -103,7 +110,7 @@ class Autocomplete extends React.Component {
         } = this.props;
         let dropdownList = [];
 
-        if(items !== undefined) {
+        if (items !== undefined) {
             const list = this.getUnselectedList(items, this.getSelectedItems());
 
             dropdownList = list.filter(s => _.includes(s.name.toLowerCase(), this.state.inputValue.toLowerCase()));
@@ -115,14 +122,14 @@ class Autocomplete extends React.Component {
     }
 
     getUnselectedList(list, selectedList) {
-        let { comparerFunction } = this.props;
+        let {comparerFunction} = this.props;
         return (
-            comparerFunction ? comparerFunction(list, selectedList) : list.filter(item  => !_.some(selectedList, {id: item.id}))
+            comparerFunction ? comparerFunction(list, selectedList) : list.filter(item => !_.some(selectedList, {id: item.id}))
         );
     }
 
     getSelectedItems() {
-        const { values, } = this.props;
+        const {values,} = this.props;
 
         return (values !== undefined) ? values : this.state.selectedItems;
     }
@@ -136,7 +143,8 @@ class Autocomplete extends React.Component {
             item => {
                 return isStaffItem !== undefined ?
                     item.isStaff !== isStaffItem || item.id !== itemId :
-                    item.id !== itemId});
+                    item.id !== itemId
+            });
         event.preventDefault();
 
         this.setState({
@@ -156,7 +164,7 @@ class Autocomplete extends React.Component {
             onItemSelected,
         } = this.props;
 
-        if(this.getDropdownList().length) {
+        if (this.getDropdownList().length) {
             const selectedItem = this.getDropdownList()[e.index];
             const newList = [...this.getSelectedItems(), selectedItem];
             this.setState({
@@ -173,7 +181,7 @@ class Autocomplete extends React.Component {
     }
 
     onChangeInput(str) {
-        const { getItemListFromQuery, } = this.props;
+        const {getItemListFromQuery,} = this.props;
 
         this.setState({
             inputValue: str,
@@ -181,7 +189,7 @@ class Autocomplete extends React.Component {
             highlightedIndex: 0,
         });
 
-        if(getItemListFromQuery !== undefined) {
+        if (getItemListFromQuery !== undefined) {
             this.setState({
                 loading: true,
             });
@@ -208,19 +216,19 @@ class Autocomplete extends React.Component {
             onRemoveClick,
         } = this.props;
 
-        if(this.props.disabled) {
+        if (this.props.disabled) {
             event.stopPropagation();
             event.preventDefault();
 
             return;
         }
 
-        if(keyCode(event) === "space") {
+        if (keyCode(event) === "space") {
             event.stopPropagation();
         }
 
-        if(keyCode(event) === "backspace" && this.state.inputValue === "") {
-            const lastSelectedItemsIndex = this.getSelectedItems().length-1;
+        if (keyCode(event) === "backspace" && this.state.inputValue === "") {
+            const lastSelectedItemsIndex = this.getSelectedItems().length - 1;
             const newList = this.getSelectedItems().slice(0, lastSelectedItemsIndex);
             this.setState({
                 selectedItems: newList,
@@ -229,7 +237,7 @@ class Autocomplete extends React.Component {
             onChange && onChange(newList);
             this.searchApi("", newList);
 
-            if(this.getSelectedItems().length) {
+            if (this.getSelectedItems().length) {
                 const itemId = this.getSelectedItems()[lastSelectedItemsIndex].id;
 
                 onRemoveClick && onRemoveClick(itemId);
@@ -237,25 +245,26 @@ class Autocomplete extends React.Component {
         }
     }
 
-    searchApi(query, blacklist=this.getSelectedItems()) {
-        const { getItemListFromQuery } = this.props;
+    searchApi(query, blacklist = this.getSelectedItems()) {
+
+        const {getItemListFromQuery} = this.props;
         let id = ++this.searchApiRequestId;
 
-        if(getItemListFromQuery) {
+        if (getItemListFromQuery) {
             this.setState({loading: true});
 
             getItemListFromQuery(query, blacklist)
-            .then(result => {
-                if (id === this.searchApiRequestId){
-                    this.setState({
-                        itemsFromQuery: result,
-                        loading: false,
-                    });
-                }
-            })
-            .catch(() => this.setState({
-                loading: false,
-            }));
+                .then(result => {
+                    if (id === this.searchApiRequestId) {
+                        this.setState({
+                            itemsFromQuery: result,
+                            loading: false,
+                        });
+                    }
+                })
+                .catch(() => this.setState({
+                    loading: false,
+                }));
         }
     }
 }
