@@ -27,30 +27,35 @@ class CheckLimit extends AbstractRule
             return true;
         }
 
-        $planLimit = \PlanLimit::findOne()->toArray();
-        $itsOk = (int)$planLimit[$this->limitToCheck] === 0;
+        $planLimit = \PlanLimit::findOne();
+        if ($planLimit->isNull()) {
+            return true;
+        }
 
-        if (!$itsOk) {
+        $planLimit = $planLimit->toArray();
+        $itsUnlimited = (int)$planLimit[$this->limitToCheck] === 0;
+
+        if (!$itsUnlimited) {
             switch ($this->limitToCheck) {
                 case 'users':
-                    $itsOk = \User::count() < $planLimit['users'];
+                    $itsUnlimited = \User::count() < $planLimit['users'];
                     break;
                 case 'companies':
-                    // <= because there is a default company
-                    $itsOk = \Company::count() <= $planLimit['companies'];
+                    // <= because there is a default company (required to add users without defining a company)
+                    $itsUnlimited = \Company::count() <= $planLimit['companies'];
                     break;
                 case 'staff':
                     // <= because there is a default staff (system admin)
-                    $itsOk = \Staff::count() <= $planLimit['staff'];
+                    $itsUnlimited = \Staff::count() <= $planLimit['staff'];
                     break;
                 case 'departments':
-                    // <= because there is a default department
-                    $itsOk = \Department::count() <= $planLimit['departments'];
+                    // there is a default department but it can be edited and deleted
+                    $itsUnlimited = \Department::count() < $planLimit['departments'];
                     break;
             }
         }
 
-        return $itsOk;
+        return $itsUnlimited;
     }
 
     private function isLimitNameValid($dataStoreName)

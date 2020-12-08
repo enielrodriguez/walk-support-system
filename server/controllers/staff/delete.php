@@ -45,9 +45,8 @@ class DeleteStaffController extends Controller {
         $staffId = Controller::request('staffId');
         $staff = Staff::getDataStore($staffId);
 
-        if($staffId === Controller::getLoggedUser()->id) {
+        if($staffId === Controller::getLoggedUser()->id || $staff->isSuperUser()) {
             throw new RequestException(ERRORS::INVALID_STAFF);
-            return;
         }
 
         foreach($staff->sharedTicketList as $ticket) {

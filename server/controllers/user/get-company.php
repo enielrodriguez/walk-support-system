@@ -49,14 +49,17 @@ class GetCompanyByIdController extends Controller
         $users = User::find(' company_id = ? ', [$companyId]);
 
         $listUsers = [];
+        $listTickets = [];
 
         foreach ($users as $user) {
             $listUsers [] = $user->toArray(true);
+            array_push($listTickets, ...$user->sharedTicketList->toArray(true));
         }
 
         Response::respondSuccess([
             'company' => $company->toArray(),
-            'users' => $listUsers
+            'users' => $listUsers,
+            'tickets' => $listTickets
         ]);
     }
 }

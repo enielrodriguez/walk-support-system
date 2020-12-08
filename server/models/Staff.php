@@ -33,7 +33,8 @@ class Staff extends DataStore {
             'sharedTicketList',
             'lastLogin',
             'ownStatList',
-            'sendEmailOnNewTicket'
+            'sendEmailOnNewTicket',
+            'superUser'
         ];
     }
 
@@ -43,6 +44,11 @@ class Staff extends DataStore {
             'ownStatList' => new DataStoreList(),
             'sendEmailOnNewTicket' => 0
         ];
+    }
+
+    public function isSuperUser()
+    {
+        return (bool)$this->superUser;
     }
 
     public static function getUser($value, $property = 'id') {

@@ -1,5 +1,8 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
+DataValidator::with('CustomValidations', true);
 
 /**
  * @api {post} /staff/last-events Get last events
@@ -21,36 +24,54 @@ use Respect\Validation\Validator as DataValidator;
  * @apiSuccess {[TicketEvent](#api-Data_Structures-ObjectTicketevent)[]} data Array of last events
  *
  */
-
-class LastEventsStaffController extends Controller {
+class LastEventsStaffController extends Controller
+{
     const PATH = '/last-events';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'staff_1',
             'requestData' => [
                 'page' => [
                     'validation' => DataValidator::numeric(),
                     'error' => ERRORS::INVALID_PAGE
+                ],
+                'dateRange' => [
+                    'validation' => DataValidator::oneOf(DataValidator::validDateRange(), DataValidator::nullType()),
+                    'error' => ERRORS::INVALID_DATE_RANGE_FILTER
                 ]
             ]
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
         $page = Controller::request('page');
+        $dateRange = json_decode(Controller::request('dateRange'));
 
-        $user = Controller::getLoggedUser();
-        $query = ' (';
-        foreach ($user->sharedTicketList as $ticket) {
-            $query .= 'ticket_id =' . $ticket->id . ' OR ';
-        }
-        $query = substr($query,0,-3);
-        $query .= ') ORDER BY id desc LIMIT ? OFFSET ?' ;
+        $staff = Controller::getLoggedUser();
 
-        if(Ticketevent::count() && !$user->sharedTicketList->isEmpty()) {
-            $eventList = Ticketevent::find($query, [10, 10*($page-1)]);
+        if (Ticketevent::count() && !$staff->sharedTicketList->isEmpty()) {
+
+            $query = ' (';
+            foreach ($staff->sharedTicketList as $ticket) {
+                $query .= 'ticket_id =' . $ticket->id . ' OR ';
+            }
+            $query = substr($query, 0, -3);
+
+            if ($dateRange) {
+                $query .= 'and date >= ? and date <= ? ';
+                $params = [$dateRange[0], $dateRange[1], 10, 10 * ($page - 1)];
+            } else {
+                $params = [10, 10 * ($page - 1)];
+            }
+
+            $query .= ') ';
+            $query .= 'ORDER BY id desc LIMIT ? OFFSET ?';
+
+            $eventList = Ticketevent::find($query, $params);
             Response::respondSuccess($eventList->toArray());
         } else {
             Response::respondSuccess([]);

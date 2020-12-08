@@ -60,10 +60,6 @@
  * @apiError {String} INVALID_TAG The tag is invalid.
  */
 /**
- * @apiDefine INIT_SETTINGS_DONE
- * @apiError {String} INIT_SETTINGS_DONE The init settings are already done.
- */
-/**
  * @apiDefine INVALID_OLD_PASSWORD
  * @apiError {String} INVALID_OLD_PASSWORD The old password is invalid.
  */
@@ -345,7 +341,6 @@ class ERRORS
     public const INVALID_DEPARTMENT = 'INVALID_DEPARTMENT';
     public const INVALID_TICKET = 'INVALID_TICKET';
     public const INVALID_TAG = 'INVALID_TAG';
-    public const INIT_SETTINGS_DONE = 'INIT_SETTINGS_DONE';
     public const INVALID_OLD_PASSWORD = 'INVALID_OLD_PASSWORD';
     public const INVALID_CAPTCHA = 'INVALID_CAPTCHA';
     public const INVALID_TICKET_EVENT = 'INVALID_TICKET_EVENT';
@@ -429,4 +424,9 @@ class ERRORS
     public const STAFF_LIMIT_REACHED = 'STAFF_LIMIT_REACHED';
 
     public const INVALID_USERS_LIMIT = 'INVALID_USERS_LIMIT';
+    public const INVALID_LIMIT = 'INVALID_LIMIT';
+    public const INVALID_CONFIG_FILE = 'INVALID_CONFIG_FILE';
+    public const INVALID_KEY = 'INVALID_KEY';
+    public const INVALID_HOST = 'INVALID_HOST';
+    public const INVALID_TIMEZONE = 'INVALID_TIMEZONE';
 }

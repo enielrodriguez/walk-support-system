@@ -1,4 +1,5 @@
 <?php
+
 use RedBeanPHP\Facade as RedBean;
 
 /**
@@ -16,24 +17,27 @@ use RedBeanPHP\Facade as RedBean;
  * @apiSuccess {Boolean} data Indicates if the installation is already done.
  *
  */
-
-class InstallationDoneController extends Controller {
+class InstallationDoneController extends Controller
+{
     const PATH = '/installation-done';
     const METHOD = 'POST';
 
-    public static function isInstallationDone() {
-        return RedBean::testConnection() && !Setting::isTableEmpty() && !Staff::isTableEmpty();
+    public static function isInstallationDone()
+    {
+        return RedBean::testConnection() && !Setting::isTableEmpty() && !Staff::isTableEmpty() && !PlanLimit::isTableEmpty();
     }
-    
-    public function validations() {
+
+    public function validations()
+    {
         return [
             'permission' => 'any',
             'requestData' => []
         ];
     }
 
-    public function handler() {
-        if(InstallationDoneController::isInstallationDone()) {
+    public function handler()
+    {
+        if (InstallationDoneController::isInstallationDone()) {
             Response::respondSuccess(1);
         } else {
             Response::respondSuccess(0);

@@ -61,7 +61,7 @@ class GetUserController extends Controller
             'email' => $user->email,
             'staff' => false,
             'company' => $user->company->toArray(true),
-            'isCompanyAdmin' => $user->company->toArray()['admin']['id'] === $user->id,
+            'isCompanyAdmin' => User::isCompanyAdmin($user),
             'verified' => !$user->verificationToken,
             'tickets' => $user->sharedTicketList->toArray(true),
             'customfields' => $user->xownCustomfieldvalueList->toArray(),

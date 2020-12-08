@@ -71,6 +71,7 @@ class CreateController extends Controller {
                 ]
             ]
         ];
+
         if (!Controller::isLoginMandatory() && !Controller::isStaffLogged() && !Controller::isUserLogged()) {
             $validations['permission'] = 'any';
             $validations['requestData']['captcha'] = [

@@ -41,19 +41,19 @@ class EditStaffController extends Controller
             'permission' => 'staff_1',
             'requestData' => [
                 'name' => [
-                    'validation' => DataValidator::oneOf(DataValidator::notBlank()->length(2, 55), DataValidator::falseVal()),
+                    'validation' => DataValidator::optional(DataValidator::notBlank()->length(2, 55)),
                     'error' => ERRORS::INVALID_NAME
                 ],
                 'email' => [
-                    'validation' => DataValidator::oneOf(DataValidator::email(), DataValidator::falseVal()),
+                    'validation' => DataValidator::optional(DataValidator::email()),
                     'error' => ERRORS::INVALID_EMAIL
                 ],
                 'password' => [
-                    'validation' => DataValidator::oneOf(DataValidator::notBlank()->length(5, 200), DataValidator::falseVal()),
+                    'validation' => DataValidator::optional(DataValidator::notBlank()->length(6, 200)),
                     'error' => ERRORS::INVALID_PASSWORD
                 ],
                 'level' => [
-                    'validation' => DataValidator::oneOf(DataValidator::between(1, 3, true), DataValidator::falseVal()),
+                    'validation' => DataValidator::optional(DataValidator::between(1, 3, true)),
                     'error' => ERRORS::INVALID_LEVEL
                 ]
 
@@ -73,6 +73,11 @@ class EditStaffController extends Controller
             if ($this->staffInstance->isNull()) {
                 throw new RequestException(ERRORS::INVALID_STAFF);
             }
+
+            if ($this->staffInstance->isSuperUser() && !Controller::getLoggedUser()->isSuperUser()) {
+                throw new RequestException(ERRORS::NO_PERMISSION);
+            }
+
         } else {
             throw new RequestException(ERRORS::NO_PERMISSION);
         }
@@ -132,8 +137,8 @@ class EditStaffController extends Controller
             $this->staffInstance->profilePic = ($fileUploader instanceof FileUploader) ? $fileUploader->getFileName() : null;
         }
 
-        if (Controller::request('sendEmailOnNewTicket') !== null && Controller::request('sendEmailOnNewTicket') !== '' && $this->isModifyingCurrentStaff()) {
-            $this->staffInstance->sendEmailOnNewTicket = intval(Controller::request('sendEmailOnNewTicket'));
+        if (Controller::request('sendEmailOnNewTicket') && $this->isModifyingCurrentStaff()) {
+            $this->staffInstance->sendEmailOnNewTicket = (int)Controller::request('sendEmailOnNewTicket');
         }
 
         $this->staffInstance->store();

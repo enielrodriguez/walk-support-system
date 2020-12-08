@@ -66,9 +66,8 @@ class EditCompanyController extends Controller
                     'validation' => DataValidator::notBlank()->length(6, 100),
                     'error' => ERRORS::INVALID_PHONE
                 ], 'contact_name' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::notBlank()->length(5, 100),
-                        DataValidator::falseVal()
+                    'validation' => DataValidator::optional(
+                        DataValidator::notBlank()->length(5, 100)
                     ),
                     'error' => ERRORS::INVALID_CONTACT_NAME
                 ], 'users_limit' => [
@@ -78,9 +77,8 @@ class EditCompanyController extends Controller
                 'new_admin_name' => [
                     'validation' => [
                         [
-                            'validation' => DataValidator::oneOf(
-                                DataValidator::notBlank()->length(2, 100),
-                                DataValidator::falseVal()
+                            'validation' => DataValidator::optional(
+                                DataValidator::notBlank()->length(2, 100)
                             ),
                             'error' => ERRORS::INVALID_ADMIN_NAME
                         ],
@@ -91,9 +89,8 @@ class EditCompanyController extends Controller
                     ]
                 ],
                 'new_admin_email' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::email(),
-                        DataValidator::falseVal()
+                    'validation' => DataValidator::optional(
+                        DataValidator::email()
                     ),
                     'error' => ERRORS::INVALID_ADMIN_EMAIL
                 ],

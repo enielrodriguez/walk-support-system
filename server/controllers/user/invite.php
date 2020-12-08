@@ -66,9 +66,8 @@ class InviteUserController extends Controller
                     'error' => ERRORS::INVALID_EMAIL
                 ],
                 'companyId' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::dataStoreId('company'),
-                        DataValidator::falseVal()
+                    'validation' => DataValidator::optional(
+                        DataValidator::dataStoreId('company')
                     ),
                     'error' => ERRORS::INVALID_COMPANY
                 ]

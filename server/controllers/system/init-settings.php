@@ -1,6 +1,8 @@
 <?php
+
 use RedBeanPHP\Facade as RedBean;
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -28,45 +30,82 @@ DataValidator::with('CustomValidations', true);
  * @apiParam {Boolean} mandatory-login Indicates if the login is mandatory.
  * @apiParam {Number} default-department-id Indicates the id of the default department
  * @apiParam {Boolean} locked-department Indicates if the default department is locked or not
+ *
  * @apiUse INVALID_LANGUAGE
- * @apiUse INIT_SETTINGS_DONE
+ * @apiUse INVALID_SETTING If some parameter has invalid value, but more importantly,
+ * if both, mandatory-login and registration, are false.
  *
  * @apiSuccess {Object} data Empty object
  *
  */
-
-
-class InitSettingsController extends Controller {
+class InitSettingsController extends Controller
+{
     const PATH = '/init-settings';
     const METHOD = 'POST';
 
-    public function validations() {
+    private $defDepId;
+
+    public function validations()
+    {
         return [
-            'permission' => 'any',
+            'permission' => 'installer',
             'requestData' => [
                 'language' => [
-                    'validation' => DataValidator::validLanguage(),
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::validLanguage(),
+                        DataValidator::nullType()
+                    ),
                     'error' => ERRORS::INVALID_LANGUAGE
+                ],
+                'mandatory-login' => [
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::in([0, 1]),
+                        DataValidator::nullType()
+                    ),
+                    'error' => ERRORS::INVALID_SETTING
+                ],
+                'registration' => [
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::in([0, 1]),
+                        DataValidator::nullType()
+                    ),
+                    'error' => ERRORS::INVALID_SETTING
+                ],
+                'allow-attachments' => [
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::in([0, 1]),
+                        DataValidator::nullType()
+                    ),
+                    'error' => ERRORS::INVALID_SETTING
                 ]
             ]
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
+        $this->validateUserSystemSettings();
+
         if (Setting::isTableEmpty()) {
             RedBean::exec(file_get_contents('data/db_schema.sql'));
-            $this->storeGlobalSettings();
+
             $this->storeMailTemplates();
             $this->storeLanguages();
-            $this->storeMockedDepartments();
+            $this->storeMockedDepartment();
+            $this->storeMockedCompany();
 
-            Response::respondSuccess();
+            $this->storeGlobalSettings();
         } else {
-            throw new RequestException(ERRORS::INIT_SETTINGS_DONE);
+            $this->editGlobalSettings();
         }
+
+        Response::respondSuccess();
     }
 
-    private function storeGlobalSettings() {
+    private function storeGlobalSettings()
+    {
+        $url = Controller::request('url') ?: ('http://' . $_SERVER['HTTP_HOST']);
+
         $this->storeSettings([
             'language' => Controller::request('language'),
             'recaptcha-public' => '',
@@ -83,21 +122,46 @@ class InitSettingsController extends Controller {
             'allow-attachments' => !!Controller::request('allow-attachments'),
             'max-size' => 1,
             'title' => Controller::request('title') ? Controller::request('title') : 'Support Center',
-            'url' => Controller::request('url')  ? Controller::request('url') : ('http://' . $_SERVER['HTTP_HOST']),
+            'url' => $url,
             'registration' => !!Controller::request('registration'),
             'last-stat-day' => date('YmdHi', strtotime(' -12 day ')),
             'ticket-gap' => Hashing::generateRandomPrime(100000, 999999),
             'ticket-first-number' => Hashing::generateRandomNumber(100000, 999999),
-            'session-prefix' => 'opensupports-'.Hashing::generateRandomToken().'_',
-            'mail-template-header-image' => 'https://s3.amazonaws.com/opensupports/logo.png',
-            'default-department-id' => 1,
+            'session-prefix' => 'opensupports-' . Hashing::generateRandomToken() . '_',
+            'mail-template-header-image' => $url . '/images/logo.png',
+            'default-department-id' => $this->defDepId,
             'default-is-locked' => false,
             'imap-token' => '',
             'mandatory-login' => !!Controller::request('mandatory-login')
         ]);
     }
 
-    private function storeMailTemplates() {
+    private function editGlobalSettings()
+    {
+        $settings = [
+            'language',
+            'mandatory-login',
+            'registration',
+            'title',
+            'allow-attachments',
+            'server-email',
+            'smtp-host',
+            'smtp-user',
+            'smtp-pass'
+        ];
+
+        foreach ($settings as $setting) {
+            $settingVal = Controller::request($setting);
+            if ($settingVal !== null && $settingVal !== '') {
+                $settingInstance = Setting::getSetting($setting);
+                $settingInstance->value = $settingVal;
+                $settingInstance->store();
+            }
+        }
+    }
+
+    private function storeMailTemplates()
+    {
         $mailLanguages = MailTexts::getTexts();
 
         foreach ($mailLanguages as $language => $mailTemplate) {
@@ -118,7 +182,8 @@ class InitSettingsController extends Controller {
         }
     }
 
-    private function storeSettings($settings) {
+    private function storeSettings($settings)
+    {
         foreach ($settings as $settingName => $settingValue) {
             $setting = new Setting();
             $setting->setProperties([
@@ -129,10 +194,12 @@ class InitSettingsController extends Controller {
             $setting->store();
         }
     }
-    private function storeLanguages() {
+
+    private function storeLanguages()
+    {
         $defaultLanguage = Controller::request('language');
 
-        foreach(Language::LANGUAGES as $languageCode) {
+        foreach (Language::LANGUAGES as $languageCode) {
             $language = new Language();
             $language->setProperties([
                 'code' => $languageCode,
@@ -144,16 +211,32 @@ class InitSettingsController extends Controller {
         }
     }
 
-    private function storeMockedDepartments() {
-        $departments = [
-            'Help and Support'
-        ];
+    private function storeMockedDepartment()
+    {
+        $department = new Department();
+        $department->name = 'Help and Support';
+        $department->private = 0;
+        $this->defDepId = $department->store();
+    }
 
-        foreach ($departments as $departmentName) {
-            $department = new Department();
-            $department->name = $departmentName;
-            $department->private = 0;
-            $department->store();
+    private function storeMockedCompany()
+    {
+        $company = new Company();
+        $company->setProperties([
+            'nit' => 'default_company',
+            'business_name' => 'Default Company',
+            'phone' => 'default_company'
+        ]);
+        $company->store();
+    }
+
+    private function validateUserSystemSettings()
+    {
+        $mandatoryLogin = Controller::request('mandatory-login');
+        $registration = Controller::request('registration');
+
+        if ($mandatoryLogin !== null && $registration !== null && !$mandatoryLogin && !$registration) {
+            throw new \Respect\Validation\Exceptions\ValidationException(ERRORS::INVALID_SETTING);
         }
     }
 }

@@ -154,26 +154,26 @@ class AdminPanelViewUser extends React.Component {
 
     renderNotVerified() {
         return (
-            <InfoTooltip className="admin-panel-view-user__unverified" type="warning" text={i18n('UNVERIFIED_EMAIL')}/>
+            <InfoTooltip className="admin-panel-view-user__tooltip" type="warning" text={i18n('UNVERIFIED_EMAIL')}/>
         );
     }
 
     renderDisabled() {
         return (
-            <InfoTooltip className="admin-panel-view-user__unverified" type="warning" text={i18n('USER_DISABLED')}/>
+            <InfoTooltip className="admin-panel-view-user__tooltip" type="warning" text={i18n('USER_DISABLED')}/>
         );
     }
 
     renderAdmin() {
         return (
-            <InfoTooltip className="admin-panel-view-user__unverified" type="user-plus" size="sm"
+            <InfoTooltip className="admin-panel-view-user__tooltip" type="user-plus" size="sm"
                          text={i18n('COMPANY_ADMIN_DESCRIPTION')}/>
         );
     }
 
     renderForbiddenDelete() {
         return (
-            <InfoTooltip className="admin-panel-view-user__unverified" type="warning"
+            <InfoTooltip className="admin-panel-view-user__tooltip" type="warning"
                          text={i18n('COMPANY_ADMIN_DESCRIPTION')}/>
         );
     }

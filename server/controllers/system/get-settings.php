@@ -86,11 +86,15 @@ class GetSettingsController extends Controller
                 ];
             }
 
-            if (Controller::isStaffLogged(3)) {
+            if (Controller::isStaffLogged(3) || (InstallationDoneController::isInstallationDone() && Session::getInstance()->isInstallerLogged())) {
                 $settingsList['plan_limit'] = $this->getPlanLimit();
             } else if (Controller::isCompanyAdminLogged()) {
                 $settingsList['users_limit'] = Controller::getLoggedUser()->company->users_limit;
             }
+        }
+
+        if($logged = Session::getInstance()->isInstallerLogged()) {
+            $settingsList['installerLogged'] = $logged;
         }
 
         Response::respondSuccess($settingsList);
@@ -101,10 +105,10 @@ class GetSettingsController extends Controller
         $planLimit = PlanLimit::findOne()->toArray();
 
         $totalUsersCurrently = User::count();
-        // -1 because there is a default [entity]
+        // -1 because there is a default entity
         $totalStaffCurrently = Staff::count() - 1;
         $totalCompaniesCurrently = Company::count() - 1;
-        $totalDepartmentsCurrently = Department::count() - 1;
+        $totalDepartmentsCurrently = Department::count();
 
         $planLimit['unassigned_users_quota'] = null;
         $planLimit['total_users_currently'] = $totalUsersCurrently;

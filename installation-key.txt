@@ -1,0 +1,2 @@
+#Cambiar esta cadena de caracteres cada vez que se vaya a distribuir una copia. Los espacios en blanco al inicio y al final serán ignorados
+&AdxPxVbGwKTeA2

@@ -7,7 +7,7 @@
  */
 class PlanLimit extends DataStore
 {
-    const TABLE = 'plan_limit';
+    const TABLE = 'planlimit';
 
     public static function getProps()
     {

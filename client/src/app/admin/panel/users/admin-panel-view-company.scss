@@ -28,7 +28,7 @@
         margin-right: 20px;
     }
 
-    &__users-title {
+    &__users-title, &__tickets-title {
         font-size: $font-size--md;
         margin-bottom: 20px;
         text-align: left;

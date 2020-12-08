@@ -24,15 +24,12 @@ class CheckRequirementsController extends Controller {
 
     public function validations() {
         return [
-            'permission' => 'any',
+            'permission' => 'installer',
             'requestData' => []
         ];
     }
 
     public function handler() {
-        if(InstallationDoneController::isInstallationDone()) {
-          throw new RequestException(ERRORS::INIT_SETTINGS_DONE);
-        }
 
         Response::respondSuccess([
             'phpVersion' => [

@@ -1,6 +1,11 @@
 .admin-panel-custom-field-form {
     min-width: 400px;
 
+    &__form-container {
+        margin: auto;
+        width: fit-content;
+    }
+
     &__options {
 
         &-title {
@@ -24,7 +29,11 @@
     }
 
     &__buttons {
-        display: flex;
-        justify-content: space-between;
+        margin-top: 20px;
+        text-align: center;
+
+        &-close {
+            margin-top: 20px;
+        }
     }
 }

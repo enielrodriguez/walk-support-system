@@ -47,7 +47,7 @@ class RecoverPasswordController extends Controller {
                     'error' => ERRORS::INVALID_EMAIL
                 ],
                 'password' => [
-                    'validation' => DataValidator::notBlank()->length(5, 200),
+                    'validation' => DataValidator::notBlank()->length(6, 200),
                     'error' => ERRORS::INVALID_PASSWORD
                 ]
             ]

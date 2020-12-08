@@ -16,7 +16,7 @@ import { updateSearchTicketsFromURL } from './app/admin/panel/tickets/admin-pane
 import './main.scss';
 
 Array.prototype.swap = function (x,y) {
-    var b = this[x];
+    const b = this[x];
     this[x] = this[y];
     this[y] = b;
     return this;

@@ -1,17 +1,27 @@
 @import "../../scss/vars";
 
 .install-step-4 {
+
+    &__message {
+        margin-bottom: 20px;
+    }
+
     &__container {
         display: inline-flex;
         justify-content: space-between;
         width: 70%;
     }
 
-
-    &__previous {
-        margin-right: 20px;
+    &__buttons {
+        width: 55%;
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    &__next {
+
+    &__previous {
+        float: left;
     }
 }

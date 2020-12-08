@@ -10,12 +10,14 @@ import SessionActions from 'actions/session-actions';
 import StaffEditor from 'app/admin/panel/staff/staff-editor';
 import Header from 'core-components/header';
 import Loading from 'core-components/loading';
+import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 class AdminPanelViewStaff extends React.Component {
 
     state = {
         loading: true,
-        userData: {}
+        userData: {},
+        errorRetrievingData: false
     };
 
     componentDidMount() {
@@ -23,19 +25,21 @@ class AdminPanelViewStaff extends React.Component {
     }
 
     render() {
-        return (
-            <div className="admin-panel-view-staff">
-                <Header title={i18n('EDIT_STAFF')} description={i18n('EDIT_STAFF_DESCRIPTION')} />
-                {(this.state.loading) ? <Loading /> : <StaffEditor {...this.getProps()} />}
-            </div>
-        );
+        return this.state.loading ?
+            <LoadingWithMessage showMessage={this.state.errorRetrievingData} messageKey="NO_PERMISSION"/>
+            : (
+                <div className="admin-panel-view-staff">
+                    <Header title={i18n('EDIT_STAFF')} description={i18n('EDIT_STAFF_DESCRIPTION')}/>
+                    <StaffEditor {...this.getProps()} />
+                </div>
+            );
     }
 
     getProps() {
-        const { userData } = this.state;
+        const {userData} = this.state;
         const userDataWithNumericLevel = {
             ...userData,
-            level: userData.level*1,
+            level: userData.level * 1,
             sendEmailOnNewTicket: userData.sendEmailOnNewTicket === "1",
             myAccount: this.props.userEmail == userData.email
         };
@@ -53,7 +57,7 @@ class AdminPanelViewStaff extends React.Component {
             data: {
                 staffId: this.props.params.staffId
             }
-        }).then(this.onStaffRetrieved.bind(this));
+        }).then(this.onStaffRetrieved.bind(this)).catch(() => this.setState({errorRetrievingData: true}));
     }
 
     onStaffRetrieved(result) {
@@ -62,7 +66,7 @@ class AdminPanelViewStaff extends React.Component {
             userData: result.data
         });
 
-        if(this.props.userId == this.props.params.staffId) {
+        if (this.props.userId == this.props.params.staffId) {
             this.props.dispatch(SessionActions.getUserData(null, null, true))
         }
     }

@@ -75,7 +75,7 @@ class SignUpController extends Controller
                     'error' => ERRORS::INVALID_EMAIL
                 ],
                 'password' => [
-                    'validation' => DataValidator::notBlank()->length(5, 200),
+                    'validation' => DataValidator::notBlank()->length(6, 200),
                     'error' => ERRORS::INVALID_PASSWORD
                 ]
             ]
@@ -153,7 +153,8 @@ class SignUpController extends Controller
             'password' => Hashing::hashPassword($this->userPassword),
             'verificationToken' => (MailSender::getInstance()->isConnected()) ? $this->verificationToken : null,
             'notRegistered' => Controller::request('indirectSignUp') ? true : null,
-            'xownCustomfieldvalueList' => $this->getCustomFieldValues()
+            'xownCustomfieldvalueList' => self::getCustomFieldValues(),
+            'company' => Company::findOne(' nit = "default_company" ')
         ]);
 
         return $userInstance->store();

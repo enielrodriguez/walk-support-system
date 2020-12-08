@@ -16,7 +16,14 @@ class Form extends React.Component {
         onChange: React.PropTypes.func,
         values: React.PropTypes.object,
         onSubmit: React.PropTypes.func,
-        defaultValues: React.PropTypes.object
+        defaultValues: React.PropTypes.object,
+        // This is to maintain compatibility with other previously defined forms
+        // This attribute is to decide whether externally defined errors (props.errors) should be considered internally, for example to prevent form submission.
+        takeExternalErrors: React.PropTypes.bool
+    };
+
+    static defaultPropTypes = {
+        takeExternalErrors: false
     };
 
     static childContextTypes = {
@@ -57,6 +64,7 @@ class Form extends React.Component {
         props.onSubmit = this.handleSubmit.bind(this);
 
         delete props.errors;
+        delete props.takeExternalErrors;
         delete props.loading;
         delete props.onValidateErrors;
         delete props.values;
@@ -94,11 +102,13 @@ class Form extends React.Component {
     }
 
     getFieldError(fieldName) {
+
         let error = this.state.errors[fieldName];
 
         if (this.props.errors) {
             error = this.props.errors[fieldName]
         }
+
         return error;
     }
 
@@ -127,9 +137,10 @@ class Form extends React.Component {
 
     getErrorsWithValidatedField(fieldName, form = this.getFormValue(), errors = this.state.errors) {
         let newErrors = _.clone(errors);
-
         if (this.state.validations[fieldName]) {
             newErrors[fieldName] = this.state.validations[fieldName].performValidation(form[fieldName], form);
+        } else if (this.props.takeExternalErrors && this.props.errors[fieldName]) {
+            newErrors[fieldName] = this.props.errors[fieldName];
         }
 
         return newErrors;

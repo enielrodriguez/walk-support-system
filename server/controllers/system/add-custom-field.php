@@ -42,9 +42,8 @@ class AddCustomFieldController extends Controller
                     'error' => ERRORS::INVALID_NAME
                 ],
                 'description' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::notBlank()->length(2, 100),
-                        DataValidator::nullType()
+                    'validation' => DataValidator::optional(
+                        DataValidator::notBlank()->length(2, 100)
                     ),
                     'error' => ERRORS::INVALID_DESCRIPTION
                 ],
@@ -56,9 +55,8 @@ class AddCustomFieldController extends Controller
                     'error' => ERRORS::INVALID_CUSTOM_FIELD_TYPE
                 ],
                 'options' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::json(),
-                        DataValidator::nullType()
+                    'validation' => DataValidator::optional(
+                        DataValidator::json()
                     ),
                     'error' => ERRORS::INVALID_CUSTOM_FIELD_OPTIONS
                 ]
@@ -76,12 +74,18 @@ class AddCustomFieldController extends Controller
         if (!Customfield::getDataStore($name, 'name')->isNull())
             throw new Exception(ERRORS::CUSTOM_FIELD_ALREADY_EXISTS);
 
+        $optionList = $this->getOptionList($options);
+
+        if($type === 'select' && $optionList->isEmpty()){
+            throw new Exception(ERRORS::INVALID_CUSTOM_FIELD_OPTIONS);
+        }
+
         $customField = new Customfield();
         $customField->setProperties([
             'name' => $name,
             'type' => $type,
             'description' => $description,
-            'ownCustomfieldoptionList' => $this->getOptionList($options)
+            'ownCustomfieldoptionList' => $optionList
         ]);
 
         $customField->store();

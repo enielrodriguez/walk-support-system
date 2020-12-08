@@ -69,6 +69,7 @@ class AddDepartmentController extends Controller
 
     }
 
+    // Staff level 3 are system admins, they must be able to access everything
     private function addStaffsLevel3($departmentInstance)
     {
         $staffs = Staff::find(' level = 3 ');

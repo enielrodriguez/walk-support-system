@@ -20,6 +20,7 @@ class Validator
     {
         $permissions = [
             'any' => true,
+            'installer' => Session::getInstance()->isInstallerLogged(),
             'user' => Controller::isUserLogged(),
             'company_admin' => Controller::isCompanyAdminLogged() || Controller::isStaffLogged(),
             'staff_1' => Controller::isStaffLogged(1),
@@ -58,5 +59,4 @@ class Validator
             throw new ValidationException($error);
         }
     }
-
 }

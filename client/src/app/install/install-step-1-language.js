@@ -1,28 +1,57 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import history from 'lib-app/history';
 import i18n from 'lib-app/i18n';
 import ConfigActions from 'actions/config-actions';
 
 import LanguageSelector from 'app-components/language-selector';
-import Button from 'core-components/button';
 import Header from 'core-components/header';
+import API from "../../lib-app/api-call";
+import Message from "../../core-components/message";
+import history from "../../lib-app/history";
+import Form from "../../core-components/form";
+import FormField from "../../core-components/form-field";
+import SubmitButton from "../../core-components/submit-button";
 
 class InstallStep1Language extends React.Component {
+
+    state = {
+        loading: false,
+        errorMessage: '',
+        language: 0
+    };
 
     render() {
         return (
             <div className="install-step-1">
-                <Header title={i18n('STEP_TITLE', {title: i18n('SELECT_LANGUAGE'), current: 1, total: 6})} description={i18n('STEP_1_DESCRIPTION')} />
-                <LanguageSelector {...this.getLanguageSelectorProps()} />
-                <div className="install-step-1__button">
-                    <Button size="medium" type="secondary" onClick={() => history.push('/install/step-2')}>
-                        {i18n('NEXT')}
-                    </Button>
-                </div>
+                <Header title={i18n('STEP_TITLE', {title: i18n('SELECT_LANGUAGE'), current: 1, total: 7})}
+                        description={i18n('STEP_1_DESCRIPTION')}/>
+
+                {this.state.errorMessage &&
+                <Message className="install-step-1__message" type="error">
+                    {i18n('ERROR_UPDATING_SETTINGS')}: {this.state.errorMessage}
+                </Message>
+                }
+
+                <Form loading={this.state.loading} onSubmit={this.submitOptions.bind(this)}>
+
+                    <LanguageSelector {...this.getLanguageSelectorProps()} />
+
+                    <div className="install-step-1__button">
+                        <SubmitButton {...this.getButtonProps()} >
+                            {i18n(this.props.installed ? 'SAVE' : 'NEXT')}
+                        </SubmitButton>
+                    </div>
+                </Form>
             </div>
         );
+    }
+
+    getButtonProps() {
+        return {
+            size: "medium",
+            type: "secondary",
+        }
     }
 
     getLanguageSelectorProps() {
@@ -37,11 +66,36 @@ class InstallStep1Language extends React.Component {
     changeLanguage(event) {
         this.props.dispatch(ConfigActions.changeLanguage(event.target.value));
     }
+
+    submitOptions(form) {
+        if (!this.props.installed) {
+            history.push('/install/step/2');
+        } else {
+            this.setState({loading: true});
+
+            API.call({
+                path: '/system/init-settings',
+                data: {
+                    'language': this.props.config['language']
+                }
+            })
+                .then(() => this.setState({
+                    loading: false,
+                    errorMessage: '',
+                }))
+                .catch(({message}) => this.setState({
+                    loading: false,
+                    errorMessage: message
+                }));
+        }
+    }
 }
 
 
 export default connect((store) => {
     return {
-        config: store.config
+        config: store.config,
+        installerLogged: !!store.config.installerLogged,
+        installed: !!store.config.installed
     };
 })(InstallStep1Language);

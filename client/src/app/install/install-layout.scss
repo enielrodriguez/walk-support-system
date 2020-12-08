@@ -9,6 +9,10 @@
         width: 100%;
     }
 
+    &__logout {
+        color: $primary-red;
+    }
+
     &__header {
         text-align: left;
 
@@ -42,7 +46,9 @@
     }
 
     &__step {
-        color: $primary-black;
+        &-text {
+            color: $primary-black;
+        }
 
         &-icon {
             color: $primary-blue;

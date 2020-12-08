@@ -14,11 +14,15 @@ import ModalContainer from "../../../../app-components/modal-container";
 import InviteUserWidget from "./invite-user-widget";
 import {Link} from "react-router";
 import LoadingWithMessage from "../../../../core-components/loading-with-message";
+import TicketList from "../../../../app-components/ticket-list";
+import {connect} from "react-redux";
 
 class AdminPanelViewCompany extends React.Component {
 
     state = {
-        company: {admin: {}},
+        company: {},
+        users: [],
+        tickets: [],
         loading: true,
         message: '',
         errorRetrievingData: false
@@ -125,6 +129,12 @@ class AdminPanelViewCompany extends React.Component {
                         </Button>
                     </div>
                 </div>
+
+
+                <div className="admin-panel-view-company__tickets">
+                    <div className="admin-panel-view-company__tickets-title">{i18n('TICKETS')}</div>
+                    <TicketList {...this.getTicketListProps()}/>
+                </div>
             </div>
         );
     }
@@ -136,10 +146,20 @@ class AdminPanelViewCompany extends React.Component {
         };
     }
 
+    getTicketListProps() {
+        return {
+            type: 'secondary',
+            tickets: this.state.tickets,
+            departments: this.props.departments,
+            ticketPath: '/admin/panel/tickets/view-ticket/'
+        };
+    }
+
     onCompanyRetrieved(result) {
         this.setState({
             company: result.data.company,
             users: result.data.users,
+            tickets: result.data.tickets,
             loading: false
         });
     }
@@ -185,4 +205,8 @@ class AdminPanelViewCompany extends React.Component {
     }
 }
 
-export default AdminPanelViewCompany;
+export default connect((store) => {
+    return {
+        departments: store.session.userDepartments
+    };
+})(AdminPanelViewCompany);

@@ -147,7 +147,7 @@ class AdminPanelMenu extends React.Component {
                     {
                         name: i18n('PLAN'),
                         path: '/admin/panel/plan',
-                        level: 1
+                        level: 3
                     }
                 ])
             },
@@ -203,7 +203,7 @@ class AdminPanelMenu extends React.Component {
                     {
                         name: i18n('CUSTOM_FIELDS'),
                         path: '/admin/panel/users/custom-fields',
-                        level: 1
+                        level: 2
                     }
                 ])
             },

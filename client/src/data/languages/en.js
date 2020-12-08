@@ -263,13 +263,13 @@ export default {
     'ACTIVITY_DELETE_USER': 'deleted user',
     'ACTIVITY_UN_BAN_USER': 'unbanned user',
 
-    'SERVER_REQUIREMENTS': 'Server requirements',
-    'DATABASE_CONFIGURATION': 'Database configuration',
-    'ADMIN_SETUP': 'Admin setup',
+    'SERVER_REQUIREMENTS': 'Requirements',
+    'DATABASE_CONFIGURATION': 'Database',
+    'ADMIN_SETUP': 'Admin',
     'COMPLETED': 'Completed',
-    'INSTALL_HEADER_TITLE': 'F2F Installation Wizard',
-    'INSTALL_HEADER_DESCRIPTION': 'This wizard will help you to configure and install F2F on your website',
-    'SELECT_LANGUAGE': 'Select language',
+    'INSTALL_HEADER_TITLE': 'Installation Wizard',
+    'INSTALL_HEADER_DESCRIPTION': 'This wizard will help you to configure and install the support system',
+    'SELECT_LANGUAGE': 'Language',
     'REQUIREMENT': 'Requirement',
     'VALUE': 'Value',
     'REFRESH': 'Refresh',
@@ -284,16 +284,17 @@ export default {
     'ADMIN_EMAIL': 'Admin email',
     'ADMIN_PASSWORD': 'Admin password',
     'ADMIN_PASSWORD_DESCRIPTION': 'Please remember this password. It is needed for accessing the admin panel. You can change it later',
-    'INSTALLATION_COMPLETED_TITLE': 'Installation completed',
-    'INSTALLATION_COMPLETED_DESCRIPTION': 'The installation of F2F is completed. Redirecting to admin panel...',
+    'INSTALLATION_COMPLETED': 'Installation completed',
+    'INSTALLATION_COMPLETED_DESCRIPTION': 'The installation is completed. Redirecting to admin panel...',
 
     'STEP_TITLE': 'Step {current} of {total} - {title}',
     'STEP_1_DESCRIPTION': 'Select your preferred language for the installation wizard',
-    'STEP_2_DESCRIPTION': 'Here are listed the requirements for running F2F. Please make sure that all requirements are satisfied',
+    'STEP_2_DESCRIPTION': 'Here are listed the requirements for running the system. Please make sure that all requirements are satisfied',
     'STEP_3_DESCRIPTION': 'Please fill the MySQL database configuration',
-    'STEP_4_DESCRIPTION': 'Please select your user system preferences',
+    'STEP_4_DESCRIPTION': 'Please select your user system preferences and set plan limits',
     'STEP_5_DESCRIPTION': 'Please fill your general system preferences',
-    'STEP_6_DESCRIPTION': 'Please configure the administrator account',
+    'STEP_6_DESCRIPTION': 'Please define the limits for this distro',
+    'STEP_7_DESCRIPTION': 'Please configure the administrator account',
 
     //VIEW DESCRIPTIONS
     'CREATE_TICKET_DESCRIPTION': 'This is a form for creating tickets. Fill the form and send us your issues/doubts/suggestions. Our support system will answer it as soon as possible',
@@ -340,7 +341,7 @@ export default {
     'EDIT_PROFILE_VIEW_DESCRIPTION': 'Here you can edit your user preferences',
     'ENABLE_USER_SYSTEM_DESCRIPTION': 'Enable/disable the use of an user system. If you disable it, all users will be deleted but the tickets will be kept. If you enable it, the users of existent tickets will be created',
     'CSV_DESCRIPTION': 'The CSV file must have 3 columns: email, password, name. There is no limit in row count. It will be created one user per row in the file',
-    'SMTP_SERVER_DESCRIPTION': 'The configuration of the SMTP server allows the application to send mails. If you do not configure it, no emails will be sent by F2F',
+    'SMTP_SERVER_DESCRIPTION': 'The configuration of the SMTP server allows the application to send mails. If you do not configure it, no emails will be sent by the system',
     'IMAP_SERVER_DESCRIPTION': 'The configuration of the IMAP server allows the application to create tickets from the emails sent to a mailbox',
     'ENABLE_USER_DESCRIPTION': 'This action allows the user to sign in and create tickets',
     'DISABLE_USER_DESCRIPTION': 'User will be disabled and will not be able to sign in and create tickets',
@@ -349,7 +350,7 @@ export default {
     'PRIVATE_DEPARTMENT_DESCRIPTION': 'This department will only be seen by staff members',
     'LOCK_DEPARTMENT_DESCRIPTION': 'Allow users to create tickets only in the default department',
     'EMAIL_SETTINGS_DESCRIPTION': 'Here you can edit the settings for receiving and sending email to your customers',
-    'IMAP_POLLING_DESCRIPTION': 'Inbox checking will not be done automatically by F2F. You have to make POST requests periodically to this url to process the emails: {url}',
+    'IMAP_POLLING_DESCRIPTION': 'Inbox checking will not be done automatically. You have to make POST requests periodically to this url to process the emails: {url}',
     'NEW_CUSTOM_FIELD_DESCRIPTION': 'Here you can create a custom field for an user, it can be a blank text box or a fixed set of options',
     'CUSTOM_FIELDS_DESCRIPTION': 'Custom fields are defined additional fields the users are able to fill to provide more information about them',
     'INVITE_USER_VIEW_DESCRIPTION': 'Here you can add an user to our support system',
@@ -440,7 +441,6 @@ export default {
     'ACTIVITY_RE_OPEN_THIS': 'reopened this ticket',
     'ACTIVITY_DEPARTMENT_CHANGED_THIS': 'changed department of this ticket to ',
     'DATE_PREFIX': 'on',
-    'LEFT_EMPTY_DATABASE': 'Leave empty for automatic database creation',
     'DEFAULT_PORT': 'Leave empty for 3306 as default',
     'REMEMBER_ME': 'Remember me',
     'EMAIL_LOWERCASE': 'email',
@@ -450,7 +450,7 @@ export default {
     'EMAIL_SERVER_ADDRESS': 'Email server address',
     'EMAIL_SERVER_ADDRESS_DESCRIPTION': 'Address where mails will be received and sent',
 
-    //Custom for F2F
+    // Modifications to OpenSupport
     'COMPANY': 'Company',
     'COMPANIES': 'Companies',
     'LIST_COMPANIES': 'List Companies',
@@ -514,6 +514,9 @@ export default {
     'ACTIVITY_ADD_COMPANY': 'added company',
     'ACTIVITY_EDIT_COMPANY': 'edited company',
     'ACTIVITY_DELETE_COMPANY': 'deleted company',
+    'FILTER':'Filter',
+    'DELETE_LOGS_WARNING': 'This action will delete the records within the selected dates',
+    'DELETE_LOGS_INFO': 'To avoid accidents, this option will be enabled after applying the filter',
 
     'PLAN': 'Plan',
     'PLAN_DOTS': 'Plan: ',
@@ -522,6 +525,7 @@ export default {
     'UP_TO': 'Up to: {number}',
     'LIMIT_REACHED': 'plan limit reached',
     'PLAN_USED': 'In use: {value}',
+    'PLAN_LIMIT_HAS_DEFAULT_INFO': '+ a default element',
 
     'USERS_LIMIT': 'Users limit',
     'AVAILABLE': 'Available: ',
@@ -537,13 +541,27 @@ export default {
     'ASSIGNED_QUOTA_NOT_USED': 'Reserved to companies but not used: {value}',
     'TOTAL_USERS_PLAN_FREE': 'Total available capacities: {value}',
 
+    'COMPANIES_LIMIT': 'Companies limit',
     'COMPANY_USERS_LIMIT_INFO_1': 'This number will be reserved from the total number of users allowed by the current plan (if it is unlimited, it does not apply).',
     'COMPANY_USERS_LIMIT_INFO_2': 'This feature is very useful if the company has an administrator, who could add too many users.',
     'COMPANY_USERS_LIMIT_INFO_3': 'Leave 0 (zero) for unlimited. Be careful if you have a limited plan and also assign an administrator to this company. ',
     'COMPANIES_LIMIT_REACHED': 'Companies limit reached',
     'ADD_COMPANY_WITH_LIMIT_REACHED_INFO': 'The company will be added without limit of users, even so, it will not be possible to add new users to this company, since the plan limit has already been reached.',
-    
+
+    'STAFF_LIMIT': 'Staff limit',
     'STAFF_LIMIT_REACHED': 'Staff limit reached',
-    
-    'DEPARTMENTS_LIMIT_REACHED': 'Departments limit reached'
+
+    'DEPARTMENTS_LIMIT': 'Departments limit',
+    'DEPARTMENTS_LIMIT_REACHED': 'Departments limit reached',
+
+    'INVALID_DESCRIPTION': 'Invalid description',
+    'CUSTOM_FIELD_ALREADY_EXISTS': 'Custom field already exists',
+    'INVALID_CUSTOM_FIELD_OPTIONS': 'Invalid options',
+
+    // installation
+    'INSTALLATION_KEY': 'Installation key',
+    'INVALID_KEY': 'Invalid installation key',
+    'TIMEZONE': 'Time zone',
+    'TIMEZONE_REQUIRED_ERROR': 'You must select a time zone',
+    'CURRENT' : 'current: {value}'
 };

@@ -1,21 +1,22 @@
-import React              from 'react';
-import _                  from 'lodash';
-import classNames         from 'classnames';
-import { connect }        from 'react-redux'
-import DocumentTitle      from 'react-document-title';
+import React from 'react';
+import _ from 'lodash';
+import classNames from 'classnames';
+import {connect} from 'react-redux'
+import DocumentTitle from 'react-document-title';
 
 import history from 'lib-app/history';
 import ModalContainer from 'app-components/modal-container';
 
 const level2Paths = [
+    '/admin/panel/users/custom-fields',
     '/admin/panel/tickets/custom-responses',
-    '/admin/panel/users',
     '/admin/panel/articles'
 ];
 
 const level3Paths = [
     '/admin/panel/staff',
-    '/admin/panel/settings'
+    '/admin/panel/settings',
+    '/admin/panel/plan'
 ];
 
 class App extends React.Component {
@@ -39,7 +40,7 @@ class App extends React.Component {
                     <div className="application__content">
                         {React.cloneElement(this.props.children, {})}
                     </div>
-                    <ModalContainer />
+                    <ModalContainer/>
                 </div>
             </DocumentTitle>
         );
@@ -57,19 +58,20 @@ class App extends React.Component {
     }
 
     redirectIfPathIsNotValid(props) {
+
         const validations = {
             languageChanged: props.config.language !== this.props.config.language,
             loggedIn: !_.includes(props.location.pathname, '/dashboard') && props.session.logged,
             loggedOut: _.includes(props.location.pathname, '/dashboard') && !props.session.logged,
             loggedInStaff: !_.includes(props.location.pathname, '/admin/panel') && props.session.logged && props.session.staff,
             loggedOutStaff: _.includes(props.location.pathname, '/admin/panel') && !props.session.logged
-        };
+         };
 
-        if(props.config['maintenance-mode'] && !_.includes(props.location.pathname, '/admin') && !_.includes(props.location.pathname, '/maintenance')) {
+        if (props.config['maintenance-mode'] && !_.includes(props.location.pathname, '/admin') && !_.includes(props.location.pathname, '/maintenance')) {
             history.push('/maintenance');
         }
 
-        if(!props.config['maintenance-mode'] && _.includes(props.location.pathname, '/maintenance')) {
+        if (!props.config['maintenance-mode'] && _.includes(props.location.pathname, '/maintenance')) {
             history.push('/');
         }
 
@@ -87,7 +89,7 @@ class App extends React.Component {
 
         if (validations.loggedIn && !props.session.staff) {
             history.push('/dashboard');
-        } else if(validations.loggedInStaff) {
+        } else if (validations.loggedInStaff) {
             history.push('/admin/panel');
         }
 
@@ -99,7 +101,7 @@ class App extends React.Component {
             history.push('/');
         }
 
-        if(props.config['mandatory-login'] && _.includes(props.location.pathname, '/check-ticket')) {
+        if (props.config['mandatory-login'] && _.includes(props.location.pathname, '/check-ticket')) {
             history.push('/');
         }
 
@@ -107,11 +109,19 @@ class App extends React.Component {
             history.push('/install');
         }
 
-        if(props.config.installedDone && props.config.installed && _.includes(props.location.pathname, '/install')) {
+        if(props.config.installedDone && _.includes(props.location.pathname, '/install/step/') && !props.config.installerLogged) {
+            history.push('/install');
+        }
+
+        if(props.config.installedDone && props.location.pathname === '/install' && props.config.installerLogged) {
+            history.push('/install/step/1');
+        }
+
+        if(props.config.installedDone && props.config.installed && _.includes(props.location.pathname, '/completed')) {
             history.push('/admin');
         }
 
-        if(process.env.NODE_ENV === 'production' && _.includes(props.location.pathname, '/components-demo')) {
+        if (process.env.NODE_ENV === 'production' && _.includes(props.location.pathname, '/components-demo')) {
             history.push('/');
         }
     }
@@ -120,11 +130,11 @@ class App extends React.Component {
         let pathForLevel2 = _.findIndex(level2Paths, path => _.includes(props.location.pathname, path)) !== -1;
         let pathForLevel3 = _.findIndex(level3Paths, path => _.includes(props.location.pathname, path)) !== -1;
 
-        if (props.session.userLevel === 1) {
+        if (props.session.userLevel == 1) {
             return !pathForLevel2 && !pathForLevel3;
         }
 
-        if (props.session.userLevel === 2) {
+        if (props.session.userLevel == 2) {
             return !pathForLevel3;
         }
 

@@ -60,8 +60,9 @@ import InstallStep1Language from 'app/install/install-step-1-language';
 import InstallStep2Requirements from 'app/install/install-step-2-requirements';
 import InstallStep3Database from 'app/install/install-step-3-database';
 import InstallStep4UserSystem from 'app/install/install-step-4-user-system';
-import InstallStep5Settings from 'app/install/install-step-5-settings';
-import InstallStep6Admin from 'app/install/install-step-6-admin';
+import InstallStep5Settings from 'app/install/install-step-5-settings.js';
+import InstallStep6Settings from "./install/install-step-6-plan-limits";
+import InstallStep7Admin from 'app/install/install-step-7-admin';
 import InstallCompleted from 'app/install/install-completed';
 import AdminPanelViewCompany from "./admin/panel/users/admin-panel-view-company";
 import DashboardListUsersPage from "./main/dashboard/dashboard-list-users/dashboard-list-users-page";
@@ -70,6 +71,7 @@ import AdminPanelEditUser from "./admin/panel/users/admin-panel-edit-user";
 import DashboardEditUser from "./main/dashboard/dashboard-edit-user/dashboard-edit-user";
 import AdminPanelEditCompany from "./admin/panel/users/admin-panel-edit-company";
 import AdminPanelPlan from "./admin/panel/dashboard/admin-panel-plan";
+import ValidateKey from "./install/validate-key";
 
 export default (
     <Router history={history}>
@@ -103,14 +105,18 @@ export default (
                            render={props => <DashboardEditUser {...props} />}/>
                 </Route>
             </Route>
-            <Route path="install" component={InstallLayout}>
-                <IndexRedirect to="step-1"/>
-                <Route path="step-1" component={InstallStep1Language}/>
-                <Route path="step-2" component={InstallStep2Requirements}/>
-                <Route path="step-3" component={InstallStep3Database}/>
-                <Route path="step-4" component={InstallStep4UserSystem}/>
-                <Route path="step-5" component={InstallStep5Settings}/>
-                <Route path="step-6" component={InstallStep6Admin}/>
+            <Route path="install">
+                <IndexRoute component={ValidateKey}/>
+                <Route path="step" component={InstallLayout}>
+                    <IndexRedirect to="1"/>
+                    <Route path="1" component={InstallStep1Language}/>
+                    <Route path="2" component={InstallStep2Requirements}/>
+                    <Route path="3" component={InstallStep3Database}/>
+                    <Route path="4" component={InstallStep4UserSystem}/>
+                    <Route path="5" component={InstallStep5Settings}/>
+                    <Route path="6" component={InstallStep6Settings}/>
+                    <Route path="7" component={InstallStep7Admin}/>
+                </Route>
                 <Route path="completed" component={InstallCompleted}/>
             </Route>
             <Route path="admin">

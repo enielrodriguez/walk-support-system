@@ -192,12 +192,13 @@ class AdminPanelSystemPreferences extends React.Component {
                 'allowedLanguages': JSON.stringify(form.allowedLanguages.map(index => languageKeys[index])),
                 'supportedLanguages': JSON.stringify(form.supportedLanguages.map(index => languageKeys[index]))
             }
-        }).then(this.onSubmitSuccess.bind(this))
+        })
+            .then(this.onSubmitSuccess.bind(this))
             .catch(() => this.setState({loading: false, message: 'fail'}));
     }
 
     onSubmitSuccess() {
-        this.recoverSettings();
+        store.dispatch(ConfigActions.updateData());
         this.setState({
             message: 'success',
             loading: false
@@ -214,7 +215,8 @@ class AdminPanelSystemPreferences extends React.Component {
             data: {
                 allSettings: true
             }
-        }).then(this.onRecoverSettingsSuccess.bind(this))
+        })
+            .then(this.onRecoverSettingsSuccess.bind(this))
             .catch(() => this.setState({errorRetrievingData: true}));
     }
 
@@ -235,8 +237,6 @@ class AdminPanelSystemPreferences extends React.Component {
                 'supportedLanguages': result.data.supportedLanguages.map(lang => (_.indexOf(languageKeys, lang)))
             }
         });
-
-        store.dispatch(ConfigActions.updateData());
     }
 
     onDiscardChangesSubmit(event) {

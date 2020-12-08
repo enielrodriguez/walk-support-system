@@ -4,7 +4,6 @@ import {connect}  from 'react-redux';
 
 import API from 'lib-app/api-call';
 import i18n from 'lib-app/i18n';
-import SessionStore from 'lib-app/session-store';
 
 import TicketViewer from 'app-components/ticket-viewer';
 import Loading from 'core-components/loading';

@@ -33,7 +33,7 @@ class EditSettingsController extends Controller {
             'permission' => 'staff_3',
             'requestData' => [
                 'default-department-id' => [
-                    'validation' => DataValidator::oneOf(DataValidator::dataStoreId('department'),DataValidator::nullType()),
+                    'validation' => DataValidator::oneOf(DataValidator::dataStoreId('department'), DataValidator::nullType()),
                     'error' => ERRORS::INVALID_DEFAULT_DEPARTMENT
                 ],
             ]

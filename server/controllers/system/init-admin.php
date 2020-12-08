@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -21,19 +23,19 @@ DataValidator::with('CustomValidations', true);
  * @apiUse INVALID_NAME
  * @apiUse INVALID_EMAIL
  * @apiUse INVALID_PASSWORD
- * @apiUse INIT_SETTINGS_DONE
  *
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class InitAdminController extends Controller {
+class InitAdminController extends Controller
+{
     const PATH = '/init-admin';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
-            'permission' => 'any',
+            'permission' => 'installer',
             'requestData' => [
                 'name' => [
                     'validation' => DataValidator::notBlank()->length(2, 55),
@@ -44,36 +46,57 @@ class InitAdminController extends Controller {
                     'error' => ERRORS::INVALID_EMAIL
                 ],
                 'password' => [
-                    'validation' => DataValidator::notBlank()->length(5, 200),
+                    'validation' => DataValidator::oneOf(
+                        DataValidator::notBlank()->length(6, 200),
+                        DataValidator::nullType()
+                    ),
                     'error' => ERRORS::INVALID_PASSWORD
                 ],
             ]
         ];
     }
 
-    public function handler() {
-        if(!Staff::isTableEmpty()) {
-            throw new RequestException(ERRORS::INIT_SETTINGS_DONE);
+    public function handler()
+    {
+        $admin = Staff::findOne(' super_user = 1 ');
+        $password = Controller::request('password');
+
+        if ($admin->isNull()) {
+
+            if ($password === null) {
+                throw new ValidationException(ERRORS::INVALID_PASSWORD);
+            }
+
+            $admin = new Staff();
+            $admin->setProperties([
+                'profilePic' => '',
+                'level' => 3,
+                'superUser' => 1,
+                'sharedDepartmentList' => Department::getAll(),
+                'sharedTicketList' => [],
+                'sendEmailOnNewTicket' => 1
+            ]);
+
+            foreach (Department::getAll() as $department) {
+                $department->owners++;
+                $department->store();
+            }
         }
 
-        $staff = new Staff();
-        $staff->setProperties([
+        $props = [
             'name' => Controller::request('name'),
-            'email' => Controller::request('email'),
-            'password' => Hashing::hashPassword(Controller::request('password')),
-            'profilePic' => '',
-            'level' => 3,
-            'sharedDepartmentList' => Department::getAll(),
-            'sharedTicketList' => [],
-            'sendEmailOnNewTicket' => 1
-        ]);
-        
-        foreach(Department::getAll() as $department) {
-            $department->owners++;
-            $department->store();
+            'email' => Controller::request('email')
+        ];
+
+        // If editing the installation this can be null (means keep the current pass)
+        // In fresh installation can't be null (throws an exception at the beginning of this function)
+        if ($password !== null) {
+            $props['password'] = Hashing::hashPassword($password);
         }
-        
-        $staff->store();
+
+        $admin->setProperties($props);
+
+        $admin->store();
 
         Response::respondSuccess();
     }

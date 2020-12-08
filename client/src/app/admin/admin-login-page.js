@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
-import {connect}  from 'react-redux';
+import {connect} from 'react-redux';
 
 import i18n from 'lib-app/i18n';
 import API from 'lib-app/api-call';
@@ -36,7 +36,8 @@ class AdminLoginPage extends React.Component {
     render() {
         return (
             <div className="admin-login-page">
-                <WidgetTransition sideToShow={this.state.sideToShow} className={classNames('admin-login-page__container', this.props.className)}>
+                <WidgetTransition sideToShow={this.state.sideToShow}
+                                  className={classNames('admin-login-page__container', this.props.className)}>
                     {this.renderLogin()}
                     {this.renderPasswordRecovery()}
                 </WidgetTransition>
@@ -48,7 +49,8 @@ class AdminLoginPage extends React.Component {
         return (
             <div>
                 <Widget className="admin-login-page__content">
-                    <div className="admin-login-page__image"><img width="100%" src={API.getURL() + '/images/logo.png'} alt="OpenSupports Admin Panel"/></div>
+                    <div className="admin-login-page__image"><img width="100%" src={API.getURL() + '/images/logo.png'}
+                                                                  alt="OpenSupports Admin Panel"/></div>
                     <div className="admin-login-page__login-form-container">
                         <Form {...this.getLoginFormProps()}>
                             <div className="admin-login-page__login-form-container__login-form__fields">
@@ -58,19 +60,19 @@ class AdminLoginPage extends React.Component {
                                     className="admin-login-page__login-form-container__login-form__fields__email"
                                     field="input"
                                     validation="EMAIL"
-                                    fieldProps={{size:'large'}}
-                                    required />
+                                    fieldProps={{size: 'large'}}
+                                    required/>
                                 <FormField
                                     name="password"
                                     label={i18n('PASSWORD')}
                                     className="admin-login-page__login-form-container__login-form__fields__password"
                                     field="input"
-                                    fieldProps={{password:true, size:'large'}} />
+                                    fieldProps={{password: true, size: 'large'}}/>
                                 <FormField
                                     name="remember"
                                     label={i18n('REMEMBER_ME')}
                                     className="admin-login-page__login-form-container__login-form__fields__remember"
-                                    field="checkbox" />
+                                    field="checkbox"/>
                             </div>
                             <div className="admin-login-page__login-form-container__login-form__submit-button">
                                 <SubmitButton>{i18n('LOG_IN')}</SubmitButton>
@@ -79,9 +81,12 @@ class AdminLoginPage extends React.Component {
                     </div>
                     {this.renderRecoverStatus()}
                     {this.renderErrorStatus()}
-                <Button className="login-widget__forgot-password" type="link" onClick={this.onForgotPasswordClick.bind(this)} onMouseDown={(event) => {event.preventDefault()}}>
-                    {i18n('FORGOT_PASSWORD')}
-                </Button>
+                    <Button className="login-widget__forgot-password" type="link"
+                            onClick={this.onForgotPasswordClick.bind(this)} onMouseDown={(event) => {
+                        event.preventDefault()
+                    }}>
+                        {i18n('FORGOT_PASSWORD')}
+                    </Button>
                 </Widget>
             </div>
         );
@@ -90,7 +95,8 @@ class AdminLoginPage extends React.Component {
     renderPasswordRecovery() {
         return (
             <div className="admin-login-page__recovery-form-container">
-                <PasswordRecovery recoverSent={this.state.recoverSent} formProps={this.getRecoverFormProps()} onBackToLoginClick={this.onBackToLoginClick.bind(this)} renderLogo={true}/>
+                <PasswordRecovery recoverSent={this.state.recoverSent} formProps={this.getRecoverFormProps()}
+                                  onBackToLoginClick={this.onBackToLoginClick.bind(this)} renderLogo={true}/>
             </div>
         );
     }
@@ -165,9 +171,7 @@ class AdminLoginPage extends React.Component {
     }
 
     onLoginFormSubmit(formState) {
-        this.props.dispatch(SessionActions.login(_.extend({}, formState, {
-            staff: true
-        })));
+        this.props.dispatch(SessionActions.login(_.extend({}, formState, {staff: true})));
     }
 
     onForgotPasswordSubmit(formState) {

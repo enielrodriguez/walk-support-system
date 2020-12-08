@@ -1,9 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import classNames from 'classnames';
 
 import DropDown from 'core-components/drop-down';
-import Icon from 'core-components/icon';
 
 class CompanyDropdown extends React.Component {
     static propTypes = {

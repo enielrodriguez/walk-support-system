@@ -103,7 +103,7 @@ abstract class Controller
     {
         if (Controller::isUserLogged()) {
             $user = Controller::getLoggedUser();
-            $isAdmin = !$user->isNull() && $user->company ? $user->company->toArray()['admin']['id'] === $user->id : false;
+            $isAdmin = !$user->isNull() && $user->company && $user->company->admin ? $user->company->admin->id === $user->id : false;
             return $isAdmin;
         }
         return false;

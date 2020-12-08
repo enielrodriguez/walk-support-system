@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -29,32 +31,37 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {Boolean} data.sendEmailOnNewTicket Indicates if this member receives a mail when a ticket is created.
  *
  */
-
-class GetStaffController extends Controller {
+class GetStaffController extends Controller
+{
     const PATH = '/get';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'staff_1',
             'requestData' => []
         ];
     }
 
-    public function handler() {
-        $user = Controller::getLoggedUser();
+    public function handler()
+    {
+        $loggedStaff = Controller::getLoggedUser();
+        $requestedStaff = Staff::getDataStore(Controller::request('staffId'));
 
-        $userId = Controller::request('staffId');
-        $userRow = Staff::getDataStore($userId);
+        if ((int)$loggedStaff->level === 3 && !$requestedStaff->isNull()) {
 
-        if($user->level == 3 && !$userRow->isNull()) {
-            $user = $userRow;
+            if ($loggedStaff->id !== $requestedStaff->id && $requestedStaff->isSuperUser()) {
+                throw new RequestException(ERRORS::NO_PERMISSION);
+            }
+
+            $loggedStaff = $requestedStaff;
         }
 
         $parsedDepartmentList = [];
-        $departmentList = $user->sharedDepartmentList;
+        $departmentList = $loggedStaff->sharedDepartmentList;
 
-        foreach($departmentList as $department) {
+        foreach ($departmentList as $department) {
             $parsedDepartmentList[] = [
                 'id' => $department->id,
                 'name' => $department->name,
@@ -63,14 +70,14 @@ class GetStaffController extends Controller {
         }
 
         Response::respondSuccess([
-            'name' => $user->name,
-            'email' => $user->email,
-            'profilePic' => $user->profilePic,
-            'level' => $user->level,
+            'name' => $loggedStaff->name,
+            'email' => $loggedStaff->email,
+            'profilePic' => $loggedStaff->profilePic,
+            'level' => $loggedStaff->level,
             'staff' => true,
             'departments' => $parsedDepartmentList,
-            'tickets' => $user->sharedTicketList->toArray(true),
-            'sendEmailOnNewTicket' => $user->sendEmailOnNewTicket
+            'tickets' => $loggedStaff->sharedTicketList->toArray(true),
+            'sendEmailOnNewTicket' => $loggedStaff->sendEmailOnNewTicket
         ]);
     }
 }

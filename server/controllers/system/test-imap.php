@@ -22,19 +22,26 @@
  *
  */
 
-class TestIMAPController extends Controller {
+class TestIMAPController extends Controller
+{
     const PATH = '/test-imap';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'any',
             'requestData' => []
         ];
     }
 
-    public function handler() {
-        if(imap_open(Controller::request('imap-host'), Controller::request('imap-user'), Controller::request('imap-pass'))) {
+    public function handler()
+    {
+        if (!Session::getInstance()->isInstallerLogged() && !Controller::isUserLogged()) {
+            throw new RequestException(ERRORS::NO_PERMISSION);
+        }
+
+        if (imap_open(Controller::request('imap-host'), Controller::request('imap-user'), Controller::request('imap-pass'))) {
             Response::respondSuccess();
         } else {
             throw new RequestException(ERRORS::IMAP_CONNECTION);

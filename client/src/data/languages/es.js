@@ -105,7 +105,7 @@ export default {
     'CHANGE_PASSWORD': 'Cambiar contraseña',
     'NAME': 'Nombre',
     'SIGNUP_DATE': 'Fecha de registro',
-    'CLEAR': 'Claro',
+    'CLEAR': 'Limpiar',
     'SEARCH': 'Buscar',
     'SEARCH_USERS': 'Buscar usuarios...',
     'SEARCH_EMAIL': 'Buscar email...',
@@ -139,7 +139,7 @@ export default {
     'UPDATE_EMAIL': 'Actualizar correo electrónico',
     'UPDATE_PASSWORD': 'Actualizar contraseña',
     'UPDATE_LEVEL': 'Actualizar nivel',
-    'UPDATE_DEPARTMENTS': 'Actializar departamentos',
+    'UPDATE_DEPARTMENTS': 'Actualizar departamentos',
     'EDIT_STAFF': 'Editar miembro del personal',
     'ADD_DEPARTMENT': 'Añadir departamento',
     'UPDATE_DEPARTMENT': 'Actualizar Departamento',
@@ -268,13 +268,13 @@ export default {
     'ACTIVITY_DELETE_USER': 'borró el usuario',
     'ACTIVITY_UN_BAN_USER': 'desbloqueó el usuario',
 
-    'SERVER_REQUIREMENTS': 'Requisitos del servidor',
-    'DATABASE_CONFIGURATION': 'Configuracion de la base de datos',
-    'ADMIN_SETUP': 'Configuración del administrador',
+    'SERVER_REQUIREMENTS': 'Requisitos',
+    'DATABASE_CONFIGURATION': 'Base de Datos',
+    'ADMIN_SETUP': 'Administrador',
     'COMPLETED': 'Completado',
-    'INSTALL_HEADER_TITLE': 'F2F Asistente de Instalación',
-    'INSTALL_HEADER_DESCRIPTION': 'Este asistente le ayudará a configurar e installar F2F en su sitio web',
-    'SELECT_LANGUAGE': 'Seleccionar idioma',
+    'INSTALL_HEADER_TITLE': 'Asistente de Instalación',
+    'INSTALL_HEADER_DESCRIPTION': 'Este asistente le ayudará a configurar e instalar el sistema de soporte',
+    'SELECT_LANGUAGE': 'Idioma',
     'REQUIREMENT': 'Requisito',
     'VALUE': 'Valor',
     'REFRESH': 'Refrescar',
@@ -290,16 +290,16 @@ export default {
     'ADMIN_PASSWORD': 'Contraseña del administrador',
     'ADMIN_PASSWORD_DESCRIPTION': 'Por favor, recuerde esta contraseña. Es necesaria para acceder al panel de administración. Puedes cambiarla después',
     'INSTALLATION_COMPLETED': 'Instalación Completada',
-    'INSTALLATION_COMPLETED_DESCRIPTION': 'La instalación de F2F ha finalizado. Redirigiendo al panel de administración...',
+    'INSTALLATION_COMPLETED_DESCRIPTION': 'La instalación ha finalizado. Redirigiendo al panel de administración...',
 
     'STEP_TITLE': 'Paso {current} de {total} - {title}',
     'STEP_1_DESCRIPTION': 'Seleccione su idioma preferido para el asistente de instalación',
-    'STEP_2_DESCRIPTION': 'Aqui están listados los requisitos para F2F. Por favor, asegúrese de cumplir con todos los requisitos',
+    'STEP_2_DESCRIPTION': 'Aqui están listados los requisitos del sistema. Por favor, asegúrese de cumplir con todos los requisitos',
     'STEP_3_DESCRIPTION': 'Por favor, complete la configuracion de la base de datos MySQL',
-    'STEP_4_DESCRIPTION': 'Por favor, seleccione sus preferencias de sistema de usuarios',
+    'STEP_4_DESCRIPTION': 'Por favor, seleccione sus preferencias del sistema de usuarios',
     'STEP_5_DESCRIPTION': 'Pro favor, seleccione sus preferencias generales del sistema',
-    'STEP_6_DESCRIPTION': 'Por favor, configure la cuenta de administrador',
-    'STEP_7_DESCRIPTION': 'La instalación ha sido completada',
+    'STEP_6_DESCRIPTION': 'Por favor, defina los límites de esta distribución',
+    'STEP_7_DESCRIPTION': 'Por favor, configure la cuenta de administrador',
 
     //VIEW DESCRIPTIONS
     'CREATE_TICKET_DESCRIPTION': 'Este es un formulario para crear tickets. Rellene el formulario y envíenos sus dudas. Nuestro sistema de soporte responderá lo antes posible',
@@ -357,7 +357,7 @@ export default {
     'PRIVATE_TOPIC_DESCRIPTION': 'Este tema solo será visto por miembros del personal',
     'PRIVATE_DEPARTMENT_DESCRIPTION': 'Este departamento solo será visto por miembros del personal',
     'EMAIL_SETTINGS_DESCRIPTION': 'Aquí puedes editar la configuración para recibir y enviar correos electrónicos de los clientes',
-    'IMAP_POLLING_DESCRIPTION': 'La verificación de la bandeja de entrada no se hará automáticamente por F2F. Se deben realizar solicitudes POST periódicamente a esta URL para procesar los correos electrónicos: {url}',
+    'IMAP_POLLING_DESCRIPTION': 'La verificación de la bandeja de entrada no se hará automáticamente. Se deben realizar solicitudes POST periódicamente a esta URL para procesar los correos electrónicos: {url}',
     'NEW_CUSTOM_FIELD_DESCRIPTION': 'Aquí puedes crear un campo personalizado para un usuario',
     'CUSTOM_FIELDS_DESCRIPTION': 'Los campos personalizados son campos adicionales que los usuarios pueden completar para proporcionar más información sobre ellos',
 
@@ -365,7 +365,7 @@ export default {
     'EMAIL_OR_PASSWORD': 'Email o contraseña no válida',
     'EMAIL_NOT_EXIST': 'El email no existe',
     'ERROR_EMPTY': 'Campo obligatorio',
-    'ERROR_PASSWORD': 'Contraseña incorrecta',
+    'ERROR_PASSWORD': 'Contraseña no válida',
     'INVITE_USER_VIEW_DESCRIPTION': 'Aquí puedes añadir un usuario a nuestro sistema de soporte',
     'ERROR_NAME': 'Nombre incorrecto',
     'INVITE_STAFF_DESCRIPTION': 'Aquí puedes añadir los miembros del equipo de soporte',
@@ -448,17 +448,16 @@ export default {
     'ACTIVITY_RE_OPEN_THIS': 'reabrió este ticket',
     'ACTIVITY_DEPARTMENT_CHANGED_THIS': 'cambió el departamento de este ticket a ',
     'DATE_PREFIX': 'el día',
-    'LEFT_EMPTY_DATABASE': 'Dejar vacío para la creación automática de bases de datos',
     'REMEMBER_ME': 'Recordarme',
     'EMAIL_LOWERCASE': 'email',
-    'DEFAULT_PORT': 'Deje en blanco para 3306 por defecto',
+    'DEFAULT_PORT': 'Deje en blanco para 3306 (puerto por defecto)',
     'PASSWORD_LOWERCASE': 'contraseña',
     'TEST_SMTP_CONNECTION': 'Probar conexion de SMTP',
     'SERVER_ERROR': 'No es posible conectar con el servidor',
     'EMAIL_SERVER_ADDRESS': 'Dirección del servidor de correo electrónico',
     'EMAIL_SERVER_ADDRESS_DESCRIPTION': 'Dirección donde se recibirán y enviarán los correos',
 
-    //Custom for F2F
+    // Modifications to OpenSupport
     'COMPANY': 'Empresa',
     'COMPANIES': 'Empresas',
     'LIST_COMPANIES': 'Lista de Empresas',
@@ -522,6 +521,9 @@ export default {
     'ACTIVITY_ADD_COMPANY': 'añadió la empresa',
     'ACTIVITY_EDIT_COMPANY': 'editó la empresa',
     'ACTIVITY_DELETE_COMPANY': 'borró la empresa',
+    'FILTER':'Filtrar',
+    'DELETE_LOGS_WARNING': 'Esta acción eliminará los registros comprendidos en las fechas seleccionadas',
+    'DELETE_LOGS_INFO': 'Para evitar accidentes, esta opción se habilitará después de aplicar el filtro',
 
     'PLAN': 'Plan',
     'PLAN_DOTS': 'Plan: ',
@@ -530,6 +532,7 @@ export default {
     'UP_TO': 'Hasta: {number}',
     'LIMIT_REACHED': 'plan agotado',
     'PLAN_USED': 'En uso: {value}',
+    'PLAN_LIMIT_HAS_DEFAULT_INFO': '+ un elemento por defecto',
 
     'USERS_LIMIT': 'Límite de usuarios',
     'AVAILABLE': 'Disponible: ',
@@ -545,13 +548,27 @@ export default {
     'ASSIGNED_QUOTA_NOT_USED': 'Reservado a empresas pero sin utilizar: {value}',
     'TOTAL_USERS_PLAN_FREE': 'Total de capacidades disponibles: {value}',
 
+    'COMPANIES_LIMIT': 'Límite de empresas',
     'COMPANY_USERS_LIMIT_INFO_1': 'Este número se reservará del total de usuarios permitidos por el plan actual (si es ilimitado no aplica).',
     'COMPANY_USERS_LIMIT_INFO_2': 'Esta característica es muy útil si la empresa tiene un administrador, el cual pudiera añadir usuarios de forma excesiva.',
     'COMPANY_USERS_LIMIT_INFO_3': 'Dejar en 0 (cero) para ilimitado. Tenga precaución si tiene un plan limitado, y además le asigna administrador a esta empresa.',
     'COMPANIES_LIMIT_REACHED': 'Se alcanzó el límite de empresas',
     'ADD_COMPANY_WITH_LIMIT_REACHED_INFO': 'La empresa se añadirá sin límite de usuarios, aún así, no se podrá añadir nuevos usuarios a esta empresa, pues ya se alcanzó el límite del plan.',
 
+    'STAFF_LIMIT': 'Límite de personal',
     'STAFF_LIMIT_REACHED': 'Se alcanzó el límite de personal',
 
-    'DEPARTMENTS_LIMIT_REACHED': 'Se alcanzó el límite de departamentos'
+    'DEPARTMENTS_LIMIT': 'Límite de departamentos',
+    'DEPARTMENTS_LIMIT_REACHED': 'Se alcanzó el límite de departamentos',
+
+    'INVALID_DESCRIPTION': 'Descripción no válida',
+    'CUSTOM_FIELD_ALREADY_EXISTS': 'El campo ya existe',
+    'INVALID_CUSTOM_FIELD_OPTIONS': 'Opciones no válidas',
+
+    // installation
+    'INSTALLATION_KEY' : 'Llave de instalación',
+    'INVALID_KEY': 'La llave no es válida',
+    'TIMEZONE': 'Zona horaria',
+    'TIMEZONE_REQUIRED_ERROR': 'Debe seleccionar una zona horaria',
+    'CURRENT' : 'actual: {value}'
 };

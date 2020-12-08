@@ -92,7 +92,7 @@ class MainSignUpWidget extends React.Component {
             case 'success':
                 return <Message type="success">{i18n('SIGNUP_SUCCESS')}</Message>;
             case 'fail':
-                return <Message type="error">{i18n('EMAIL_EXISTS')}</Message>;
+                return <Message type="error">{i18n('UNKNOWN_ERROR')}</Message>;
             default:
                 return null;
         }

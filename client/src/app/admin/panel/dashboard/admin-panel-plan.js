@@ -24,19 +24,19 @@ class AdminPanelPlan extends React.Component {
                                 {i18n('TOTAL_USERS_CURRENTLY', {'value': planLimit.total_users_currently})}
                             </div>
 
-                            {planLimit.unassigned_users_quota &&
+                            {planLimit.unassigned_users_quota !== null &&
                             <div>
                                 {i18n('USERS_PLAN_RESERVED', {'value': planLimit.users - planLimit.unassigned_users_quota})}
                             </div>
                             }
 
-                            {planLimit.unassigned_users_quota &&
+                            {planLimit.unassigned_users_quota !== null &&
                             <div>
                                 {i18n('FREE_QUOTA', {'value': planLimit.unassigned_users_quota})}
                             </div>
                             }
 
-                            {planLimit.unassigned_users_quota &&
+                            {planLimit.unassigned_users_quota !== null &&
                             <div>
                                 {i18n('ASSIGNED_QUOTA_NOT_USED', {'value': planLimit.users - planLimit.unassigned_users_quota - planLimit.total_users_currently})}
                             </div>

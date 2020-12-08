@@ -1,5 +1,7 @@
 <?php
+
 use RedBeanPHP\Facade as RedBean;
+use Respect\Validation\Validator as DataValidator;
 
 /**
  * @api {post} /system/init-database Init database
@@ -26,50 +28,46 @@ use RedBeanPHP\Facade as RedBean;
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class InitDatabaseController extends Controller {
+class InitDatabaseController extends Controller
+{
     const PATH = '/init-database';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
-            'permission' => 'any',
-            'requestData' => []
+            'permission' => 'installer',
+            'requestData' => [
+                'dbHost' => [
+                    'validation' => DataValidator::notBlank(),
+                    'error' => ERRORS::INVALID_HOST
+                ],
+                'dbName' => [
+                    'validation' => DataValidator::notBlank(),
+                    'error' => ERRORS::INVALID_NAME
+                ]
+            ]
         ];
     }
 
-    public function handler() {
-        if(defined('MYSQL_HOST')) {
-            throw new RequestException(ERRORS::INIT_SETTINGS_DONE);
-        }
-
+    public function handler()
+    {
         $dbHost = Controller::request('dbHost');
         $dbPort = Controller::request('dbPort');
         $dbName = Controller::request('dbName');
         $dbUser = Controller::request('dbUser');
         $dbPass = Controller::request('dbPassword');
 
+        RedBean::removeToolBoxByKey("default");
         RedBean::setup("mysql:host=$dbHost;port=$dbPort", $dbUser, $dbPass);
+        RedBean::addDatabase($dbName, "mysql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
+        RedBean::selectDatabase($dbName);
 
-        if($dbName) {
-            RedBean::addDatabase($dbName, "mysql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
-            RedBean::selectDatabase($dbName);
-
-            if(!RedBean::testConnection()) {
-                throw new RequestException(ERRORS::DATABASE_CONNECTION);
-            }
-        } else {
-            $dbName = 'opensupports_' . Hashing::generateRandomNumber(100, 999);
-            RedBean::exec('CREATE DATABASE ' . $dbName);
-            RedBean::addDatabase($dbName, "mysql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
-            RedBean::selectDatabase($dbName);
-
-            if(!RedBean::testConnection()) {
-                throw new RequestException(ERRORS::DATABASE_CREATION);
-            }
+        if (!RedBean::testConnection()) {
+            throw new RequestException(ERRORS::DATABASE_CONNECTION);
         }
 
-        $configFile = fopen('config.php', 'w+') or die(ERRORS::INVALID_FILE);
+        $configFile = fopen('config.php', 'w+') or die(ERRORS::INVALID_CONFIG_FILE);
         $content = '<?php' . PHP_EOL;
         $content .= 'define(\'MYSQL_HOST\', \'' . $dbHost . '\');' . PHP_EOL;
         $content .= 'define(\'MYSQL_PORT\', \'' . $dbPort . '\');' . PHP_EOL;

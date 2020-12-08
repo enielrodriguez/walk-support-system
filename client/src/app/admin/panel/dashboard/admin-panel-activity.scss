@@ -1,7 +1,30 @@
+@import '../../../../scss/vars';
+
 .admin-panel-activity {
 
     &__menu {
         margin: 0 auto 20px auto;
-        width: 300px;
+        width: max-content;
+    }
+
+    &__form-field {
+        &-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-item {
+            margin: 10px;
+            &-delete button:enabled {
+               color: $primary-red;
+            }
+            &-clear button:enabled {
+                color: $primary-green;
+            }
+            button:disabled{
+                color: $medium-grey;
+            }
+        }
     }
 }

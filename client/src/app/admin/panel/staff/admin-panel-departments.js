@@ -20,6 +20,7 @@ import SubmitButton from 'core-components/submit-button';
 import Icon from 'core-components/icon';
 import Message from 'core-components/message';
 import Loading from 'core-components/loading'
+import SessionActions from "../../../../actions/session-actions";
 
 function getPublicDepartmentList() {
     return _.filter(SessionStore.getDepartments(), item => item.private != 1)
@@ -296,6 +297,7 @@ class AdminPanelDepartments extends React.Component {
             }).then(() => {
                 this.setState({formLoading: false, errorMessage: false, defaultDepartmentError: null});
                 this.retrieveDepartments();
+                this.props.dispatch(SessionActions.getUserData(null, null, true));
             }).catch(result => this.setState({
                 formLoading: false,
                 errorMessage: result.message,
@@ -312,6 +314,7 @@ class AdminPanelDepartments extends React.Component {
                 this.setState({formLoading: false, errorMessage: false, defaultDepartmentError: null});
                 this.retrieveDepartments();
                 this.onItemChange(-1);
+                this.props.dispatch(SessionActions.getUserData(null, null, true));
             }).catch((result) => {
                 this.onItemChange.bind(this, -1)
                 this.setState({
@@ -346,6 +349,7 @@ class AdminPanelDepartments extends React.Component {
             this.retrieveDepartments();
             this.onItemChange(-1);
             this.setState({defaultDepartmentError: null});
+            this.props.dispatch(SessionActions.getUserData(null, null, true));
         })
             .catch(result => this.setState({errorMessage: result.message, defaultDepartmentError: null}));
     }

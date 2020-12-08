@@ -1,6 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
-import {TransitionMotion, spring} from 'react-motion';
+import {spring, TransitionMotion} from 'react-motion';
 
 import API from 'lib-app/api-call';
 import i18n from 'lib-app/i18n';
@@ -9,6 +8,13 @@ import ActivityRow from 'app-components/activity-row';
 import Header from 'core-components/header';
 import Menu from 'core-components/menu';
 import SubmitButton from 'core-components/submit-button';
+import {connect} from "react-redux";
+import FormField from "../../../../core-components/form-field";
+import Form from "../../../../core-components/form";
+import Button from "../../../../core-components/button";
+import AreYouSure from "../../../../app-components/are-you-sure";
+import InfoTooltip from "../../../../core-components/info-tooltip";
+import DateTransformer from "../../../../lib-core/date-transformer";
 
 class AdminPanelActivity extends React.Component {
 
@@ -27,8 +33,20 @@ class AdminPanelActivity extends React.Component {
         page: 1,
         limit: false,
         loading: false,
-        mode: 'staff'
+        mode: 'staff',
+        dateRange: {startDate: this.getStartDate(), endDate: this.getEndDate()},
+        applyFilter: false
     };
+
+    getStartDate() {
+        let date = new Date();
+        let formattedDate = `${date.getFullYear()}01010000`;
+        return +formattedDate;
+    }
+
+    getEndDate() {
+        return +`${DateTransformer.getDateToday()}2359`;
+    }
 
     componentDidMount() {
         this.retrieveNextPage();
@@ -37,7 +55,7 @@ class AdminPanelActivity extends React.Component {
     render() {
         return (
             <div className="admin-panel-activity">
-                <Header title={i18n('LAST_ACTIVITY')} />
+                <Header title={i18n('LAST_ACTIVITY')}/>
                 <Menu {...this.getMenuProps()} />
                 {this.renderList()}
             </div>
@@ -45,7 +63,7 @@ class AdminPanelActivity extends React.Component {
     }
 
     getMenuProps() {
-        return {
+        let props = {
             className: 'admin-panel-activity__menu',
             type: 'horizontal-list-bright',
             onItemClick: this.onMenuItemClick.bind(this),
@@ -54,13 +72,18 @@ class AdminPanelActivity extends React.Component {
                 {
                     content: i18n('MY_NOTIFICATIONS'),
                     icon: ''
-                },
-                {
-                    content: i18n('ALL_NOTIFICATIONS'),
-                    icon: ''
                 }
             ]
         };
+
+        if (+this.props.level === 3) {
+            props.items[1] = {
+                content: i18n('ALL_NOTIFICATIONS'),
+                icon: ''
+            }
+        }
+
+        return props;
     }
 
     renderList() {
@@ -77,9 +100,93 @@ class AdminPanelActivity extends React.Component {
     renderActivityList(styles) {
         return (
             <div>
+
+                <Form values={{dateRange: this.state.dateRange}}
+                      onSubmit={this.onApplyFilter.bind(this)}
+                      onChange={form => this.setState({dateRange: form.dateRange})}>
+                    <div className="admin-panel-activity__form-field-container">
+                        <div className="admin-panel-activity__form-field-item">
+                            <FormField name="dateRange" field="date-range"/>
+                        </div>
+
+                        <div className="admin-panel-activity__form-field-item">
+                            <SubmitButton size="extra-small" type="secondary">{i18n('FILTER')}</SubmitButton>
+                        </div>
+
+                        <div className="admin-panel-activity__form-field-item-clear">
+                            <Button disabled={!this.state.applyFilter} type="clean"
+                                    onClick={this.clearFilter.bind(this)}>
+                                {i18n('CLEAR')}
+                            </Button>
+                        </div>
+
+                        <div className="admin-panel-activity__form-field-item-delete">
+                            <Button disabled={!this.state.applyFilter} type="clean"
+                                    onClick={this.onDeleteLogs.bind(this)}>
+                                {i18n('DELETE')}
+                            </Button>
+                            {this.renderDeleteInfo()}
+                        </div>
+                    </div>
+                </Form>
+
                 {styles.map(this.renderAnimatedItem.bind(this))}
             </div>
         );
+    }
+
+    renderDeleteInfo() {
+        return (
+            <InfoTooltip className="admin-panel-activity__tooltip"
+                         text={i18n('DELETE_LOGS_INFO')}/>
+        );
+    }
+
+    onApplyFilter(form) {
+        let state = {
+            page: 1,
+            activities: []
+        };
+
+        if (!this.state.applyFilter) {
+            state.applyFilter = true;
+        }
+        this.setState(state, () => this.retrieveNextPage())
+    }
+
+    clearFilter(event) {
+        event.preventDefault();
+        if (this.state.applyFilter) {
+            this.setState({
+                dateRange: {startDate: this.getStartDate(), endDate: this.getEndDate()},
+                applyFilter: false,
+                page: 1,
+                activities: []
+            }, () => this.retrieveNextPage());
+        }
+    }
+
+    onDeleteLogs(event) {
+        event.preventDefault();
+        AreYouSure.openModal(i18n('DELETE_LOGS_WARNING'), this.deleteLogs.bind(this));
+    }
+
+    deleteLogs() {
+        API.call({
+            path: (this.state.mode === 'staff') ? '/staff/delete-events' : '/system/delete-logs',
+            data: {
+                dateRange: `[${this.state.dateRange.startDate},${this.state.dateRange.endDate}]`
+            }
+        }).then(result => {
+            this.setState({
+                dateRange: {startDate: this.getStartDate(), endDate: this.getEndDate()},
+                applyFilter: false,
+                page: 1,
+                activities: []
+            }, () => this.onRetrieveSuccess(result));
+        });
+
+
     }
 
     renderAnimatedItem(config, index) {
@@ -123,18 +230,23 @@ class AdminPanelActivity extends React.Component {
         this.setState({
             page: 1,
             mode: (index === 0) ? 'staff' : 'system',
-            activities: []
+            activities: [],
+            dateRange: {startDate: this.getStartDate(), endDate: this.getEndDate()},
+            applyFilter: false
         }, this.retrieveNextPage.bind(this));
     }
 
     retrieveNextPage() {
         this.setState({loading: true});
+        let data = {page: this.state.page}
+
+        if (this.state.applyFilter) {
+            data.dateRange = `[${this.state.dateRange.startDate},${this.state.dateRange.endDate}]`;
+        }
 
         API.call({
             path: (this.state.mode === 'staff') ? '/staff/last-events' : '/system/get-logs',
-            data: {
-                page: this.state.page
-            }
+            data: data
         }).then(this.onRetrieveSuccess.bind(this));
     }
 
@@ -148,4 +260,8 @@ class AdminPanelActivity extends React.Component {
     }
 }
 
-export default AdminPanelActivity;
+export default connect((store) => {
+    return {
+        level: store.session.userLevel
+    };
+})(AdminPanelActivity);

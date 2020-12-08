@@ -42,8 +42,12 @@ class AdminPanelCustomFieldForm extends React.Component {
                         {this.state.addForm.type ? this.renderOptionFormFields() : null}
                         {this.state.error ? this.renderErrorMessage() : null}
                         <div className="admin-panel-custom-field-form__buttons">
-                            <SubmitButton>{i18n('SUBMIT')}</SubmitButton>
-                            <Button onClick={this.props.onClose} type="link">{i18n('CLOSE')}</Button>
+                            <div>
+                                <SubmitButton>{i18n('SUBMIT')}</SubmitButton>
+                            </div>
+                            <div className="admin-panel-custom-field-form__buttons-close">
+                                <Button onClick={this.props.onClose} type="link">{i18n('CLOSE')}</Button>
+                            </div>
                         </div>
                     </Form>
                 </div>
@@ -54,7 +58,7 @@ class AdminPanelCustomFieldForm extends React.Component {
     renderErrorMessage() {
         return (
             <Message type="error">
-                {this.state.error}
+                {i18n(this.state.error)}
             </Message>
         );
     }

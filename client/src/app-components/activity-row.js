@@ -5,6 +5,7 @@ import {Link} from 'react-router';
 import Icon from 'core-components/icon';
 
 import i18n from 'lib-app/i18n';
+import DateTransformer from "../lib-core/date-transformer";
 
 class ActivityRow extends React.Component {
 
@@ -50,7 +51,8 @@ class ActivityRow extends React.Component {
             name: React.PropTypes.string,
             staff: React.PropTypes.bool,
             id: React.PropTypes.string
-        })
+        }),
+        date: React.PropTypes.string
     };
 
     render() {
@@ -75,6 +77,9 @@ class ActivityRow extends React.Component {
                 </span>
                 <span className="activity-row__message"> {i18n('ACTIVITY_' + this.props.type)} </span>
                 {_.includes(ticketRelatedTypes, this.props.type) ? this.renderTicketNumber() : this.props.to}
+                {this.props.date &&
+                <span> ({DateTransformer.transformToString(this.props.date, false)})</span>
+                }
                 <span className="separator"/>
             </div>
         );

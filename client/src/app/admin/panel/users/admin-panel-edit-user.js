@@ -104,7 +104,7 @@ class AdminPanelEditUser extends React.Component {
                         </Form>
 
 
-                        {this.state.customFields.length && this.renderCustomFields()}
+                        {this.state.customFields.length > 0 && this.renderCustomFields()}
                     </div>
                 </div>
             );

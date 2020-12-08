@@ -60,9 +60,8 @@ class AddCompanyController extends Controller
                     'validation' => DataValidator::notBlank()->length(6, 100),
                     'error' => ERRORS::INVALID_PHONE
                 ], 'contact_name' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::notBlank()->length(5, 100),
-                        DataValidator::falseVal()
+                    'validation' => DataValidator::optional(
+                        DataValidator::notBlank()->length(5, 100)
                     ),
                     'error' => ERRORS::INVALID_CONTACT_NAME
                 ], 'users_limit' => [
@@ -72,9 +71,8 @@ class AddCompanyController extends Controller
                 'admin_name' => [
                     'validation' => [
                         [
-                            'validation' => DataValidator::oneOf(
-                                DataValidator::notBlank()->length(2, 100),
-                                DataValidator::falseVal()
+                            'validation' => DataValidator::optional(
+                                DataValidator::notBlank()->length(2, 100)
                             ),
                             'error' => ERRORS::INVALID_NAME
                         ],
@@ -85,9 +83,8 @@ class AddCompanyController extends Controller
                     ]
                 ],
                 'admin_email' => [
-                    'validation' => DataValidator::oneOf(
-                        DataValidator::email(),
-                        DataValidator::falseVal()
+                    'validation' => DataValidator::optional(
+                        DataValidator::email()
                     ),
                     'error' => ERRORS::INVALID_ADMIN_EMAIL
                 ],
@@ -110,10 +107,10 @@ class AddCompanyController extends Controller
             throw new RequestException(ERRORS::INVALID_USER);
         }
 
-
         $globalUsersLimit = PlanLimit::findOne()->users;
         if ($globalUsersLimit > 0) {
-            $usersInDefaultCompany = User::count(' company_id = ? ', [1]);
+            $defCompanyId = Company::findOne(' nit = "default_company" ')->id;
+            $usersInDefaultCompany = User::count(' company_id = ? ', [$defCompanyId]);
             $companiesLimit = (int)Company::getCell('SELECT SUM(users_limit) FROM company');
 
             $availablePositions = $globalUsersLimit - $companiesLimit - $usersInDefaultCompany;

@@ -52,7 +52,7 @@ class Log extends DataStore {
             $authorName = $author->name;
         }
 
-        $log = new Log();
+        $log = new self();
 
         $log->setProperties(array(
             'type' => $type,

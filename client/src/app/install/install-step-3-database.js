@@ -11,71 +11,137 @@ import Form from 'core-components/form';
 import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
+import {connect} from "react-redux";
 
 class InstallStep3Database extends React.Component {
 
     state = {
         loading: false,
-        error: false,
-        errorMessage: ''
+        errorMessage: '',
+        form: {
+            dbHost: '',
+            dbPort: '',
+            dbName: '',
+            dbUser: ''
+        },
+        currentHost: '',
+        currentName: '',
+        partialInstalled: false
     };
 
+    componentDidMount() {
+        if (this.props.installed) {
+            this.customSetState({loading: true});
+            API.call({
+                path: '/system/get-db-settings'
+            })
+                .then((result) => {
+                    const data = result.data;
+                    let state = _.extend(this.state, {
+                        form: data,
+                        currentHost: data['dbHost'],
+                        currentName: data['dbName'],
+                        loading: false,
+                        errorMessage: ''
+                    });
+                    if (data.dbName && !this.props.installed) {
+                        state.partialInstalled = true;
+                    }
+                    this.customSetState(state);
+                })
+                .catch(() => this.customSetState({
+                    loading: false,
+                    errorMessage: 'UNKNOWN_ERROR'
+                }));
+        }
+    }
+
+    customSetState(state) {
+        if (this.props.installerLogged) {
+            this.setState(state);
+        }
+    }
+
     render() {
-        const { loading } = this.state;
+        const {loading, form} = this.state;
         return (
             <div className="install-step-3">
-                <Header title={i18n('STEP_TITLE', {title: i18n('DATABASE_CONFIGURATION'), current: 3, total: 6})} description={i18n('STEP_3_DESCRIPTION')} />
-                {this.renderMessage()}
-                <Form loading={loading} onSubmit={this.onSubmit.bind(this)}>
-                    <FormField name="dbHost" label={i18n('DATABASE_HOST')} fieldProps={{size: 'large'}} required/>
-                    <FormField name="dbPort" label={i18n('DATABASE_PORT')} fieldProps={{size: 'large'}} infoMessage={i18n('DEFAULT_PORT')}/>
-                    <FormField name="dbName" label={i18n('DATABASE_NAME')} fieldProps={{size: 'large'}} infoMessage={i18n('LEFT_EMPTY_DATABASE')}/>
-                    <FormField name="dbUser" label={i18n('DATABASE_USER')} fieldProps={{size: 'large'}} required/>
-                    <FormField name="dbPassword" label={i18n('DATABASE_PASSWORD')} fieldProps={{size: 'large', password: true}}/>
+                <Header title={i18n('STEP_TITLE', {title: i18n('DATABASE_CONFIGURATION'), current: 3, total: 7})}
+                        description={i18n('STEP_3_DESCRIPTION')}/>
+
+                {this.state.errorMessage &&
+                <Message className="install-step-3__message" type="error">
+                    {i18n('ERROR_UPDATING_SETTINGS')}: {this.state.errorMessage}
+                </Message>
+                }
+
+                <Form loading={loading}
+                      values={form}
+                      onChange={form => this.customSetState({form})}
+                      onSubmit={this.onSubmit.bind(this)}>
+                    <FormField name="dbHost" label={i18n('DATABASE_HOST')}
+                               fieldProps={{size: 'large'}} required/>
+                    <FormField name="dbPort" label={i18n('DATABASE_PORT')}
+                               fieldProps={{size: 'large'}}
+                               infoMessage={i18n('DEFAULT_PORT')}/>
+                    <FormField name="dbName" label={i18n('DATABASE_NAME')}
+                               fieldProps={{size: 'large'}} required/>
+                    <FormField name="dbUser" label={i18n('DATABASE_USER')}
+                               fieldProps={{size: 'large'}} required/>
+                    <FormField name="dbPassword" label={i18n('DATABASE_PASSWORD')}
+                               fieldProps={{size: 'large', password: true}}/>
+
                     <div className="install-step-3__buttons">
-                        <Button className="install-step-3__previous" disabled={loading} size="medium" onClick={this.onPreviousClick.bind(this)}>{i18n('PREVIOUS')}</Button>
-                        <SubmitButton className="install-step-3__next" size="medium" type="secondary">{i18n('NEXT')}</SubmitButton>
+                        {!this.props.installed &&
+                        <Button className="install-step-3__previous"
+                                disabled={loading}
+                                size="medium"
+                                route={{to: '/install/step/2'}}>
+                            {i18n('PREVIOUS')}
+                        </Button>
+                        }
+
+                        <SubmitButton className="install-step-3__next" size="medium"
+                                      type="secondary">
+                            {i18n(this.props.installed ? 'SAVE' : 'NEXT')}
+                        </SubmitButton>
                     </div>
                 </Form>
             </div>
         );
     }
 
-    renderMessage() {
-        let message = null;
-
-        if(this.state.error) {
-            message = (
-                <Message className="install-step-3__message" type="error">
-                    {i18n('ERROR_UPDATING_SETTINGS')}: {this.state.errorMessage}
-                </Message>
-            );
-        }
-
-        return message;
-    }
-
-    onPreviousClick(event) {
-        event.preventDefault();
-        history.push('/install/step-2');
-    }
-
     onSubmit(form) {
-        this.setState({
-            loading: true
-        }, () => {
-            API.call({
-                path: '/system/init-database',
-                data: _.extend({}, form, {dbPort: form.dbPort || 3306})
+        this.customSetState({loading: true});
+
+        API.call({
+            path: '/system/init-database',
+            data: _.extend({}, form, {dbPort: form.dbPort || 3306})
+        })
+            .then(() => {
+                if (!this.props.installed || this.state.partialInstalled)
+                    history.push('/install/step/4')
+                else {
+                    if (form.dbHost !== this.state.currentHost || form.dbName !== this.state.currentName) {
+                        window.location.reload(true);
+                    } else {
+                        this.customSetState({loading: false, errorMessage: ''});
+                    }
+                }
             })
-                .then(() => history.push('/install/step-4'))
-                .catch(({message}) => this.setState({
+            .catch(({message}) => {
+                this.customSetState({
                     loading: false,
-                    error: true,
                     errorMessage: message
-                }));
-        });
+                });
+            });
+
     }
 }
 
-export default InstallStep3Database;
+export default connect((store) => {
+    return {
+        installerLogged: !!store.config.installerLogged,
+        installed: !!store.config.installed
+    };
+})(InstallStep3Database);

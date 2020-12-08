@@ -35,5 +35,11 @@ $systemControllerGroup->addController(new EmailPollingController);
 $systemControllerGroup->addController(new AddCustomFieldController);
 $systemControllerGroup->addController(new DeleteCustomFieldController);
 $systemControllerGroup->addController(new GetCustomFieldsController);
+$systemControllerGroup->addController(new InitPlanController);
+$systemControllerGroup->addController(new ValidateInstallationKeyController);
+$systemControllerGroup->addController(new GetDBSettingsController);
+$systemControllerGroup->addController(new GetEmailSettingsController);
+$systemControllerGroup->addController(new GetAdminSettingsController);
+$systemControllerGroup->addController(new DeleteLogsController);
 
 $systemControllerGroup->finalize();

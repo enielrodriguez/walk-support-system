@@ -1,5 +1,4 @@
 <?php
-use Respect\Validation\Validator as DataValidator;
 
 /**
  * @api {post} /system/test-smtp Test SMTP Connection
@@ -23,19 +22,25 @@ use Respect\Validation\Validator as DataValidator;
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class TestSMTPController extends Controller {
+class TestSMTPController extends Controller
+{
     const PATH = '/test-smtp';
     const METHOD = 'POST';
 
-    public function validations() {
+    public function validations()
+    {
         return [
             'permission' => 'any',
             'requestData' => []
         ];
     }
 
-    public function handler() {
+    public function handler()
+    {
+        if (!Session::getInstance()->isInstallerLogged() && !Controller::isUserLogged()) {
+            throw new RequestException(ERRORS::NO_PERMISSION);
+        }
+
         $mailSender = MailSender::getInstance();
         $mailSender->setConnectionSettings(
             Controller::request('smtp-host'),
@@ -44,7 +49,7 @@ class TestSMTPController extends Controller {
             ''
         );
 
-        if($mailSender->isConnected()) {
+        if ($mailSender->isConnected()) {
             Response::respondSuccess();
         } else {
             throw new RequestException(ERRORS::SMTP_CONNECTION);
