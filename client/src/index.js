@@ -27,10 +27,6 @@ if (process.env.NODE_ENV !== 'production') {
     window.React = React;
 }
 
-if (process.env.FIXTURES) {
-    require('lib-app/fixtures-loader');
-}
-
 let renderApplication = function () {
     render(<Provider store={store}>{routes}</Provider>, document.getElementById('app'));
 };

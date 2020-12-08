@@ -2,7 +2,6 @@ import React from 'react';
 import {Router, Route, IndexRoute, IndexRedirect} from 'react-router';
 
 import App from 'app/App';
-import DemoPage from 'app/demo/components-demo-page';
 import history from 'lib-app/history';
 
 import MainLayout from 'app/main/main-layout';
@@ -174,7 +173,6 @@ export default (
                 </Route>
             </Route>
 
-            <Route name='Demo' path='components-demo' component={DemoPage}/>
         </Route>
     </Router>
 );

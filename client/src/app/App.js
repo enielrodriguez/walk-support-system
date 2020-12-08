@@ -120,10 +120,6 @@ class App extends React.Component {
         if(props.config.installedDone && props.config.installed && _.includes(props.location.pathname, '/completed')) {
             history.push('/admin');
         }
-
-        if (process.env.NODE_ENV === 'production' && _.includes(props.location.pathname, '/components-demo')) {
-            history.push('/');
-        }
     }
 
     isPathAvailableForStaff(props) {
