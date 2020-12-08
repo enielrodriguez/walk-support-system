@@ -79,8 +79,7 @@ const config = env => {
             }),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-                'process.env.FIXTURES': env && env.FIXTURES,
+                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }),
             // new StyleLintPlugin({
             //     files: './src/**/*.scss',

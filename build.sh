@@ -27,13 +27,13 @@ chmod -R 755 .
 cp client/src/index.php client/build
 echo "3/3 Generating zip..."
 cd client/build
-zip opensupports_dev.zip index.php
-zip -u opensupports_dev.zip .htaccess
-zip -u opensupports_dev.zip bundle.js
-zip -ur opensupports_dev.zip images
-mv opensupports_dev.zip ../..
+zip opensupports_prod.zip index.php
+zip -u opensupports_prod.zip .htaccess
+zip -u opensupports_prod.zip bundle.js
+zip -ur opensupports_prod.zip images
+mv opensupports_prod.zip ../..
 cd ../..
-zip -ur opensupports_dev.zip api
+zip -ur opensupports_prod.zip api
 mkdir -p dist
-mv opensupports_dev.zip dist
+mv opensupports_prod.zip dist
 rm -r api

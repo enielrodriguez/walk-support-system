@@ -1,77 +1,82 @@
 import React from 'react';
 import {Router, Route, IndexRoute, IndexRedirect} from 'react-router';
+import asyncComponent from './async-component';
 
-import App from 'app/App';
-import DemoPage from 'app/demo/components-demo-page';
+import App from './App';
 import history from 'lib-app/history';
 
-import MainLayout from 'app/main/main-layout';
-import MainHomePage from 'app/main/main-home/main-home-page';
-import MainSignUpPage from 'app/main/main-signup/main-signup-page';
-import MainVerifyTokenPage from 'app/main/main-verify-token-page';
-import MainRecoverPasswordPage from 'app/main/main-recover-password/main-recover-password-page';
-import MainMaintenancePage from 'app/main/main-maintenance-page';
-import MainCheckTicketPage from 'app/main/main-check-ticket-page';
-import MainViewTicketPage from 'app/main/main-view-ticket-page';
+import MainLayout from './main/main-layout';
+import MainHomePage from './main/main-home/main-home-page';
 
-import DashboardLayout from 'app/main/dashboard/dashboard-layout';
-import DashboardListTicketsPage from 'app/main/dashboard/dashboard-list-tickets/dashboard-list-tickets-page';
-import DashboardListArticlesPage from 'app/main/dashboard/dashboard-list-articles/dashboard-list-articles-page';
-import DashboardCreateTicketPage from 'app/main/dashboard/dashboard-create-ticket/dashboard-create-ticket-page';
-import DashboardEditProfilePage from 'app/main/dashboard/dashboard-edit-profile/dashboard-edit-profile-page';
-import DashboardArticlePage from 'app/main/dashboard/dashboard-article/dashboard-article-page';
-import DashboardTicketPage from 'app/main/dashboard/dashboard-ticket/dashboard-ticket-page';
+const MainSignUpPage = asyncComponent(() => import('./main/main-signup/main-signup-page'));
+const MainVerifyTokenPage = asyncComponent(() => import('./main/main-verify-token-page'));
+const MainRecoverPasswordPage = asyncComponent(() => import('./main/main-recover-password/main-recover-password-page'));
+const MainMaintenancePage = asyncComponent(() => import('./main/main-maintenance-page'));
+const MainCheckTicketPage = asyncComponent(() => import('./main/main-check-ticket-page'));
+const MainViewTicketPage = asyncComponent(() => import('./main/main-view-ticket-page'));
+
+const DashboardLayout = asyncComponent(() => import('./main/dashboard/dashboard-layout'));
+const DashboardListTicketsPage = asyncComponent(() => import('./main/dashboard/dashboard-list-tickets/dashboard-list-tickets-page'));
+const DashboardListArticlesPage = asyncComponent(() => import('./main/dashboard/dashboard-list-articles/dashboard-list-articles-page'));
+const DashboardCreateTicketPage = asyncComponent(() => import('./main/dashboard/dashboard-create-ticket/dashboard-create-ticket-page'));
+const DashboardEditProfilePage = asyncComponent(() => import('./main/dashboard/dashboard-edit-profile/dashboard-edit-profile-page'));
+const DashboardArticlePage = asyncComponent(() => import('./main/dashboard/dashboard-article/dashboard-article-page'));
+const DashboardTicketPage = asyncComponent(() => import('./main/dashboard/dashboard-ticket/dashboard-ticket-page'));
+const DashboardEditUser = asyncComponent(() => import('./main/dashboard/dashboard-edit-user/dashboard-edit-user'));
+const DashboardViewUser = asyncComponent(() => import('./main/dashboard/dashboard-view-user/dashboard-view-user'));
+const DashboardListUsersPage = asyncComponent(() => import('./main/dashboard/dashboard-list-users/dashboard-list-users-page'));
+
 
 // ADMIN PANEL
-import AdminLoginPage from 'app/admin/admin-login-page';
-import AdminPanelLayout from 'app/admin/panel/admin-panel-layout';
+const AdminPanelLayout = asyncComponent(() => import('./admin/panel/admin-panel-layout'));
+const AdminLoginPage = asyncComponent(() => import('./admin/admin-login-page'));
 
-import AdminPanelStats from 'app/admin/panel/dashboard/admin-panel-stats';
-import AdminPanelActivity from 'app/admin/panel/dashboard/admin-panel-activity';
-import AdminPanelMyAccount from 'app/admin/panel/dashboard/admin-panel-my-account';
+const AdminPanelStats = asyncComponent(() => import('./admin/panel/dashboard/admin-panel-stats'));
+const AdminPanelActivity = asyncComponent(() => import('./admin/panel/dashboard/admin-panel-activity'));
+const AdminPanelMyAccount = asyncComponent(() => import('./admin/panel/dashboard/admin-panel-my-account'));
+const AdminPanelPlan = asyncComponent(() => import('./admin/panel/dashboard/admin-panel-plan'));
 
-import AdminPanelMyTickets from 'app/admin/panel/tickets/admin-panel-my-tickets';
-import AdminPanelNewTickets from 'app/admin/panel/tickets/admin-panel-new-tickets';
-import AdminPanelSearchTickets from 'app/admin/panel/tickets/admin-panel-search-tickets';
-import AdminPanelViewTicket from 'app/admin/panel/tickets/admin-panel-view-ticket';
-import AdminPanelCustomResponses from 'app/admin/panel/tickets/admin-panel-custom-responses';
+const AdminPanelMyTickets = asyncComponent(() => import('./admin/panel/tickets/admin-panel-my-tickets'));
+const AdminPanelNewTickets = asyncComponent(() => import('./admin/panel/tickets/admin-panel-new-tickets'));
+const AdminPanelSearchTickets = asyncComponent(() => import('./admin/panel/tickets/admin-panel-search-tickets'));
+const AdminPanelViewTicket = asyncComponent(() => import('./admin/panel/tickets/admin-panel-view-ticket'));
+const AdminPanelCustomResponses = asyncComponent(() => import('./admin/panel/tickets/admin-panel-view-ticket'));
 
-import AdminPanelListUsers from 'app/admin/panel/users/admin-panel-list-users';
-import AdminPanelViewUser from 'app/admin/panel/users/admin-panel-view-user';
-import AdminPanelBanUsers from 'app/admin/panel/users/admin-panel-ban-users';
-import AdminPanelCustomFields from 'app/admin/panel/users/admin-panel-custom-fields';
-import AdminPanelCompanies from "app/admin/panel/users/admin-panel-companies";
+const AdminPanelListUsers = asyncComponent(() => import('./admin/panel/users/admin-panel-list-users'));
+const AdminPanelViewUser = asyncComponent(() => import('./admin/panel/users/admin-panel-view-user'));
+const AdminPanelBanUsers = asyncComponent(() => import('./admin/panel/users/admin-panel-ban-users'));
+const AdminPanelCustomFields = asyncComponent(() => import('./admin/panel/users/admin-panel-custom-fields'));
+const AdminPanelCompanies = asyncComponent(() => import('./admin/panel/users/admin-panel-companies'));
 
-import AdminPanelListArticles from 'app/admin/panel/articles/admin-panel-list-articles';
-import AdminPanelViewArticle from 'app/admin/panel/articles/admin-panel-view-article';
+const AdminPanelListArticles = asyncComponent(() => import('./admin/panel/articles/admin-panel-list-articles'));
+const AdminPanelViewArticle = asyncComponent(() => import('./admin/panel/articles/admin-panel-view-article'));
 
-import AdminPanelStaffMembers from 'app/admin/panel/staff/admin-panel-staff-members';
-import AdminPanelDepartments from 'app/admin/panel/staff/admin-panel-departments';
-import AdminPanelViewStaff from 'app/admin/panel/staff/admin-panel-view-staff';
+const AdminPanelStaffMembers = asyncComponent(() => import('./admin/panel/staff/admin-panel-staff-members'));
+const AdminPanelDepartments = asyncComponent(() => import('./admin/panel/staff/admin-panel-departments'));
+const AdminPanelViewStaff = asyncComponent(() => import('./admin/panel/staff/admin-panel-view-staff'));
 
-import AdminPanelSystemPreferences from 'app/admin/panel/settings/admin-panel-system-preferences';
-import AdminPanelAdvancedSettings from 'app/admin/panel/settings/admin-panel-advanced-settings';
-import AdminPanelEmailSettings from 'app/admin/panel/settings/admin-panel-email-settings';
-import AdminPanelCustomTags from 'app/admin/panel/settings/admin-panel-custom-tags';
+const AdminPanelSystemPreferences = asyncComponent(() => import('./admin/panel/settings/admin-panel-system-preferences'));
+const AdminPanelAdvancedSettings = asyncComponent(() => import('./admin/panel/settings/admin-panel-advanced-settings'));
+const AdminPanelEmailSettings = asyncComponent(() => import('./admin/panel/settings/admin-panel-email-settings'));
+const AdminPanelCustomTags = asyncComponent(() => import('./admin/panel/settings/admin-panel-custom-tags'));
+
+const AdminPanelEditCompany = asyncComponent(() => import('./admin/panel/users/admin-panel-edit-company'));
+const AdminPanelViewCompany = asyncComponent(() => import('./admin/panel/users/admin-panel-view-company'));
+const AdminPanelEditUser = asyncComponent(() => import('./admin/panel/users/admin-panel-edit-user'));
+
 
 // INSTALLATION
-import InstallLayout from 'app/install/install-layout';
-import InstallStep1Language from 'app/install/install-step-1-language';
-import InstallStep2Requirements from 'app/install/install-step-2-requirements';
-import InstallStep3Database from 'app/install/install-step-3-database';
-import InstallStep4UserSystem from 'app/install/install-step-4-user-system';
-import InstallStep5Settings from 'app/install/install-step-5-settings.js';
-import InstallStep6Settings from "./install/install-step-6-plan-limits";
-import InstallStep7Admin from 'app/install/install-step-7-admin';
-import InstallCompleted from 'app/install/install-completed';
-import AdminPanelViewCompany from "./admin/panel/users/admin-panel-view-company";
-import DashboardListUsersPage from "./main/dashboard/dashboard-list-users/dashboard-list-users-page";
-import DashboardViewUser from "./main/dashboard/dashboard-view-user/dashboard-view-user";
-import AdminPanelEditUser from "./admin/panel/users/admin-panel-edit-user";
-import DashboardEditUser from "./main/dashboard/dashboard-edit-user/dashboard-edit-user";
-import AdminPanelEditCompany from "./admin/panel/users/admin-panel-edit-company";
-import AdminPanelPlan from "./admin/panel/dashboard/admin-panel-plan";
-import ValidateKey from "./install/validate-key";
+const InstallLayout = asyncComponent(() => import('./install/install-layout'));
+const ValidateKey = asyncComponent(() => import('./install/validate-key'));
+const InstallStep1Language = asyncComponent(() => import('./install/install-step-1-language'));
+const InstallStep2Requirements = asyncComponent(() => import('./install/install-step-2-requirements'));
+const InstallStep3Database = asyncComponent(() => import('./install/install-step-3-database'));
+const InstallStep4UserSystem = asyncComponent(() => import('./install/install-step-4-user-system'));
+const InstallStep5Settings = asyncComponent(() => import('./install/install-step-5-settings'));
+const InstallStep6PlanLimits = asyncComponent(() => import('./install/install-step-6-plan-limits'));
+const InstallStep7Admin = asyncComponent(() => import('./install/install-step-7-admin'));
+const InstallCompleted = asyncComponent(() => import('./install/install-completed'));
+
 
 export default (
     <Router history={history}>
@@ -114,7 +119,7 @@ export default (
                     <Route path="3" component={InstallStep3Database}/>
                     <Route path="4" component={InstallStep4UserSystem}/>
                     <Route path="5" component={InstallStep5Settings}/>
-                    <Route path="6" component={InstallStep6Settings}/>
+                    <Route path="6" component={InstallStep6PlanLimits}/>
                     <Route path="7" component={InstallStep7Admin}/>
                 </Route>
                 <Route path="completed" component={InstallCompleted}/>
@@ -174,7 +179,6 @@ export default (
                 </Route>
             </Route>
 
-            <Route name='Demo' path='components-demo' component={DemoPage}/>
         </Route>
     </Router>
 );
