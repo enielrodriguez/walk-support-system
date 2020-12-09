@@ -6,8 +6,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 // const StyleLintPlugin = require('stylelint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const {dependencies} = require('./package.json');
-
 const BUILD_DIR = path.join(__dirname, 'build');
 const APP_DIR = path.join(__dirname, 'src');
 
@@ -100,12 +98,13 @@ const config = env => {
             modules: ['./src', './node_modules']
         },
         node: {fs: 'empty'},
-        optimization: {
+        optimization: process.env.NODE_ENV === 'production' ? {
             minimize: true,
             minimizer: [new TerserPlugin({
                 parallel: 4
             })],
-        },
+        }
+        :{},
     };
 };
 
