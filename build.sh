@@ -38,6 +38,8 @@ mv opensupports_prod.zip ../..
 
 cd ../..
 zip -ur opensupports_prod.zip api
+zip -u opensupports_prod.zip LICENSE
+zip -u opensupports_prod.zip installation-key.txt
 
 mkdir -p dist
 mv opensupports_prod.zip dist
