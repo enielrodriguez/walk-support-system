@@ -38,7 +38,6 @@ class EditMailTemplateController extends Controller {
 
     private $language;
     private $templateType;
-    private $subject;
     private $texts;
 
     public function validations() {
@@ -64,7 +63,7 @@ class EditMailTemplateController extends Controller {
     public function handler() {
         $this->language = Controller::request('language');
         $this->templateType = Controller::request('template');
-        $this->subject = Controller::request('subject', true);
+        $subject = Controller::request('subject', true);
         $this->texts = [
             Controller::request('text1'),
             Controller::request('text2'),
@@ -79,7 +78,7 @@ class EditMailTemplateController extends Controller {
 
         $this->validateReplacements();
 
-        $mailTemplate->subject = $this->subject;
+        $mailTemplate->subject = $subject;
         $mailTemplate->text1 = $this->texts[0];
         $mailTemplate->text2 = $this->texts[1];
         $mailTemplate->text3 = $this->texts[2];
@@ -116,7 +115,9 @@ class EditMailTemplateController extends Controller {
 
     public function includes($array1, $array2) {
         foreach($array1 as $item) {
-            if(!in_array($item, $array2)) return false;
+            if(!in_array($item, $array2, true)) {
+                return false;
+            }
         }
 
         return true;

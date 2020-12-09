@@ -18,9 +18,9 @@ class FileDownloader extends FileManager {
             fclose($file);
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function eraseFile() {
@@ -42,14 +42,21 @@ class FileDownloader extends FileManager {
     }
 
     public function getFilePermission() {
-        if(!strlen($this->getFileName())) return NULL;
+        if($this->getFileName() === '') {
+            return NULL;
+        }
+
         $indicator = $this->getFileName()[0];
 
         if($indicator === 'a') {
             return FileManager::PERMISSION_ARTICLE;
-        } else if($indicator === 't') {
+        }
+
+        if($indicator === 't') {
             return FileManager::PERMISSION_TICKET;
-        } else if($indicator === 'p') {
+        }
+
+        if($indicator === 'p') {
             return FileManager::PERMISSION_PROFILE;
         }
 

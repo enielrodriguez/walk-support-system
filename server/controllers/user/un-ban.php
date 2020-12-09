@@ -44,13 +44,13 @@ class UnBanUserController extends Controller {
         
         if($banRow->isNull()) {
             throw new RequestException(ERRORS::INVALID_EMAIL);
-        } else {
-            $banRow->delete();
-            
-            Log::createLog('UN_BAN_USER', $email);
-
-            Response::respondSuccess();
         }
+
+        $banRow->delete();
+
+        Log::createLog('UN_BAN_USER', $email);
+
+        Response::respondSuccess();
     }
         
 }

@@ -76,7 +76,7 @@ class Session
 
     public function isInstallerLogged()
     {
-        $storedValue = $_SESSION['isInstallerLogged'] ?? null;
+        $storedValue = array_key_exists('isInstallerLogged', $_SESSION) ? $_SESSION['isInstallerLogged'] : null;
         return (bool)$storedValue;
     }
 

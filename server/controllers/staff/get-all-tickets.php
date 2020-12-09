@@ -73,11 +73,7 @@ class GetAllTicketsStaffController extends Controller {
     }
 
     private function getSearchQuery() {
-        $page = Controller::request('page');
-
-        $query = " (title LIKE ? OR title LIKE ?) AND ";
-
-        return $query;
+        return " (title LIKE ? OR title LIKE ?) AND ";
     }
 
     private function getTotalPages() {
@@ -107,8 +103,8 @@ class GetAllTicketsStaffController extends Controller {
         $closed = Controller::request('closed')*1;
         if ($closed) {
             return '';
-        } else {
-            return " AND (closed = '0')";
         }
+
+        return " AND (closed = '0')";
     }
 }

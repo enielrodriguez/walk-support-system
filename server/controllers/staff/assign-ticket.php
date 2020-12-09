@@ -30,9 +30,6 @@ class AssignStaffController extends Controller {
     const PATH = '/assign-ticket';
     const METHOD = 'POST';
 
-    private $ticket;
-    private $staffToAssign;
-
     public function validations() {
         return [
             'permission' => 'staff_1',
@@ -48,46 +45,46 @@ class AssignStaffController extends Controller {
     public function handler() {
         $ticketNumber = Controller::request('ticketNumber');
         $staffId = Controller::request('staffId');
-        $this->ticket = Ticket::getByTicketNumber($ticketNumber);
+        $ticket = Ticket::getByTicketNumber($ticketNumber);
         $user = Controller::getLoggedUser();
 
         if($staffId) {
-            $this->staffToAssign = Staff::getDataStore($staffId, 'id');
+            $staffToAssign = Staff::getDataStore($staffId, 'id');
 
-            if($this->staffToAssign->isNull()) {
+            if($staffToAssign->isNull()) {
                 throw new RequestException(ERRORS::INVALID_STAFF);
             }
 
-            if(!$this->staffToAssign->sharedDepartmentList->includesId($this->ticket->department->id)) {
+            if(!$staffToAssign->sharedDepartmentList->includesId($ticket->department->id)) {
                 throw new RequestException(ERRORS::INVALID_DEPARTMENT);
             }
         } else {
-            $this->staffToAssign = Controller::getLoggedUser();
+            $staffToAssign = Controller::getLoggedUser();
         }
 
-        if($this->ticket->owner) {
+        if($ticket->owner) {
             throw new RequestException(ERRORS::TICKET_ALREADY_ASSIGNED);
         }
 
-        if(!$user->canManageTicket($this->ticket)) {
+        if(!$user->canManageTicket($ticket)) {
             throw new RequestException(ERRORS::NO_PERMISSION);
-        } else {
-            $this->staffToAssign->sharedTicketList->add($this->ticket);
-            $this->ticket->owner = $this->staffToAssign;
-            $this->ticket->unread = !$this->ticket->isAuthor($this->staffToAssign);
-            $event = Ticketevent::getEvent(Ticketevent::ASSIGN);
-            $event->setProperties(array(
-                'authorStaff' => Controller::getLoggedUser(),
-                'date' => Date::getCurrentDate(),
-                'content' => $this->staffToAssign->name,
-            ));
-            $this->ticket->addEvent($event);
-
-            $this->ticket->store();
-            $this->staffToAssign->store();
-
-            Response::respondSuccess();
         }
+
+        $staffToAssign->sharedTicketList->add($ticket);
+        $ticket->owner = $staffToAssign;
+        $ticket->unread = !$ticket->isAuthor($staffToAssign);
+        $event = Ticketevent::getEvent(Ticketevent::ASSIGN);
+        $event->setProperties(array(
+            'authorStaff' => Controller::getLoggedUser(),
+            'date' => Date::getCurrentDate(),
+            'content' => $staffToAssign->name,
+        ));
+        $ticket->addEvent($event);
+
+        $ticket->store();
+        $staffToAssign->store();
+
+        Response::respondSuccess();
 
     }
 

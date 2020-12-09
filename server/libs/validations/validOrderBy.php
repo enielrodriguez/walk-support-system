@@ -11,9 +11,13 @@ class ValidOrderBy extends AbstractRule {
 
             $object = json_decode($orderBy);
 
-        	if(($object->asc !== 1 && $object->asc !== 0) || !in_array($object->value, $values)) return false;
+        	if(($object->asc !== 1 && $object->asc !== 0) || !in_array($object->value, $values, true)) {
+                return false;
+            }
 
             return true;
         }
+
+        return false;
     }
 }

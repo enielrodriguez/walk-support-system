@@ -40,7 +40,6 @@ class DownloadController extends Controller {
 
     public function handler() {
         $fileName = Controller::request('file');
-        $isStaffProfilePic = !Staff::getDataStore($fileName, 'profilePic')->isNull();
 
         $fileDownloader = FileDownloader::getInstance();
         $fileDownloader->setFileName($fileName);
@@ -77,9 +76,9 @@ class DownloadController extends Controller {
 
         if($session->getTicketNumber()) {
             return $session->getTicketNumber() !== $ticket->ticketNumber;
-        } else {
-            return $ticket->author->id !== $loggedUser->id || ($loggedUser instanceof Staff) !== $ticket->authorToArray()['staff'];
         }
+
+        return $ticket->author->id !== $loggedUser->id || ($loggedUser instanceof Staff) !== $ticket->authorToArray()['staff'];
     }
 
     private function isNotDepartmentOwner($ticket, $loggedUser) {
@@ -87,8 +86,8 @@ class DownloadController extends Controller {
 
         if($session->getTicketNumber()) {
             return $session->getTicketNumber() !== $ticket->ticketNumber;
-        } else {
-            return !($loggedUser->level >= 1) || !$loggedUser->sharedDepartmentList->includesId($ticket->department->id);
         }
+
+        return !($loggedUser->level >= 1) || !$loggedUser->sharedDepartmentList->includesId($ticket->department->id);
     }
 }

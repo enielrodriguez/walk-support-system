@@ -27,9 +27,8 @@ class AddCompanyController extends Controller
 
     private $adminEmail;
     private $adminName;
-    private $token;
 
-    private Company $company;
+    private $company;
 
     private $businessName;
     private $nit;
@@ -193,11 +192,11 @@ class AddCompanyController extends Controller
 
     public function sendInvitationMail()
     {
-        $this->token = Hashing::generateRandomToken();
+        $token = Hashing::generateRandomToken();
         $recoverPassword = new RecoverPassword();
         $recoverPassword->setProperties(array(
             'email' => $this->adminEmail,
-            'token' => $this->token,
+            'token' => $token,
             'staff' => false
         ));
         $recoverPassword->store();
@@ -208,7 +207,7 @@ class AddCompanyController extends Controller
             'to' => $this->adminEmail,
             'name' => $this->adminName,
             'url' => Setting::getSetting('url')->getValue(),
-            'token' => $this->token
+            'token' => $token
         ]);
 
         $mailSender->send();

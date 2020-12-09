@@ -68,9 +68,9 @@ abstract class Controller
             $config = HTMLPurifier_Config::createDefault();
             $purifier = new HTMLPurifier($config);
             return $purifier->purify($result);
-        } else {
-            return $result;
         }
+
+        return $result;
     }
 
     public static function getLoggedUser()
@@ -79,14 +79,14 @@ abstract class Controller
 
         if ($session->isStaffLogged()) {
             return Staff::getUser($session->getUserId());
-        } else {
-            $user = User::getUser($session->getUserId());
-            if ($session->getTicketNumber()) {
-                $user->ticketNumber = $session->getTicketNumber();
-            }
-
-            return $user;
         }
+
+        $user = User::getUser($session->getUserId());
+        if ($session->getTicketNumber()) {
+            $user->ticketNumber = $session->getTicketNumber();
+        }
+
+        return $user;
     }
 
     public static function isUserLogged()
@@ -103,8 +103,7 @@ abstract class Controller
     {
         if (Controller::isUserLogged()) {
             $user = Controller::getLoggedUser();
-            $isAdmin = !$user->isNull() && $user->company && $user->company->admin ? $user->company->admin->id === $user->id : false;
-            return $isAdmin;
+            return !$user->isNull() && $user->company && $user->company->admin ? $user->company->admin->id === $user->id : false;
         }
         return false;
     }
@@ -164,9 +163,9 @@ abstract class Controller
 
         if ($fileUploader->upload('file')) {
             return $fileUploader;
-        } else {
-            throw new RequestException(ERRORS::INVALID_FILE);
         }
+
+        throw new RequestException(ERRORS::INVALID_FILE);
     }
 
     public function replaceWithImagePaths($imagePaths, $content)
@@ -194,10 +193,10 @@ abstract class Controller
                     'customfield' => $customField,
                 ]);
 
-                if ($customField->type == 'select') {
+                if ($customField->type === 'select') {
                     $ok = false;
                     foreach ($customField->ownCustomfieldoptionList as $option) {
-                        if ($option->name == $value) {
+                        if ($option->name === $value) {
                             $customFieldValue->setProperties([
                                 'customfieldoption' => $option,
                                 'value' => $option->name,

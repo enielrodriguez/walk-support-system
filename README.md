@@ -1,9 +1,9 @@
-F2F is powered by OpenSupports, an open source ticket system built primarily with PHP and ReactJS.
+This system is a fork of OpenSupports, an open source ticket system built primarily with PHP and ReactJS.
 Please, visit OpenSupports website for more information: [http://www.opensupports.com/](http://www.opensupports.com/)
 
 
 ## Requirements
-* PHP 5.6+
+* PHP 7.1+
 * MySQL 4.1+
 
 ## Development

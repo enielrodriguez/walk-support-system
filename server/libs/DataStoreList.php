@@ -28,12 +28,12 @@ class DataStoreList implements IteratorAggregate {
     public function remove(DataStore $dataStore) {
         $dataStoreIndexInList = $this->getIndexInListOf($dataStore);
 
-        if ($dataStoreIndexInList == -1) {
+        if ($dataStoreIndexInList === -1) {
             return false;
-        } else {
-            unset($this->list[$dataStoreIndexInList]);
-            return true;
         }
+
+        unset($this->list[$dataStoreIndexInList]);
+        return true;
     }
 
     public function includesId($id) {

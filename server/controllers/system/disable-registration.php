@@ -38,7 +38,6 @@ class DisableRegistrationController extends Controller {
 
         if(!Hashing::verifyPassword($password, Controller::getLoggedUser()->password)) {
             throw new RequestException(ERRORS::INVALID_PASSWORD);
-            return;
         }
         if(!Setting::getSetting('mandatory-login')->getValue()) { 
             throw new Exception(ERRORS::MANDATORY_LOGIN_IS_DESACTIVATED);

@@ -171,7 +171,7 @@ class EditStaffController extends Controller
             $match = false;
 
             foreach ($list2 as $department2) {
-                if ($department1->id == $department2->id) {
+                if ($department1->id === $department2->id) {
                     $match = true;
                 }
             }
@@ -186,7 +186,7 @@ class EditStaffController extends Controller
             $match = false;
 
             foreach ($list1 as $department1) {
-                if ($department2->id == $department1->id) {
+                if ($department2->id === $department1->id) {
                     $match = true;
                 }
             }

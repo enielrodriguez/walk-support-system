@@ -12,6 +12,7 @@ import FormField from 'core-components/form-field';
 import Message from 'core-components/message';
 
 import TicketList from 'app-components/ticket-list';
+import SessionStore from "../../../../lib-app/session-store";
 
 class DashboardListTicketsPage extends React.Component {
     static propTypes = {
@@ -63,6 +64,7 @@ class DashboardListTicketsPage extends React.Component {
                     page={page}
                     pages={pages}
                     tickets={tickets}
+                    departments={SessionStore.getDepartments()}
                     type={userUsers.length ? "secondary" : "primary"} />
                 {message ? <Message type="error" >{i18n(message)}</Message> : null}
             </div>
@@ -141,6 +143,7 @@ class DashboardListTicketsPage extends React.Component {
 export default connect((store) => {
     return {
         userId: store.session.userId,
-        userUsers: store.session.userUsers || []
+        userUsers: store.session.userUsers || [],
+
     };
 })(DashboardListTicketsPage);

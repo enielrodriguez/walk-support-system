@@ -108,9 +108,9 @@ class LoginController extends Controller {
 
         if(Controller::request('staff')) {
             return Staff::authenticate($email, $password);
-        } else {
-            return User::authenticate($email, $password);
         }
+
+        return User::authenticate($email, $password);
     }
 
     private function getUserByRememberToken() {

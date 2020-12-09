@@ -38,7 +38,7 @@ class Ticketevent extends DataStore {
     }
 
     public static function getEvent($type) {
-        if (!in_array($type, Ticketevent::getEventTypes())) {
+        if (!in_array($type, Ticketevent::getEventTypes(), true)) {
             return new NullDataStore();
         }
 

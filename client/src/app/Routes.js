@@ -40,7 +40,7 @@ const AdminPanelMyTickets = asyncComponent(() => import('./admin/panel/tickets/a
 const AdminPanelNewTickets = asyncComponent(() => import('./admin/panel/tickets/admin-panel-new-tickets'));
 const AdminPanelSearchTickets = asyncComponent(() => import('./admin/panel/tickets/admin-panel-search-tickets'));
 const AdminPanelViewTicket = asyncComponent(() => import('./admin/panel/tickets/admin-panel-view-ticket'));
-const AdminPanelCustomResponses = asyncComponent(() => import('./admin/panel/tickets/admin-panel-view-ticket'));
+const AdminPanelCustomResponses = asyncComponent(() => import('./admin/panel/tickets/admin-panel-custom-responses'));
 
 const AdminPanelListUsers = asyncComponent(() => import('./admin/panel/users/admin-panel-list-users'));
 const AdminPanelViewUser = asyncComponent(() => import('./admin/panel/users/admin-panel-view-user'));

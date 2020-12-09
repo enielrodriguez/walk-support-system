@@ -12,6 +12,8 @@
         "willdurand/email-reply-parser": "^2.8"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-master"
+        ,
         "phpunit/phpunit": "^5.7"
     },
     "autoload":{

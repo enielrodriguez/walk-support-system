@@ -19,12 +19,12 @@ class Tag extends DataStore {
     public function toArray($minimized = false) {
         if($minimized){
             return $this->name;
-        } else {
-            return [
-                'id'=> $this->id,
-                'name'=> $this->name,
-                'color' => $this->color
-            ];
         }
+
+        return [
+            'id'=> $this->id,
+            'name'=> $this->name,
+            'color' => $this->color
+        ];
     }
 }

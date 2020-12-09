@@ -33,8 +33,8 @@ class EditCompanyController extends Controller
     const PATH = '/edit-company';
     const METHOD = 'POST';
 
-    private Company $company;
-    private User $companyAdmin;
+    private $company;
+    private $companyAdmin;
 
     private $companyId;
     private $businessName;

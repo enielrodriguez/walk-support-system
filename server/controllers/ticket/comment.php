@@ -37,11 +37,9 @@ class CommentController extends Controller {
 
     private $ticket;
     private $content;
-    private $session;
     private $imagePaths;
 
     public function validations() {
-        $this->session = Session::getInstance();
         return [
             'permission' => 'user',
             'requestData' => [

@@ -94,8 +94,8 @@ class EditSettingsController extends Controller {
         foreach(Language::LANGUAGES as $languageCode) {
             $language = Language::getDataStore($languageCode, 'code');
 
-            $language->allowed = in_array($languageCode, $allowed);
-            $language->supported = in_array($languageCode, $supported);
+            $language->allowed = in_array($languageCode, $allowed, true);
+            $language->supported = in_array($languageCode, $supported, true);
 
             $language->store();
         }
@@ -106,17 +106,19 @@ class EditSettingsController extends Controller {
         $departmentId = Controller::request('default-department-id');
 
         if($departmentId){
-            $Publicdepartments = Department::getPublicDepartmentNames();
+            $publicDepartments = Department::getPublicDepartmentNames();
             
             $isValid = false;
             
-            foreach($Publicdepartments as $department) {
+            foreach($publicDepartments as $department) {
                 if($department['id'] == $departmentId){ 
                     $isValid = true;
                 }
             }
 
-            if(!$isValid) throw new Exception(ERRORS::INVALID_DEFAULT_DEPARTMENT);
+            if(!$isValid) {
+                throw new Exception(ERRORS::INVALID_DEFAULT_DEPARTMENT);
+            }
         }
     }
         

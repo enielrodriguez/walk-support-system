@@ -45,7 +45,6 @@ class DeleteAPIKeyController extends Controller {
         
         if($keyInstance->isNull()) {
             throw new RequestException(ERRORS::INVALID_NAME);
-            return;
         }
 
         $keyInstance->delete();

@@ -53,7 +53,7 @@ class ChangeDepartmentController extends Controller {
         $user = Controller::getLoggedUser();
 
         if(!$ticket->authorStaffId && $department->private){
-            throw new Exception(ERRORS::NO_PERMISSION);
+            throw new RequestException(ERRORS::NO_PERMISSION);
         }
 
         if(!$user->canManageTicket($ticket)){

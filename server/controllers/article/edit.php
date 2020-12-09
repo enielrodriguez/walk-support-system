@@ -64,7 +64,6 @@ class EditArticleController extends Controller {
                 $article->topic = $newArticleTopic;
             } else {
                 throw new RequestException(ERRORS::INVALID_TOPIC);
-                return;
             }
         }
 

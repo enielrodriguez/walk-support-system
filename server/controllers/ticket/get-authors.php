@@ -45,13 +45,12 @@ class GetAuthorsController extends Controller {
         
         if($authors){
             foreach ($authors as $author) {
-                $item  = [];
                 if($author->isStaff){
                     $item = Staff::getUser($author->id)->toArray(true);
                 }else{
                     $item = User::getUser($author->id)->toArray(true);
                 }
-                array_push($dataStores,$item);
+                $dataStores[] = $item;
             }
         }
 

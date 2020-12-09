@@ -13,7 +13,7 @@ class CheckLimit extends AbstractRule
         if ($this->isLimitNameValid($limitToCheck)) {
             $this->limitToCheck = $limitToCheck;
         } else {
-            throw new \Exception("Invalid limit : $limitToCheck");
+            throw new \RequestException("Invalid limit : $limitToCheck");
         }
     }
 

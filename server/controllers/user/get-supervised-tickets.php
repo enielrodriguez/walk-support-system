@@ -67,7 +67,7 @@ class GetSupervisedTicketController extends Controller
             throw new Exception(ERRORS::INVALID_SUPERVISED_USERS);
         }
 
-        $searchController = new SearchController(true);
+        $searchController = new SearchController();
         Controller::setDataRequester(function ($key) {
             switch ($key) {
                 case 'authors':
@@ -116,12 +116,12 @@ class GetSupervisedTicketController extends Controller
 
         if (!empty($this->requestedUserIDsList)) {
             foreach (array_unique($this->requestedUserIDsList) as $reqUserId) {
-                array_push($authors, ['id' => $reqUserId, 'isStaff' => 0]);
+                $authors[] = ['id' => $reqUserId, 'isStaff' => 0];
             }
-        };
+        }
 
-        if (!in_array($user->id, $this->requestedUserIDsList) && $this->showOwnTickets) {
-            array_push($authors, ['id' => $user->id * 1, 'isStaff' => 0]);
+        if ($this->showOwnTickets && !in_array($user->id, $this->requestedUserIDsList, false)) {
+            $authors[] = ['id' => $user->id * 1, 'isStaff' => 0];
         }
         return $authors;
     }

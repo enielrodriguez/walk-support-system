@@ -18,13 +18,13 @@ use RedBeanPHP\Facade as RedBean;
 class User extends DataStore
 {
     const TABLE = 'user';
-    public $ticketNumber = null;
+    public $ticketNumber;
 
     public static function authenticate($userEmail, $userPassword)
     {
         $user = self::getUser($userEmail, 'email');
 
-        return ($user && Hashing::verifyPassword($userPassword, $user->password) && !$user->notRegistered) ? $user : new NullDataStore();
+        return (!$user->isNull() && Hashing::verifyPassword($userPassword, $user->password) && !$user->notRegistered) ? $user : new NullDataStore();
     }
 
     public static function getProps()
@@ -50,7 +50,7 @@ class User extends DataStore
         return parent::getDataStore($value, $property);
     }
 
-    public static function isCompanyAdmin($user): bool
+    public static function isCompanyAdmin($user)
     {
         return $user->company->admin && $user->id === $user->company->admin->id;
     }

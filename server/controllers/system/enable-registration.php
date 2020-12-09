@@ -38,7 +38,6 @@ class EnableRegistrationController extends Controller {
 
         if(!Hashing::verifyPassword($password,Controller::getLoggedUser()->password)) {
             throw new RequestException(ERRORS::INVALID_PASSWORD);
-            return;
         }
 
         $registrationRow = Setting::getSetting('registration');

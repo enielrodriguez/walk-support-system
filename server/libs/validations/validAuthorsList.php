@@ -9,10 +9,16 @@ class ValidAuthorsList extends AbstractRule {
     public function validate($authors) {
     	if(is_array(json_decode($authors))){
 			foreach (json_decode($authors) as $author) {
-                if(!$author->id) return false;
-				if($author->isStaff != 0 && $author->isStaff != 1) return false;
-                if(!is_numeric($author->id)) return false;
-                $item = [];
+                if(!$author->id) {
+                    return false;
+                }
+				if($author->isStaff != 0 && $author->isStaff != 1) {
+                    return false;
+                }
+                if(!is_numeric($author->id)) {
+                    return false;
+                }
+
                 if($author->isStaff){
                     $item = \Staff::getDataStore($author->id);
                 }else{

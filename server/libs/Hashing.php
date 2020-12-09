@@ -9,11 +9,11 @@ class Hashing {
     }
 
     public static function generateRandomToken() {
-        return md5(uniqid(rand()));
+        return md5(uniqid(mt_rand(), true));
     }
 
     public static function generateRandomNumber($min, $max) {
-        return rand($min, $max);
+        return mt_rand($min, $max);
     }
 
     public static function generateRandomPrime($min, $max) {
@@ -30,7 +30,9 @@ class Hashing {
         $sqrt = sqrt($number);
         $prime = true;
 
-        if($number <= 1) return false;
+        if($number <= 1) {
+            return false;
+        }
 
         for($i = 2; $i <= $sqrt; $i++) {
             if($number % $i === 0) {

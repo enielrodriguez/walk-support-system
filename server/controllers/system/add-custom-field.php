@@ -72,12 +72,12 @@ class AddCustomFieldController extends Controller
         $options = Controller::request('options');
 
         if (!Customfield::getDataStore($name, 'name')->isNull())
-            throw new Exception(ERRORS::CUSTOM_FIELD_ALREADY_EXISTS);
+            throw new ValidationException(ERRORS::CUSTOM_FIELD_ALREADY_EXISTS);
 
         $optionList = $this->getOptionList($options);
 
         if($type === 'select' && $optionList->isEmpty()){
-            throw new Exception(ERRORS::INVALID_CUSTOM_FIELD_OPTIONS);
+            throw new ValidationException(ERRORS::INVALID_CUSTOM_FIELD_OPTIONS);
         }
 
         $customField = new Customfield();

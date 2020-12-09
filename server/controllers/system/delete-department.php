@@ -114,6 +114,8 @@ class DeleteDepartmentController extends Controller {
     public function checkDepartmentIdDefault() {
         $defaultDepartment = Setting::getSetting('default-department-id');
 
-        if ($defaultDepartment && $this->departmentId == $defaultDepartment->value) throw new Exception(ERRORS::CAN_NOT_DELETE_DEFAULT_DEPARTMENT);
+        if ($defaultDepartment && $this->departmentId == $defaultDepartment->value) {
+            throw new Exception(ERRORS::CAN_NOT_DELETE_DEFAULT_DEPARTMENT);
+        }
     }
 }

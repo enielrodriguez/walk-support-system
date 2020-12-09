@@ -31,7 +31,6 @@ class SendRecoverPasswordController extends Controller {
 
     private $token;
     private $user;
-    private $staff;
 
     public function validations() {
         return [
@@ -49,11 +48,11 @@ class SendRecoverPasswordController extends Controller {
     }
 
     public function handler() {
-        $this->staff = Controller::request('staff');
+        $staff = Controller::request('staff');
 
         $email = Controller::request('email');
 
-        if($this->staff){
+        if($staff){
             $this->user = Staff::getUser($email, 'email');
         } else {
             $this->user = User::getUser($email, 'email');
@@ -66,7 +65,7 @@ class SendRecoverPasswordController extends Controller {
             $recoverPassword->setProperties(array(
                 'email' => $email,
                 'token' => $this->token,
-                'staff' => !!$this->staff
+                'staff' => !!$staff
             ));
             $recoverPassword->store();
 

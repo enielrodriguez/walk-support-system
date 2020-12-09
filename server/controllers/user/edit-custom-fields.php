@@ -59,7 +59,7 @@ class EditCustomFieldsController extends Controller
         Response::respondSuccess();
     }
 
-    private function setupForSomeUser(string $userId)
+    private function setupForSomeUser($userId)
     {
         $this->user = User::getUser($userId);
 

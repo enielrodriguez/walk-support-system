@@ -144,7 +144,7 @@ class CreateController extends Controller {
         $session = Session::getInstance();
         $sessionUser = User::getUser($session->getUserId() ,'id');
 
-        return  ($session->sessionExists() && $sessionUser  &&  $this->email && !($sessionUser->email == $this->email));
+        return  ($session->sessionExists() && $sessionUser  &&  $this->email && !($sessionUser->email === $this->email));
     }
 
     private function createNewUser() {
@@ -215,9 +215,9 @@ class CreateController extends Controller {
     private function getCorrectLanguage() {
         if($this->language){
             return $this->language;
-        }else{
-            return Setting::getSetting('language')->getValue();
         }
+
+        return Setting::getSetting('language')->getValue();
     }
     
     private function getCorrectDepartmentId(){
@@ -235,9 +235,9 @@ class CreateController extends Controller {
     private function getAuthor() {
         if(Controller::getLoggedUser()->email) { 
             return Controller::getLoggedUser();
-        }else{
-            return User::getUser($this->email, 'email');
         }
+
+        return User::getUser($this->email, 'email');
     }
 
     private function sendMail() {

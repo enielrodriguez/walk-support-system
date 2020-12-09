@@ -1,5 +1,7 @@
 <?php
+
 use Respect\Validation\Validator as DataValidator;
+
 DataValidator::with('CustomValidations', true);
 
 /**
@@ -22,32 +24,32 @@ DataValidator::with('CustomValidations', true);
  * @apiSuccess {Object} data Empty object
  *
  */
-
-class CloseController extends Controller {
+class CloseController extends Controller
+{
     const PATH = '/close';
     const METHOD = 'POST';
 
     private $ticket;
 
-    public function validations() {
-        $session = Session::getInstance();
-
-            return [
-                    'permission' => 'user',
-                    'requestData' => [
-                        'ticketNumber' => [
-                            'validation' => DataValidator::validTicketNumber(),
-                            'error' => ERRORS::INVALID_TICKET
-                        ]
-                    ]
-            ];
+    public function validations()
+    {
+        return [
+            'permission' => 'user',
+            'requestData' => [
+                'ticketNumber' => [
+                    'validation' => DataValidator::validTicketNumber(),
+                    'error' => ERRORS::INVALID_TICKET
+                ]
+            ]
+        ];
     }
 
-    public function handler() {
+    public function handler()
+    {
         $this->ticket = Ticket::getByTicketNumber(Controller::request('ticketNumber'));
         $user = Controller::getLoggedUser();
 
-        if(!$user->canManageTicket($this->ticket)){
+        if (!$user->canManageTicket($this->ticket)) {
             throw new RequestException(ERRORS::NO_PERMISSION);
         }
 
@@ -63,18 +65,20 @@ class CloseController extends Controller {
         Response::respondSuccess();
     }
 
-    private function markAsUnread() {
+    private function markAsUnread()
+    {
         $this->ticket->unread = !$this->ticket->isAuthor(Controller::getLoggedUser());
         $this->ticket->unreadStaff = !$this->ticket->isOwner(Controller::getLoggedUser());
     }
 
-    private function addCloseEvent() {
+    private function addCloseEvent()
+    {
         $event = Ticketevent::getEvent(Ticketevent::CLOSE);
         $event->setProperties(array(
             'date' => Date::getCurrentDate()
         ));
 
-        if(Controller::isStaffLogged()) {
+        if (Controller::isStaffLogged()) {
             $event->authorStaff = Controller::getLoggedUser();
         } else {
             $event->authorUser = Controller::getLoggedUser();
@@ -83,7 +87,8 @@ class CloseController extends Controller {
         $this->ticket->addEvent($event);
     }
 
-    private function sendMail() {
+    private function sendMail()
+    {
         $mailSender = MailSender::getInstance();
 
         $mailSender->setTemplate(MailTemplate::TICKET_CLOSED, [
