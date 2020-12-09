@@ -2,6 +2,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 // const StyleLintPlugin = require('stylelint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -14,7 +15,7 @@ const config = env => {
     return {
         devtool: 'source-map',
         entry: {
-          bundle: APP_DIR + '/index.js',
+            bundle: APP_DIR + '/index.js',
         },
         output: {
             path: BUILD_DIR,
@@ -24,7 +25,7 @@ const config = env => {
         module: {
             rules: [
                 {
-                    test :/\.js$/,
+                    test: /\.js$/,
                     exclude: /node_modules/,
                     use: ['babel-loader'/*, 'eslint-loader'*/],
                 },
@@ -68,7 +69,7 @@ const config = env => {
             proxy: {
                 '/api': {
                     target: 'http://localhost:8080',
-                    pathRewrite: {'^/api' : ''},
+                    pathRewrite: {'^/api': ''},
                 },
             },
         },
@@ -93,12 +94,18 @@ const config = env => {
             ]),
             new BundleAnalyzerPlugin({
                 analyzerMode: process.env.NODE_ENV !== 'production' ? 'server' : 'disabled'
-            }),
+            })
         ],
         resolve: {
             modules: ['./src', './node_modules']
         },
-        node: { fs: 'empty' },
+        node: {fs: 'empty'},
+        optimization: {
+            minimize: true,
+            minimizer: [new TerserPlugin({
+                parallel: 4
+            })],
+        },
     };
 };
 
