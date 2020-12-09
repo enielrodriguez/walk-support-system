@@ -9,7 +9,6 @@ import SessionActions from 'actions/session-actions';
 
 import StaffEditor from 'app/admin/panel/staff/staff-editor';
 import Header from 'core-components/header';
-import Loading from 'core-components/loading';
 import LoadingWithMessage from "../../../../core-components/loading-with-message";
 
 class AdminPanelViewStaff extends React.Component {

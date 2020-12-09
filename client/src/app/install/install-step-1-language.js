@@ -10,7 +10,6 @@ import API from "../../lib-app/api-call";
 import Message from "../../core-components/message";
 import history from "../../lib-app/history";
 import Form from "../../core-components/form";
-import FormField from "../../core-components/form-field";
 import SubmitButton from "../../core-components/submit-button";
 
 class InstallStep1Language extends React.Component {
