@@ -1,10 +1,12 @@
-import React, {Component} from "react";
+import Component from '../lib-core/Component';
 import Loading from "../core-components/loading";
 
 const asyncComponent = (getComponent) => {
     // return AsyncComponent class component
     return class AsyncComponent extends Component {
+
         static Component = null;
+
         state = {
             Component: AsyncComponent.Component // first time similar to static Component = null
         };
@@ -15,7 +17,7 @@ const asyncComponent = (getComponent) => {
                 // For simplicity, I haven't caught an error, but you can catch any errors.
                 getComponent().then(({default: Component}) => {
                     AsyncComponent.Component = Component;
-                    this.setState({Component}); // update this.state.Component
+                        this.setState({Component}); // update this.state.Component
                 });
             }
         }
