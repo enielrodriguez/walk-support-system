@@ -1,9 +1,9 @@
-echo "1/3 Building frontend..."
+echo "1/4 Building frontend..."
 cd client
 npm run build
 rm build/index.html
 
-echo "2/3 Creating api folder..."
+echo "2/4 Creating api folder..."
 cd ../server
 composer install
 mkdir files2
@@ -29,17 +29,16 @@ chmod -R 755 .
 
 cp client/src/index.php client/build
 
-echo "3/3 Generating zip..."
-cd client/build
-zip -ur opensupports_prod.zip .
-mv opensupports_prod.zip ../..
+echo "3/4 Cleaning prod folder..."
+rm -rf /var/www/html/supportsys/
+mkdir /var/www/html/supportsys
 
-cd ../..
-zip -ur opensupports_prod.zip api
-zip -u opensupports_prod.zip LICENSE
-zip -u opensupports_prod.zip installation-key.txt
 
-mkdir -p dist
-mv opensupports_prod.zip dist
+echo "4/4 Copping files..."
+cp -r client/build/* /var/www/html/supportsys
+cp -r api/ /var/www/html/supportsys/api
+cp LICENSE /var/www/html/supportsys
+cp installation-key.txt /var/www/html/supportsys
+
 rm -rf api/
 rm -rf client/build/
