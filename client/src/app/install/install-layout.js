@@ -126,7 +126,7 @@ class InstallLayout extends React.Component {
 
     closeSession() {
         this.props.dispatch(SessionActions.logout());
-        window.location.href = "/install";
+        window.location.href = "/";
     }
 }
 

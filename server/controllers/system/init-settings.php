@@ -152,7 +152,7 @@ class InitSettingsController extends Controller
 
         foreach ($settings as $setting) {
             $settingVal = Controller::request($setting);
-            if ($settingVal !== null && $settingVal !== '') {
+            if ($settingVal !== null) {
                 $settingInstance = Setting::getSetting($setting);
                 $settingInstance->value = $settingVal;
                 $settingInstance->store();

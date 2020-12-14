@@ -10,8 +10,9 @@ import Button from 'core-components/button';
 import Header from 'core-components/header';
 import Table from 'core-components/table';
 import {connect} from "react-redux";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallStep2Requirements extends React.Component {
+class InstallStep2Requirements extends CustomComponent {
 
     state = {
         loading: true,

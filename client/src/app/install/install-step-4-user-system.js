@@ -13,8 +13,9 @@ import SubmitButton from 'core-components/submit-button';
 import Button from "../../core-components/button";
 import Message from "../../core-components/message";
 import API from "../../lib-app/api-call";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallStep4UserSystem extends React.Component {
+class InstallStep4UserSystem extends CustomComponent {
 
     state = {
         loading: false,

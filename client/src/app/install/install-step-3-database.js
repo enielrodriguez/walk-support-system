@@ -12,8 +12,10 @@ import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
 import {connect} from "react-redux";
+import ConfigActions from "../../actions/config-actions";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallStep3Database extends React.Component {
+class InstallStep3Database extends CustomComponent {
 
     state = {
         loading: false,
@@ -25,41 +27,11 @@ class InstallStep3Database extends React.Component {
             dbUser: ''
         },
         currentHost: '',
-        currentName: '',
-        partialInstalled: false
+        currentDbName: ''
     };
 
     componentDidMount() {
-        if (this.props.installed) {
-            this.customSetState({loading: true});
-            API.call({
-                path: '/system/get-db-settings'
-            })
-                .then((result) => {
-                    const data = result.data;
-                    let state = _.extend(this.state, {
-                        form: data,
-                        currentHost: data['dbHost'],
-                        currentName: data['dbName'],
-                        loading: false,
-                        errorMessage: ''
-                    });
-                    if (data.dbName && !this.props.installed) {
-                        state.partialInstalled = true;
-                    }
-                    this.customSetState(state);
-                })
-                .catch(() => this.customSetState({
-                    loading: false,
-                    errorMessage: 'UNKNOWN_ERROR'
-                }));
-        }
-    }
-
-    customSetState(state) {
-        if (this.props.installerLogged) {
-            this.setState(state);
-        }
+        this.retrieveData();
     }
 
     render() {
@@ -77,7 +49,7 @@ class InstallStep3Database extends React.Component {
 
                 <Form loading={loading}
                       values={form}
-                      onChange={form => this.customSetState({form})}
+                      onChange={form => this.setState({form})}
                       onSubmit={this.onSubmit.bind(this)}>
                     <FormField name="dbHost" label={i18n('DATABASE_HOST')}
                                fieldProps={{size: 'large'}} required/>
@@ -89,6 +61,7 @@ class InstallStep3Database extends React.Component {
                     <FormField name="dbUser" label={i18n('DATABASE_USER')}
                                fieldProps={{size: 'large'}} required/>
                     <FormField name="dbPassword" label={i18n('DATABASE_PASSWORD')}
+                               infoMessage={this.props.installed ? i18n('LEAVE_EMPTY_TO_KEEP_CURRENT') : null}
                                fieldProps={{size: 'large', password: true}}/>
 
                     <div className="install-step-3__buttons">
@@ -112,36 +85,97 @@ class InstallStep3Database extends React.Component {
     }
 
     onSubmit(form) {
-        this.customSetState({loading: true});
+        this.setState({loading: true});
+
+        let data = _.clone(form);
+        if (_.isEmpty(data.dbPassword)) {
+            delete data.dbPassword;
+        }
 
         API.call({
             path: '/system/init-database',
-            data: _.extend({}, form, {dbPort: form.dbPort || 3306})
+            data: data
         })
-            .then(() => {
-                if (!this.props.installed || this.state.partialInstalled)
-                    history.push('/install/step/4')
-                else {
-                    if (form.dbHost !== this.state.currentHost || form.dbName !== this.state.currentName) {
-                        window.location.reload(true);
-                    } else {
-                        this.customSetState({loading: false, errorMessage: ''});
-                    }
-                }
+            .then((result) => {
+                this.handleResult(form, result);
             })
             .catch(({message}) => {
-                this.customSetState({
+                this.setState({
                     loading: false,
                     errorMessage: message
                 });
             });
 
     }
+
+    retrieveData() {
+        // Can't restrict the api call (if (this.props.installed))
+        // because it's necessary in case of changing the db to an empty one, or leave the
+        // installation process just after having configured the DB.
+        // Otherwise, in this situation, the form will reload empty (without the db settings)
+        this.setState({loading: true});
+        API.call({
+            path: '/system/get-db-settings'
+        })
+            .then((result) => {
+                const data = result.data;
+                let state = _.extend(this.state, {
+                    form: data,
+                    currentHost: data['dbHost'],
+                    currentDbName: data['dbName'],
+                    loading: false,
+                    errorMessage: ''
+                });
+                this.setState(state);
+            })
+            .catch((error) => this.setState({
+                loading: false,
+                errorMessage: error.message
+            }));
+    }
+
+    handleResult(dataSubmitted, result) {
+        const currentInstalled = this.props.installed;
+        const installed = result.data;
+
+        API.call({
+            path: '/system/get-settings'
+        }).then(result => {
+
+            if ((this.state.currentHost && dataSubmitted.dbHost !== this.state.currentHost) || (this.state.currentDbName && dataSubmitted.dbName !== this.state.currentDbName)) {
+                this.props.dispatch(ConfigActions.checkInstallation(installed));
+                this.props.dispatch(ConfigActions.updateData(installed ? result.data : null))
+            }
+
+            if (result.data.language && this.props.language !== result.data.language) {
+                this.props.dispatch(ConfigActions.changeLanguage(result.data.language));
+            }
+
+            if (!currentInstalled && !installed) {
+                history.push('/install/step/4');
+            } else if (!installed) {
+                history.push('/install/step/1');
+            } else {
+                this.setState({
+                    currentHost: dataSubmitted['dbHost'],
+                    currentDbName: dataSubmitted['dbName'],
+                    loading: false,
+                    errorMessage: ''
+                });
+            }
+        }).catch(({message}) => {
+            this.setState({
+                loading: false,
+                errorMessage: message
+            });
+        });
+    }
 }
 
 export default connect((store) => {
     return {
         installerLogged: !!store.config.installerLogged,
-        installed: !!store.config.installed
+        installed: !!store.config.installed,
+        language: store.config.language
     };
 })(InstallStep3Database);

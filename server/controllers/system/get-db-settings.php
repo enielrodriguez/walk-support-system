@@ -32,10 +32,10 @@ class GetDBSettingsController extends Controller
     public function handler()
     {
         $data = [
-            'dbHost' => MYSQL_HOST,
-            'dbPort' => MYSQL_PORT,
-            'dbUser' => MYSQL_USER,
-            'dbName' => MYSQL_DATABASE
+            'dbHost' => defined('MYSQL_HOST') ? MYSQL_HOST : '',
+            'dbPort' => defined('MYSQL_PORT') && MYSQL_PORT !== '3306'? MYSQL_PORT : '',
+            'dbUser' => defined('MYSQL_USER') ? MYSQL_USER : '',
+            'dbName' => defined('MYSQL_DATABASE') ? MYSQL_DATABASE : ''
         ];
 
         Response::respondSuccess($data);

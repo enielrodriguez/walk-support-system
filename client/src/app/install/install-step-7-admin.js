@@ -11,8 +11,9 @@ import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
 import {connect} from "react-redux";
 import _ from "lodash";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallStep7Admin extends React.Component {
+class InstallStep7Admin extends CustomComponent {
 
     state = {
         loading: false,
@@ -24,24 +25,17 @@ class InstallStep7Admin extends React.Component {
 
     componentDidMount() {
         if (this.props.installed) {
-            this.customSetState({loading: true});
+            this.setState({loading: true});
             API.call({
                 path: '/system/get-admin-settings'
             })
                 .then((result) => {
-                    this.customSetState({form: result.data, loading: false});
+                    this.setState({form: result.data, loading: false});
                 })
-                .catch(() => this.customSetState({errorMessage: 'UNKNOWN_ERROR', loading: false}));
+                .catch(() => this.setState({errorMessage: 'UNKNOWN_ERROR', loading: false}));
         }
     }
-
-    customSetState(state) {
-        if (this.props.installerLogged) {
-            this.setState(state);
-        }
-    }
-
-
+    
     render() {
         const {loading, form} = this.state;
         return (
@@ -60,7 +54,7 @@ class InstallStep7Admin extends React.Component {
                       onSubmit={this.onSubmit.bind(this)}
                       values={form}
                       errors={this.getFormErrors()}
-                      onChange={form => this.customSetState({form})}
+                      onChange={form => this.setState({form})}
                       onValidateErrors={this.onValidateErrors.bind(this)}
                 >
                     <FormField name="name" validation="NAME" label={i18n('ADMIN_NAME')} fieldProps={{size: 'large'}}
@@ -69,7 +63,7 @@ class InstallStep7Admin extends React.Component {
                                required/>
                     <FormField name="password"
                                label={i18n('ADMIN_PASSWORD')}
-                               infoMessage={i18n('ADMIN_PASSWORD_DESCRIPTION')}
+                               infoMessage={this.props.installed ? i18n('LEAVE_EMPTY_TO_KEEP_CURRENT') : i18n('ADMIN_PASSWORD_DESCRIPTION')}
                                fieldProps={{size: 'large', autoComplete: 'off'}}
                     />
 
@@ -85,7 +79,7 @@ class InstallStep7Admin extends React.Component {
     }
 
     onSubmit(form) {
-        this.customSetState({loading: true});
+        this.setState({loading: true});
 
         let data = _.clone(form);
         if (_.isEmpty(data.password)) {
@@ -100,9 +94,9 @@ class InstallStep7Admin extends React.Component {
                 if (!this.props.installed)
                     history.push('/install/completed')
                 else
-                    this.customSetState({loading: false, errorMessage: ''});
+                    this.setState({loading: false, errorMessage: ''});
             })
-            .catch(({message}) => this.customSetState({
+            .catch(({message}) => this.setState({
                 loading: false,
                 errorMessage: message
             }));
@@ -118,7 +112,7 @@ class InstallStep7Admin extends React.Component {
             state.touched = true;
         }
 
-        this.customSetState(state);
+        this.setState(state);
     }
 
     getFormErrors() {

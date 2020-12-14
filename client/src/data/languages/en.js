@@ -288,7 +288,7 @@ export default {
     'INSTALLATION_COMPLETED_DESCRIPTION': 'The installation is completed. Redirecting to admin panel...',
 
     'STEP_TITLE': 'Step {current} of {total} - {title}',
-    'STEP_1_DESCRIPTION': 'Select your preferred language for the installation wizard',
+    'STEP_1_DESCRIPTION': 'Select the default language for the system',
     'STEP_2_DESCRIPTION': 'Here are listed the requirements for running the system. Please make sure that all requirements are satisfied',
     'STEP_3_DESCRIPTION': 'Please fill the MySQL database configuration',
     'STEP_4_DESCRIPTION': 'Please select your user system preferences and set plan limits',
@@ -561,7 +561,7 @@ export default {
     // installation
     'INSTALLATION_KEY': 'Installation key',
     'INVALID_KEY': 'Invalid installation key',
-    'TIMEZONE': 'Time zone',
-    'TIMEZONE_REQUIRED_ERROR': 'You must select a time zone',
-    'CURRENT' : 'current: {value}'
+    'CURRENT' : 'current: {value}',
+    'LEAVE_EMPTY_TO_KEEP_CURRENT': 'Leave empty to keep current password',
+    'ERROR_SMTP_EMPTY_FIELD': 'Missing data in SMTP configuration'
 };

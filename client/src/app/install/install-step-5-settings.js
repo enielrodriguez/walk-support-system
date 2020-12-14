@@ -14,34 +14,39 @@ import FormField from 'core-components/form-field';
 import SubmitButton from 'core-components/submit-button';
 import Message from 'core-components/message';
 import ConfigActions from "../../actions/config-actions";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallStep5Settings extends React.Component {
+class InstallStep5Settings extends CustomComponent {
 
     state = {
         loading: false,
         form: {},
+        smtpIsConfigured: false,
         errorMessage: ''
     };
 
     componentDidMount() {
         if (this.props.installed) {
-            this.customSetState({loading: true});
+            this.setState({loading: true});
 
             API.call({
                 path: '/system/get-email-settings'
             })
                 .then((result) => {
-                    result.data['title'] = this.props.title;
-                    result.data['allow-attachments'] = this.props['allow-attachments'];
-                    this.customSetState({form: result.data, loading: false});
+                    let state = {
+                        form: {
+                            title: this.props.title,
+                            'allow-attachments': this.props['allow-attachments'],
+                            ...result.data
+                        },
+                        loading: false
+                    }
+                    if (result.data['smtp-host']) {
+                        state.smtpIsConfigured = true;
+                    }
+                    this.setState(state);
                 })
-                .catch(() => this.customSetState({errorMessage: 'UNKNOWN_ERROR', loading: false}));
-        }
-    }
-
-    customSetState(state) {
-        if (this.props.installerLogged) {
-            this.setState(state);
+                .catch(() => this.setState({errorMessage: 'UNKNOWN_ERROR', loading: false}));
         }
     }
 
@@ -62,7 +67,7 @@ class InstallStep5Settings extends React.Component {
                 <Form loading={loading}
                       onSubmit={this.onSubmit.bind(this)}
                       values={form}
-                      onChange={(form) => this.customSetState({form})}>
+                      onChange={(form) => this.setState({form})}>
 
                     <FormField name="title" label={i18n('TITLE')} fieldProps={{size: 'large'}} required/>
                     <FormField className="install-step-5__attachments-field" name="allow-attachments"
@@ -75,7 +80,11 @@ class InstallStep5Settings extends React.Component {
                         <FormField name="smtp-host" label={i18n('SMTP_SERVER')} fieldProps={{size: 'large'}}/>
                         <FormField name="smtp-user" label={i18n('SMTP_USER')} fieldProps={{size: 'large'}}/>
                         <FormField name="smtp-pass" label={i18n('SMTP_PASSWORD')}
-                                   fieldProps={{size: 'large', password: true}}/>
+                                   fieldProps={{size: 'large', password: true}}
+                                   infoMessage={
+                                       this.props.installed && this.state.smtpIsConfigured ?
+                                           i18n('LEAVE_EMPTY_TO_KEEP_CURRENT') : null
+                                   }/>
                         <SubmitButton className="install-step-5__test-connection" size="medium"
                                       onClick={this.onTestSMTPClick.bind(this)} disabled={loading}>
                             {i18n('TEST_SMTP_CONNECTION')}
@@ -107,7 +116,7 @@ class InstallStep5Settings extends React.Component {
     onTestSMTPClick(event) {
         event.preventDefault();
 
-        this.customSetState({
+        this.setState({
             loading: true
         });
 
@@ -123,7 +132,7 @@ class InstallStep5Settings extends React.Component {
                     loading: false
 
                 });
-                this.customSetState({loading: false});
+                this.setState({loading: false});
             })
             .catch(result => {
                 PopupMessage.open({
@@ -132,12 +141,18 @@ class InstallStep5Settings extends React.Component {
                     type: 'error',
                     loading: false
                 });
-                this.customSetState({loading: false});
+                this.setState({loading: false});
             });
     }
 
     onSubmit(form) {
-        this.customSetState({loading: true});
+
+        if (!!(!!form['smtp-host'] ^ !!form['smtp-user'])) {
+            this.setState({errorMessage: i18n('ERROR_SMTP_EMPTY_FIELD')});
+            return;
+        }
+
+        this.setState({loading: true});
 
         let data = _.clone(form);
         data['allow-attachments'] = data['allow-attachments'] * 1;
@@ -151,6 +166,10 @@ class InstallStep5Settings extends React.Component {
             });
         }
 
+        if (_.isEmpty(data['smtp-pass'])) {
+            delete data['smtp-pass'];
+        }
+
         API.call({
             path: '/system/init-settings',
             data: data
@@ -160,9 +179,9 @@ class InstallStep5Settings extends React.Component {
                 if (!this.props.installed)
                     history.push('/install/step/6')
                 else
-                    this.customSetState({loading: false, errorMessage: ''});
+                    this.setState({loading: false, errorMessage: ''});
             })
-            .catch(({message}) => this.customSetState({
+            .catch(({message}) => this.setState({
                 loading: false,
                 errorMessage: message
             }));

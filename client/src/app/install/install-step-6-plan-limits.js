@@ -11,8 +11,9 @@ import SubmitButton from 'core-components/submit-button';
 import API from "../../lib-app/api-call";
 import Message from "../../core-components/message";
 import ConfigActions from "../../actions/config-actions";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallStep6PlanLimits extends React.Component {
+class InstallStep6PlanLimits extends CustomComponent {
 
     state = {
         loading: false,

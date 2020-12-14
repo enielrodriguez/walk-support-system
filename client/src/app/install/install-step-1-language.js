@@ -11,13 +11,13 @@ import Message from "../../core-components/message";
 import history from "../../lib-app/history";
 import Form from "../../core-components/form";
 import SubmitButton from "../../core-components/submit-button";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallStep1Language extends React.Component {
+class InstallStep1Language extends CustomComponent {
 
     state = {
         loading: false,
-        errorMessage: '',
-        language: 0
+        errorMessage: ''
     };
 
     render() {
@@ -75,7 +75,7 @@ class InstallStep1Language extends React.Component {
             API.call({
                 path: '/system/init-settings',
                 data: {
-                    'language': this.props.config['language']
+                    'language': this.props.config.language
                 }
             })
                 .then(() => this.setState({
@@ -94,7 +94,6 @@ class InstallStep1Language extends React.Component {
 export default connect((store) => {
     return {
         config: store.config,
-        installerLogged: !!store.config.installerLogged,
         installed: !!store.config.installed
     };
 })(InstallStep1Language);

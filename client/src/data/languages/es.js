@@ -293,7 +293,7 @@ export default {
     'INSTALLATION_COMPLETED_DESCRIPTION': 'La instalación ha finalizado. Redirigiendo al panel de administración...',
 
     'STEP_TITLE': 'Paso {current} de {total} - {title}',
-    'STEP_1_DESCRIPTION': 'Seleccione su idioma preferido para el asistente de instalación',
+    'STEP_1_DESCRIPTION': 'Seleccione el idioma predeterminado para el sistema',
     'STEP_2_DESCRIPTION': 'Aqui están listados los requisitos del sistema. Por favor, asegúrese de cumplir con todos los requisitos',
     'STEP_3_DESCRIPTION': 'Por favor, complete la configuracion de la base de datos MySQL',
     'STEP_4_DESCRIPTION': 'Por favor, seleccione sus preferencias del sistema de usuarios',
@@ -568,7 +568,7 @@ export default {
     // installation
     'INSTALLATION_KEY' : 'Llave de instalación',
     'INVALID_KEY': 'La llave no es válida',
-    'TIMEZONE': 'Zona horaria',
-    'TIMEZONE_REQUIRED_ERROR': 'Debe seleccionar una zona horaria',
-    'CURRENT' : 'actual: {value}'
+    'CURRENT' : 'actual: {value}',
+    'LEAVE_EMPTY_TO_KEEP_CURRENT': 'Dejar en blanco para mantener la contraseña actual',
+    'ERROR_SMTP_EMPTY_FIELD': 'Faltan datos en la configuración SMTP'
 };

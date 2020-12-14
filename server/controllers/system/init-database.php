@@ -25,7 +25,7 @@ use Respect\Validation\Validator as DataValidator;
  * @apiUse DATABASE_CREATION
  * @apiUse INVALID_FILE
  *
- * @apiSuccess {Object} data Empty object
+ * @apiSuccess {Object} data Array with isInstalled flag (indicates if the DB is already populated)
  *
  */
 class InitDatabaseController extends Controller
@@ -53,10 +53,13 @@ class InitDatabaseController extends Controller
     public function handler()
     {
         $dbHost = Controller::request('dbHost');
-        $dbPort = Controller::request('dbPort');
+        $dbPort = Controller::request('dbPort') ?: 3306;
         $dbName = Controller::request('dbName');
         $dbUser = Controller::request('dbUser');
         $dbPass = Controller::request('dbPassword');
+        if (!$dbPass) {
+            $dbPass = defined('MYSQL_PASSWORD') ? MYSQL_PASSWORD : '';
+        }
 
         RedBean::removeToolBoxByKey("default");
         RedBean::setup("mysql:host=$dbHost;port=$dbPort", $dbUser, $dbPass);
@@ -77,6 +80,11 @@ class InitDatabaseController extends Controller
 
         fwrite($configFile, $content);
         fclose($configFile);
-        Response::respondSuccess();
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate('config.php');
+        }
+
+        Response::respondSuccess(InstallationDoneController::isInstallationDone());
     }
 }

@@ -7,14 +7,12 @@ import i18n from 'lib-app/i18n';
 import Message from 'core-components/message';
 import SessionActions from "../../actions/session-actions";
 import {connect} from "react-redux/src";
+import CustomComponent from "../../lib-core/Component";
 
-class InstallCompleted extends React.Component {
+class InstallCompleted extends CustomComponent {
 
     componentDidMount() {
         store.dispatch(ConfigActions.init());
-        setTimeout(() => {
-            store.dispatch(ConfigActions.checkInstallation());
-        }, 3000);
 
         this.props.dispatch(SessionActions.logout());
 

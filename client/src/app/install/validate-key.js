@@ -11,8 +11,9 @@ import Message from 'core-components/message';
 import Widget from 'core-components/widget';
 import store from "../store";
 import ConfigActions from "../../actions/config-actions";
+import CustomComponent from "../../lib-core/Component";
 
-class ValidateKey extends React.Component {
+class ValidateKey extends CustomComponent {
 
     state = {
         sideToShow: 'front',
