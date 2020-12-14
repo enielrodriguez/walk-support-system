@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 
-class Component extends React.Component {
-    _canSetState = true;
+class CustomComponent extends React.Component {
+    _willUnmount = false;
 
     componentWillUnmount() {
-        this._canSetState = false;
+        this._willUnmount = true;
     }
 
     setState(state, callback) {
-        if (this._canSetState)
+        if (!this._willUnmount)
             super.setState(state, callback);
     }
 }
 
-export default Component;
+export default CustomComponent;
