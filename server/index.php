@@ -16,7 +16,7 @@ if (defined('MYSQL_HOST') && defined('MYSQL_DATABASE') && defined('MYSQL_USER') 
 
 if (is_readable('../installation-key.txt')) {
     $lines = file('../installation-key.txt');
-    define('INSTALLATION_KEY', trim($lines[3]));
+    define('INSTALLATION_KEY', trim($lines[0]));
 } else {
     define('INSTALLATION_KEY', md5(mt_rand()));
 }
