@@ -1,4 +1,4 @@
-#Cambiar la llave cada vez que se vaya a distribuir una copia.
+#Cambiar la llave cada vez que se vaya a distribuir una copia. Si no se cuenta con conexión segura (HTTPS) cambiar cada vez que se utilice.
 #Para crear llaves seguras puede utilizar el sitio https://www.avast.com/random-password-generator
-#Tenga en cuenta que los espacios en blanco al inicio y al final serán ignorados
-AVRMqciuby4l8QP
+#Tenga en cuenta que los espacios en blanco al inicio y al final serán ignorados. IMPORTANTE: no agregar ni quitar líneas a este archivo.
+MULyYAAA70GL?fOG

@@ -3,7 +3,7 @@ Please, visit OpenSupports website for more information: [http://www.opensupport
 
 
 ## Requirements
-* PHP 7.1+
+* PHP 5.6+
 * MySQL 4.1+
 
 ## Development
