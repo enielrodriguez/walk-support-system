@@ -3,3 +3,4 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/?(api)/
 RewriteRule .* index.php [PT,L]
+RewriteRule ^/?(installation-key\.txt|LICENSE|bundle.js.LICENSE.txt)$ - [F,L]
