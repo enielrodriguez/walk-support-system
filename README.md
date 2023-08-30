@@ -1,6 +1,11 @@
 This system is a fork of OpenSupports, an open source ticket system built primarily with PHP and ReactJS.
-Please, visit OpenSupports website for more information: [http://www.opensupports.com/](http://www.opensupports.com/)
+Please, visit OpenSupports website for more information: [http://www.opensupports.com/](http://www.opensupports.com/).  
 
+**This fork has extra features to create restrictions and make plans, let's say to sell the system as SaaS**, perhaps in a rudimentary way.  
+For example, suppose a company needs a support system:  
+This company has a number of **departments** and helpdesk **employees** that will support **users** of **client companies**.  
+As a provider of this support system, you can deploy on a web server a **customized copy** with a **maximum number of departments**, a **maximum number of helpdesk workers**, a **maximum number of client companies**, as well as a **maximum number of users** in client companies.  
+A key was also added to prevent access to the system installer.
 
 ## Requirements
 * PHP 5.6+
