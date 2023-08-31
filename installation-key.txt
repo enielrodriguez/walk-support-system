@@ -1,5 +1,5 @@
 MULyYAAA70GL?fOG
-#Cambiar la llave cada vez que se vaya a distribuir una copia.
-#Para crear llaves seguras puede utilizar el sitio https://www.avast.com/random-password-generator
-#Tenga en cuenta que los espacios en blanco al inicio y al final serán ignorados. 
-#IMPORTANTE: El sistema asume que la llave está en la primera línea de este archivo, no la cambie de posición.
+# Change the key each time a copy is to be distributed.
+# To create secure keys you can use the site https://www.avast.com/random-password-generator
+# Note that white spaces at the beginning and end will be ignored.
+# IMPORTANT: The system assumes that the key is in the first line of this file, do not change its position.
