@@ -4,7 +4,6 @@
   <img alt="Logo" src="logo.png" height="150px">
 </picture>
   <br>
-  Walk! We support you
 </div>
 <br>
 
