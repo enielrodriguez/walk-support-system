@@ -1,3 +1,13 @@
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="logo.png">
+  <img alt="Logo" src="logo.png" height="150px">
+</picture>
+  <br>
+  Walk! We support you
+</div>
+<br>
+
 This system is a fork of OpenSupports, an open source ticket system built primarily with PHP and ReactJS.
 Please, visit OpenSupports website for more information: [http://www.opensupports.com/](http://www.opensupports.com/).  
 
